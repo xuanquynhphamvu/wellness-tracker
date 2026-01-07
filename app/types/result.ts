@@ -9,8 +9,8 @@ import { ObjectId } from 'mongodb';
 export interface QuizResult {
     _id?: ObjectId;
     quizId: ObjectId;
-    userId?: string; // Optional: for anonymous users
-    sessionId?: string; // Track anonymous users across results
+    userId: ObjectId;  // Required: link result to user
+    sessionId?: string; // Optional: for tracking sessions
     answers: Answer[];
     score: number;
     completedAt: Date;
@@ -39,9 +39,12 @@ export interface SerializedQuizResult {
  */
 export function serializeQuizResult(result: QuizResult): SerializedQuizResult {
     return {
-        ...result,
         _id: result._id?.toString() || '',
         quizId: result.quizId.toString(),
+        userId: result.userId.toString(),  // Convert ObjectId to string
+        sessionId: result.sessionId,
+        answers: result.answers,
+        score: result.score,
         completedAt: result.completedAt.toISOString(),
     };
 }

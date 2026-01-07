@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import type { QuizResult, SerializedQuizResult } from "~/types/result";
 import type { Quiz } from "~/types/quiz";
+import { requireUser } from "~/lib/auth.server";
 
 /**
  * Quiz Results Route
@@ -17,7 +18,10 @@ import type { Quiz } from "~/types/quiz";
  * - Type-safe params with Route.LoaderArgs
  */
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function loader({ request, params }: Route.LoaderArgs) {
+    // PROTECTED ROUTE: Require authentication
+    const user = await requireUser(request);
+
     if (!params.id) {
         throw new Response("Result ID is required", { status: 400 });
     }
@@ -27,6 +31,11 @@ export async function loader({ params }: Route.LoaderArgs) {
 
     if (!result) {
         throw new Response("Result not found", { status: 404 });
+    }
+
+    // AUTHORIZATION: Verify user owns this result
+    if (result.userId.toString() !== user._id) {
+        throw new Response("Forbidden: You can only view your own results", { status: 403 });
     }
 
     // Fetch the quiz to display title
@@ -41,7 +50,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     const serialized: SerializedQuizResult = {
         _id: result._id!.toString(),
         quizId: result.quizId.toString(),
-        userId: result.userId,
+        userId: result.userId.toString(),  // Convert ObjectId to string
         sessionId: result.sessionId,
         answers: result.answers,
         score: result.score,

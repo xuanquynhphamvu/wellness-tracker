@@ -1,8 +1,9 @@
 import type { Route } from "./+types/progress";
 import { Link } from "react-router";
-import { getCollection } from "~/lib/db.server";
+import { getCollection, ObjectId } from "~/lib/db.server";
 import type { QuizResult } from "~/types/result";
 import type { Quiz } from "~/types/quiz";
+import { requireUser } from "~/lib/auth.server";
 
 /**
  * Progress Tracking Route
@@ -21,11 +22,14 @@ import type { Quiz } from "~/types/quiz";
  * For now, shows all results (demo purposes)
  */
 
-export async function loader({ }: Route.LoaderArgs) {
-    // Fetch all results (in production, filter by userId)
+export async function loader({ request }: Route.LoaderArgs) {
+    // PROTECTED ROUTE: Require authentication
+    const user = await requireUser(request);
+
+    // Fetch only current user's results
     const results = await getCollection<QuizResult>('results');
-    const allResults = await results
-        .find({})
+    const userResults = await results
+        .find({ userId: new ObjectId(user._id) })  // Filter by user ID
         .sort({ completedAt: -1 })
         .toArray();
 
@@ -36,7 +40,7 @@ export async function loader({ }: Route.LoaderArgs) {
         results: { date: string; score: number }[];
     }> = {};
 
-    for (const result of allResults) {
+    for (const result of userResults) {
         const quizId = result.quizId.toString();
 
         if (!progressByQuiz[quizId]) {
