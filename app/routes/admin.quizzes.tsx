@@ -3,6 +3,7 @@ import { Link, Form } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import type { Quiz, SerializedQuiz } from "~/types/quiz";
 import { redirect } from "react-router";
+import { requireAdmin } from "~/lib/auth.server";
 
 /**
  * Admin Quiz Management Route
@@ -39,6 +40,9 @@ export async function loader({ }: Route.LoaderArgs) {
 }
 
 export async function action({ request }: Route.ActionArgs) {
+    // PROTECTED ACTION: Require admin role
+    await requireAdmin(request);
+
     const formData = await request.formData();
     const intent = formData.get('intent');
     const quizId = formData.get('quizId');
@@ -120,8 +124,8 @@ export default function AdminQuizzes({ loaderData }: Route.ComponentProps) {
                                         </h2>
                                         <span
                                             className={`px-3 py-1 rounded-full text-xs font-semibold ${quiz.isPublished
-                                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400'
+                                                ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                                : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400'
                                                 }`}
                                         >
                                             {quiz.isPublished ? 'Published' : 'Draft'}

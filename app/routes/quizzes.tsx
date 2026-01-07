@@ -1,6 +1,6 @@
 import type { Route } from "./+types/quizzes";
 import { Link } from "react-router";
-import { getCollection, ObjectId } from "~/lib/db.server";
+import { getCollection } from "~/lib/db.server";
 import type { Quiz, SerializedQuiz } from "~/types/quiz";
 
 /**

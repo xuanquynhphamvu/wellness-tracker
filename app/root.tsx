@@ -9,6 +9,25 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { getOptionalUser } from "./lib/auth.server";
+
+/**
+ * Root Loader
+ * 
+ * EXECUTION CONTEXT: SERVER
+ * - Runs on every request (root of the app)
+ * - Fetches current user (or null if not logged in)
+ * - Makes user available to all routes via useRouteLoaderData('root')
+ * 
+ * WHY IN ROOT?
+ * - User info needed in navigation (all pages)
+ * - Avoids fetching user in every route loader
+ * - Single source of truth for auth state
+ */
+export async function loader({ request }: Route.LoaderArgs) {
+  const user = await getOptionalUser(request);
+  return { user };
+}
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },

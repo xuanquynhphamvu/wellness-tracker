@@ -1,4 +1,6 @@
 import { Outlet, Link } from "react-router";
+import type { Route } from "./+types/admin";
+import { requireAdmin } from "~/lib/auth.server";
 
 /**
  * Admin Layout
@@ -10,8 +12,17 @@ import { Outlet, Link } from "react-router";
  * LEARNING POINTS:
  * - Layout routes provide shared UI (nav, sidebar, etc.)
  * - <Outlet /> renders the matched child route
- * - Future: Add auth check in loader to protect admin routes
+ * - Loader protects ALL child routes (runs before children)
  */
+
+/**
+ * PROTECTED ROUTE: Require admin role
+ * This loader runs for ALL /admin/* routes
+ */
+export async function loader({ request }: Route.LoaderArgs) {
+    await requireAdmin(request);
+    return {};
+}
 
 export default function AdminLayout() {
     return (

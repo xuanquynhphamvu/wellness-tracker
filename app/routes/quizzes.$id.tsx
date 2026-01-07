@@ -4,6 +4,7 @@ import { getCollection, ObjectId } from "~/lib/db.server";
 import type { Quiz, SerializedQuiz } from "~/types/quiz";
 import type { QuizResult } from "~/types/result";
 import { data } from "react-router";
+import { requireUser } from "~/lib/auth.server";
 
 /**
  * Take Quiz Route (Dynamic Route)
@@ -23,7 +24,10 @@ import { data } from "react-router";
  * - Progressive enhancement: works without JavaScript!
  */
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function loader({ request, params }: Route.LoaderArgs) {
+    // PROTECTED ROUTE: Require authentication
+    await requireUser(request);
+
     // SERVER-SIDE: Fetch quiz by ID
 
     if (!params.id) {
@@ -55,6 +59,9 @@ export async function loader({ params }: Route.LoaderArgs) {
 }
 
 export async function action({ request, params }: Route.ActionArgs) {
+    // PROTECTED ROUTE: Require authentication
+    const user = await requireUser(request);
+
     // SERVER-SIDE: Handle quiz submission
 
     const formData = await request.formData();
@@ -99,9 +106,10 @@ export async function action({ request, params }: Route.ActionArgs) {
         }
     });
 
-    // Save result to database
+    // Save result to database (linked to user)
     const results = await getCollection<QuizResult>('results');
     const result = await results.insertOne({
+        userId: new ObjectId(user._id),  // Link result to user (convert string to ObjectId)
         quizId: new ObjectId(quizId),
         answers,
         score: totalScore,

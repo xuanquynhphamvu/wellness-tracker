@@ -8,6 +8,11 @@ export default [
     route("results/:id", "routes/results.$id.tsx"),
     route("progress", "routes/progress.tsx"),
 
+    // Auth routes
+    route("auth/login", "routes/auth.login.tsx"),
+    route("auth/register", "routes/auth.register.tsx"),
+    route("auth/logout", "routes/auth.logout.tsx"),
+
     // Admin routes (nested under admin layout)
     layout("routes/admin.tsx", [
         route("admin/quizzes", "routes/admin.quizzes.tsx"),
