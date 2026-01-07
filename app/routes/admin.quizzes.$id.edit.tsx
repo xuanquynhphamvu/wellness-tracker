@@ -1,5 +1,5 @@
 import type { Route } from "./+types/admin.quizzes.$id.edit";
-import { Form, redirect, Link } from "react-router";
+import { Form, redirect, Link, useNavigation } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import type { Quiz, SerializedQuiz, Question } from "~/types/quiz";
 import { requireAdmin } from "~/lib/auth.server";
@@ -134,6 +134,8 @@ export function meta({ data }: Route.MetaArgs) {
 export default function EditQuiz({ loaderData, actionData }: Route.ComponentProps) {
     const { quiz } = loaderData;
     const errors = actionData?.errors;
+    const navigation = useNavigation();
+    const isSubmitting = navigation.state === "submitting";
 
     const [questions, setQuestions] = useState<Question[]>(quiz.questions);
 
@@ -260,9 +262,10 @@ export default function EditQuiz({ loaderData, actionData }: Route.ComponentProp
                 <div className="flex gap-4">
                     <button
                         type="submit"
-                        className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition-colors"
+                        disabled={isSubmitting}
+                        className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg shadow transition-colors"
                     >
-                        Save Changes
+                        {isSubmitting ? "Saving..." : "Save Changes"}
                     </button>
                     <Link
                         to="/admin/quizzes"

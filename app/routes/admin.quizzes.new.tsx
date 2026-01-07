@@ -1,5 +1,5 @@
 import type { Route } from "./+types/admin.quizzes.new";
-import { Form, redirect, Link } from "react-router";
+import { Form, redirect, Link, useNavigation } from "react-router";
 import { getCollection } from "~/lib/db.server";
 import type { Quiz, Question } from "~/types/quiz";
 import { requireAdmin } from "~/lib/auth.server";
@@ -101,6 +101,8 @@ export function meta({ }: Route.MetaArgs) {
 
 export default function NewQuiz({ actionData }: Route.ComponentProps) {
     const errors = actionData?.errors;
+    const navigation = useNavigation();
+    const isSubmitting = navigation.state === "submitting";
 
     const [questions, setQuestions] = useState<Question[]>([
         {
@@ -235,9 +237,10 @@ export default function NewQuiz({ actionData }: Route.ComponentProps) {
                 <div className="flex gap-4">
                     <button
                         type="submit"
-                        className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition-colors"
+                        disabled={isSubmitting}
+                        className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg shadow transition-colors"
                     >
-                        Create Quiz
+                        {isSubmitting ? "Creating..." : "Create Quiz"}
                     </button>
                     <Link
                         to="/admin/quizzes"

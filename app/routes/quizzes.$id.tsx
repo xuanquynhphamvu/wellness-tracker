@@ -1,5 +1,5 @@
 import type { Route } from "./+types/quizzes.$id";
-import { Form, redirect, Link } from "react-router";
+import { Form, redirect, Link, useNavigation, isRouteErrorResponse, useRouteError } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import type { Quiz, SerializedQuiz } from "~/types/quiz";
 import type { QuizResult } from "~/types/result";
@@ -128,6 +128,8 @@ export function meta({ data }: Route.MetaArgs) {
 
 export default function TakeQuiz({ loaderData }: Route.ComponentProps) {
     const { quiz } = loaderData;
+    const navigation = useNavigation();
+    const isSubmitting = navigation.state === "submitting";
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -220,12 +222,63 @@ export default function TakeQuiz({ loaderData }: Route.ComponentProps) {
 
                         <button
                             type="submit"
-                            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 px-8 rounded-lg shadow-lg transition-colors"
+                            disabled={isSubmitting}
+                            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-semibold py-4 px-8 rounded-lg shadow-lg transition-colors"
                         >
-                            Submit Quiz
+                            {isSubmitting ? "Submitting..." : "Submit Quiz"}
                         </button>
                     </Form>
                 </div>
+            </div>
+        </div>
+    );
+}
+
+export function ErrorBoundary() {
+    const error = useRouteError();
+
+    if (isRouteErrorResponse(error)) {
+        return (
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
+                <div className="max-w-md w-full text-center">
+                    <h1 className="text-6xl font-bold text-red-600 dark:text-red-400 mb-4">
+                        {error.status}
+                    </h1>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                        {error.statusText}
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-300 mb-8">
+                        {error.data}
+                    </p>
+                    <Link
+                        to="/quizzes"
+                        className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition-colors"
+                    >
+                        Back to Quizzes
+                    </Link>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
+            <div className="max-w-md w-full text-center">
+                <h1 className="text-6xl font-bold text-red-600 dark:text-red-400 mb-4">
+                    Error
+                </h1>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    Something went wrong
+                </h2>
+                <p className="text-gray-600 dark:text-gray-300 mb-8">
+                    We encountered an unexpected error. Please try again.
+                </p>
+                <Link
+                    to="/quizzes"
+                    className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition-colors"
+                >
+                    Back to Quizzes
+                </Link>
             </div>
         </div>
     );

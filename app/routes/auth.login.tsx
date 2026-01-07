@@ -1,5 +1,5 @@
 import type { Route } from "./+types/auth.login";
-import { Form, redirect, Link } from "react-router";
+import { Form, redirect, Link, useNavigation } from "react-router";
 import { verifyLogin } from "~/lib/auth.server";
 import { createUserSession, getUserId } from "~/lib/session.server";
 
@@ -72,6 +72,9 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 export default function Login({ loaderData, actionData }: Route.ComponentProps) {
+    const navigation = useNavigation();
+    const isSubmitting = navigation.state === "submitting";
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
             <div className="max-w-md w-full">
@@ -144,9 +147,10 @@ export default function Login({ loaderData, actionData }: Route.ComponentProps) 
 
                         <button
                             type="submit"
-                            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg shadow transition-colors"
+                            disabled={isSubmitting}
+                            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg shadow transition-colors"
                         >
-                            Log In
+                            {isSubmitting ? "Logging in..." : "Log In"}
                         </button>
                     </Form>
 
