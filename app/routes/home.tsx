@@ -1,18 +1,24 @@
 import type { Route } from "./+types/home";
-import { Link } from "react-router";
+import { Link, Form } from "react-router";
+import { getUser } from "~/lib/session.server";
 
 /**
  * Homepage Route
  * 
  * EXECUTION FLOW:
- * 1. No loader needed (static content)
- * 2. Component renders on server (SSR) and client (hydration)
+ * 1. LOADER checks if user is authenticated
+ * 2. Component renders with conditional auth UI
  * 
  * LEARNING POINTS:
- * - Not every route needs a loader
- * - Use loaders only when you need to fetch data
- * - Links use React Router's <Link> for client-side navigation
+ * - Loaders can fetch user session data
+ * - Conditional rendering based on authentication state
+ * - Form component for logout action
  */
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const user = await getUser(request);
+  return { user };
+}
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -21,10 +27,49 @@ export function meta({ }: Route.MetaArgs) {
   ];
 }
 
-export default function Home() {
+export default function Home({ loaderData }: Route.ComponentProps) {
+  const { user } = loaderData;
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-16">
+      {/* Header with Auth Links */}
+      <header className="container mx-auto px-4 py-6">
+        <div className="flex justify-end items-center gap-4">
+          {user ? (
+            // Authenticated user - show email and logout
+            <>
+              <span className="text-gray-700 dark:text-gray-300 font-medium">
+                {user.email}
+              </span>
+              <Form method="post" action="/auth/logout">
+                <button
+                  type="submit"
+                  className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 font-medium px-4 py-2 rounded-lg transition-colors"
+                >
+                  Log Out
+                </button>
+              </Form>
+            </>
+          ) : (
+            // Guest user - show login and signup
+            <>
+              <Link
+                to="/auth/login"
+                className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium px-4 py-2 rounded-lg transition-colors"
+              >
+                Log In
+              </Link>
+              <Link
+                to="/auth/register"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-lg shadow transition-colors"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
+        </div>
+      </header>
+
+      <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-6">
             Welcome to Wellness Tracker
