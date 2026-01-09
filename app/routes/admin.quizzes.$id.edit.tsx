@@ -330,7 +330,7 @@ export default function EditQuiz({ loaderData, actionData }: Route.ComponentProp
                                     Cover Image URL <span className="text-warm-gray-400 font-normal">(Optional)</span>
                                 </label>
                                 <input
-                                    type="url"
+                                    type="text"
                                     name="coverImage"
                                     defaultValue={quiz.coverImage}
                                     className="w-full px-4 py-2 rounded-xl border border-warm-gray-200 bg-warm-gray-50 text-warm-gray-900 focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all outline-none"
