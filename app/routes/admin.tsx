@@ -26,21 +26,21 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function AdminLayout() {
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
-            <nav className="bg-white dark:bg-gray-800 shadow-lg">
-                <div className="container mx-auto px-4">
+        <div className="min-h-screen bg-warm-white dark:bg-warm-gray-900">
+            <nav className="bg-white/80 dark:bg-warm-gray-800/80 backdrop-blur-md shadow-sm border-b border-warm-gray-100 dark:border-warm-gray-700 sticky top-0 z-50">
+                <div className="container mx-auto px-6">
                     <div className="flex items-center justify-between h-16">
                         <div className="flex items-center space-x-8">
                             <Link
                                 to="/admin/quizzes"
-                                className="text-xl font-bold text-indigo-600"
+                                className="text-xl font-bold text-sage-600 dark:text-sage-400"
                             >
                                 Admin Panel
                             </Link>
 
                             <Link
                                 to="/admin/quizzes"
-                                className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 font-medium"
+                                className="text-warm-gray-600 dark:text-warm-gray-300 hover:text-sage-600 dark:hover:text-sage-400 font-medium transition-colors"
                             >
                                 Quizzes
                             </Link>
@@ -48,7 +48,7 @@ export default function AdminLayout() {
 
                         <Link
                             to="/"
-                            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                            className="text-warm-gray-500 dark:text-warm-gray-400 hover:text-warm-gray-900 dark:hover:text-white transition-colors text-sm font-medium"
                         >
                             ← Back to Site
                         </Link>
@@ -56,7 +56,7 @@ export default function AdminLayout() {
                 </div>
             </nav>
 
-            <main className="container mx-auto px-4 py-8">
+            <main className="container mx-auto px-6 py-12">
                 {/* Child routes render here */}
                 <Outlet />
             </main>

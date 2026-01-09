@@ -1,6 +1,7 @@
 import type { Route } from "./+types/home";
 import { Link, Form } from "react-router";
 import { getUser } from "~/lib/session.server";
+import { Button } from "~/components/Button";
 
 /**
  * Homepage Route
@@ -23,117 +24,102 @@ export async function loader({ request }: Route.LoaderArgs) {
 export function meta({ }: Route.MetaArgs) {
   return [
     { title: "Wellness Tracker - Mental Health Quiz App" },
-    { name: "description", content: "Track your mental wellness with evidence-based quizzes" },
+    { name: "description", content: "Track your mental wellness with evidence-based tests" },
   ];
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
   const { user } = loaderData;
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen">
       {/* Header with Auth Links */}
-      <header className="container mx-auto px-4 py-6">
+      <header className="container mx-auto px-6 py-8">
         <div className="flex justify-end items-center gap-4">
           {user ? (
-            // Authenticated user - show email and logout
+            // Authenticated user
             <>
-              <span className="text-gray-700 dark:text-gray-300 font-medium">
+              {user.role === 'admin' && (
+                <Button to="/admin/quizzes" variant="ghost" size="sm">
+                  Admin Panel
+                </Button>
+              )}
+              <span className="text-warm-gray-600 font-medium tracking-wide">
                 {user.email}
               </span>
               <Form method="post" action="/auth/logout">
-                <button
-                  type="submit"
-                  className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 font-medium px-4 py-2 rounded-lg transition-colors"
-                >
+                <Button type="submit" variant="ghost" size="sm" className="text-warm-gray-500 hover:text-orange-500">
                   Log Out
-                </button>
+                </Button>
               </Form>
             </>
           ) : (
-            // Guest user - show login and signup
+            // Guest user
             <>
-              <Link
-                to="/auth/login"
-                className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium px-4 py-2 rounded-lg transition-colors"
-              >
+              <Button to="/auth/login" variant="ghost">
                 Log In
-              </Link>
-              <Link
-                to="/auth/register"
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-lg shadow transition-colors"
-              >
+              </Button>
+              <Button to="/auth/register" variant="primary">
                 Sign Up
-              </Link>
+              </Button>
             </>
           )}
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            Welcome to Wellness Tracker
+      <main className="container mx-auto px-6 py-12 lg:py-20">
+        <div className="max-w-3xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-warm-gray-900 mb-8 tracking-tight leading-tight">
+            You're in a safe space. <br className="hidden md:block" />
+            <span className="text-sage-600">Take your time.</span>
           </h1>
 
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-12">
-            Take evidence-based mental health quizzes and track your progress over time
+          <p className="text-xl md:text-2xl text-warm-gray-600 mb-12 leading-relaxed max-w-2xl mx-auto font-light">
+            Explore your mental wellness with evidence-based tests. <br /> No judgment, just understanding.
           </p>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-            <Link
-              to="/quizzes"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 px-8 rounded-lg shadow-lg transition-colors"
-            >
-              Browse Quizzes
-            </Link>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-24">
+            <Button to="/quizzes" size="lg" className="w-full sm:w-auto min-w-[200px]">
+              Browse Tests
+            </Button>
 
-            <Link
-              to="/progress"
-              className="bg-white hover:bg-gray-50 text-indigo-600 font-semibold py-4 px-8 rounded-lg shadow-lg border-2 border-indigo-600 transition-colors"
-            >
+            <Button to="/progress" variant="outline" size="lg" className="w-full sm:w-auto min-w-[200px]">
               View Progress
-            </Link>
+            </Button>
           </div>
 
-          <div className="mt-16 p-8 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              How It Works
-            </h2>
+          <div className="grid md:grid-cols-3 gap-8 text-left">
+            <div className="bg-white/50 dark:bg-warm-gray-800/50 p-8 rounded-3xl border border-warm-gray-100 dark:border-warm-gray-800 backdrop-blur-sm">
+              <div className="text-4xl font-bold text-sage-400 mb-4 opacity-50">01</div>
+              <h3 className="text-xl font-semibold text-warm-gray-900 mb-3">
+                Choose gently
+              </h3>
+              <p className="text-warm-gray-600 leading-relaxed">
+                Select a test that resonates with how you're feeling right now.
+              </p>
+            </div>
 
-            <div className="grid md:grid-cols-3 gap-6 text-left">
-              <div>
-                <div className="text-3xl font-bold text-indigo-600 mb-2">1</div>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-                  Take a Quiz
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  Choose from our evidence-based mental health assessments
-                </p>
-              </div>
+            <div className="bg-white/50 dark:bg-warm-gray-800/50 p-8 rounded-3xl border border-warm-gray-100 dark:border-warm-gray-800 backdrop-blur-sm">
+              <div className="text-4xl font-bold text-sage-400 mb-4 opacity-50">02</div>
+              <h3 className="text-xl font-semibold text-warm-gray-900 mb-3">
+                Answer freely
+              </h3>
+              <p className="text-warm-gray-600 leading-relaxed">
+                Reflect on your experiences in a quiet, unhurried environment.
+              </p>
+            </div>
 
-              <div>
-                <div className="text-3xl font-bold text-indigo-600 mb-2">2</div>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-                  Get Results
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  Receive your score and personalized insights
-                </p>
-              </div>
-
-              <div>
-                <div className="text-3xl font-bold text-indigo-600 mb-2">3</div>
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-                  Track Progress
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  Monitor your mental wellness journey over time
-                </p>
-              </div>
+            <div className="bg-white/50 dark:bg-warm-gray-800/50 p-8 rounded-3xl border border-warm-gray-100 dark:border-warm-gray-800 backdrop-blur-sm">
+              <div className="text-4xl font-bold text-sage-400 mb-4 opacity-50">03</div>
+              <h3 className="text-xl font-semibold text-warm-gray-900 mb-3">
+                See patterns
+              </h3>
+              <p className="text-warm-gray-600 leading-relaxed">
+                Gain insights into your wellness journey with soft, supportive visuals.
+              </p>
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

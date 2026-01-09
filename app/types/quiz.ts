@@ -8,6 +8,14 @@ import { ObjectId } from 'mongodb';
  * - No runtime code, just TypeScript types (no bundle impact)
  */
 
+export interface ScoreRange {
+    min: number;
+    max: number;
+    status: string; // e.g. "Needs care", "Steady"
+    description: string;
+    color: 'green' | 'yellow' | 'orange' | 'gray'; // For UI styling
+}
+
 export interface Quiz {
     _id?: ObjectId;
     title: string;
@@ -16,6 +24,12 @@ export interface Quiz {
     isPublished: boolean;
     createdAt: Date;
     updatedAt: Date;
+    baseTestName?: string;
+    shortName?: string;
+    instructions?: string;
+    scoreRanges?: ScoreRange[];
+    coverImage?: string;
+    order?: number;
 }
 
 export interface Question {
@@ -40,6 +54,12 @@ export interface SerializedQuiz {
     isPublished: boolean;
     createdAt: string;
     updatedAt: string;
+    baseTestName?: string;
+    shortName?: string;
+    instructions?: string;
+    scoreRanges?: ScoreRange[];
+    coverImage?: string;
+    order?: number;
 }
 
 /**
@@ -51,5 +71,8 @@ export function serializeQuiz(quiz: Quiz): SerializedQuiz {
         _id: quiz._id?.toString() || '',
         createdAt: quiz.createdAt.toISOString(),
         updatedAt: quiz.updatedAt.toISOString(),
+        scoreRanges: quiz.scoreRanges || [],
+        coverImage: quiz.coverImage,
+        order: quiz.order,
     };
 }

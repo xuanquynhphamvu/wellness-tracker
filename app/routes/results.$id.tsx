@@ -2,20 +2,13 @@ import type { Route } from "./+types/results.$id";
 import { Link } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import type { QuizResult, SerializedQuizResult } from "~/types/result";
-import type { Quiz } from "~/types/quiz";
+import { type Quiz, serializeQuiz } from "~/types/quiz";
 import { requireUser } from "~/lib/auth.server";
+import { Card } from "~/components/Card";
+import { Button } from "~/components/Button";
 
 /**
  * Quiz Results Route
- * 
- * EXECUTION FLOW:
- * 1. LOADER fetches result + quiz data
- * 2. COMPONENT displays score and insights
- * 
- * LEARNING POINTS:
- * - Loaders can fetch from multiple collections
- * - Join data on the server (not in the component)
- * - Type-safe params with Route.LoaderArgs
  */
 
 export async function loader({ request, params }: Route.LoaderArgs) {
@@ -38,7 +31,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
         throw new Response("Forbidden: You can only view your own results", { status: 403 });
     }
 
-    // Fetch the quiz to display title
+    // Fetch the quiz to display title and scoring logic
     const quizzes = await getCollection<Quiz>('quizzes');
     const quiz = await quizzes.findOne({ _id: result.quizId });
 
@@ -47,10 +40,10 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     }
 
     // Serialize for client
-    const serialized: SerializedQuizResult = {
+    const serializedResult: SerializedQuizResult = {
         _id: result._id!.toString(),
         quizId: result.quizId.toString(),
-        userId: result.userId.toString(),  // Convert ObjectId to string
+        userId: result.userId.toString(),
         sessionId: result.sessionId,
         answers: result.answers,
         score: result.score,
@@ -58,92 +51,148 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     };
 
     return {
-        result: serialized,
-        quizTitle: quiz.title,
-        maxScore: quiz.questions.length * 10, // Example calculation
+        result: serializedResult,
+        quiz: serializeQuiz(quiz),
     };
 }
 
 export function meta({ data }: Route.MetaArgs) {
     return [
-        { title: `Results - ${data?.quizTitle || 'Quiz'} - Wellness Tracker` },
+        { title: `Results - ${data?.quiz.title || 'Quiz'} - Wellness Tracker` },
     ];
 }
 
 export default function Results({ loaderData }: Route.ComponentProps) {
-    const { result, quizTitle, maxScore } = loaderData;
+    const { result, quiz } = loaderData;
+
+    // Calculate percentage (fallback standard max score if not specific)
+    const maxScore = quiz.questions.length * 10;
     const percentage = Math.round((result.score / maxScore) * 100);
 
+    // Determine Status
+    let status: {
+        label: string;
+        description: string;
+        color: 'green' | 'yellow' | 'orange' | 'gray' | 'indigo';
+    } = {
+        label: "Quiz Complete",
+        description: "Thank you for completing this assessment.",
+        color: "indigo"
+    };
+
+    if (quiz.scoreRanges && quiz.scoreRanges.length > 0) {
+        // Use Custom Logic
+        const matchedRange = quiz.scoreRanges.find(
+            r => result.score >= r.min && result.score <= r.max
+        );
+
+        if (matchedRange) {
+            status = {
+                label: matchedRange.status,
+                description: matchedRange.description,
+                color: matchedRange.color as any // Cast to match our limited palette
+            };
+        }
+    } else {
+        // Fallback Logic
+        if (percentage >= 70) {
+            status = {
+                label: "Doing Well",
+                description: "Your responses indicate positive mental wellness.",
+                color: "green"
+            };
+        } else if (percentage >= 40) {
+            status = {
+                label: "Moderate",
+                description: "Your responses suggest moderate wellness. Consider tracking your progress.",
+                color: "yellow"
+            };
+        } else {
+            status = {
+                label: "Needs Care",
+                description: "Your responses may indicate areas for improvement.",
+                color: "orange"
+            };
+        }
+    }
+
+    // Map color themes
+    const colorStyles = {
+        green: "bg-sage-100 text-sage-800 border-sage-200 rounded-3xl",
+        yellow: "bg-amber-100 text-amber-800 border-amber-200 rounded-3xl",
+        orange: "bg-orange-50 text-orange-700 border-orange-100 rounded-3xl",
+        gray: "bg-warm-gray-100 text-warm-gray-800 border-warm-gray-200 rounded-3xl",
+        indigo: "bg-slate-100 text-slate-800 border-slate-200 rounded-3xl" // Fallback
+    };
+
+    // Default to gray if color not found
+    const themeClass = colorStyles[status.color as keyof typeof colorStyles] || colorStyles.gray;
+
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="min-h-screen bg-warm-white">
             <div className="container mx-auto px-4 py-12">
-                <div className="max-w-3xl mx-auto">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 mb-8">
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                            Quiz Complete!
+                <div className="max-w-2xl mx-auto space-y-8">
+
+                    {/* Header Section */}
+                    <div className="text-center space-y-4">
+                        <div className="inline-block p-4 rounded-full bg-sage-50 text-sage-600 mb-2">
+                            <span className="text-4xl">✨</span>
+                        </div>
+                        <h1 className="text-3xl font-bold text-warm-gray-900">
+                            Reflection Complete
                         </h1>
-                        <p className="text-gray-600 dark:text-gray-300 mb-8">
-                            {quizTitle}
+                        <p className="text-warm-gray-600">
+                            {quiz.title}
                         </p>
-
-                        <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-8 text-center mb-8">
-                            <div className="text-6xl font-bold text-indigo-600 dark:text-indigo-400 mb-2">
-                                {result.score}
-                            </div>
-                            <div className="text-gray-600 dark:text-gray-300">
-                                out of {maxScore} points ({percentage}%)
-                            </div>
-                        </div>
-
-                        <div className="space-y-4">
-                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                                What This Means
-                            </h2>
-
-                            {percentage >= 70 && (
-                                <div className="bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 p-4">
-                                    <p className="text-green-800 dark:text-green-300">
-                                        Great job! Your responses indicate positive mental wellness.
-                                    </p>
-                                </div>
-                            )}
-
-                            {percentage >= 40 && percentage < 70 && (
-                                <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 p-4">
-                                    <p className="text-yellow-800 dark:text-yellow-300">
-                                        Your responses suggest moderate wellness. Consider tracking your progress over time.
-                                    </p>
-                                </div>
-                            )}
-
-                            {percentage < 40 && (
-                                <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4">
-                                    <p className="text-red-800 dark:text-red-300">
-                                        Your responses may indicate areas for improvement. Consider speaking with a mental health professional.
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="mt-8 text-sm text-gray-500 dark:text-gray-400">
-                            Completed on {new Date(result.completedAt).toLocaleDateString()} at{' '}
-                            {new Date(result.completedAt).toLocaleTimeString()}
-                        </div>
                     </div>
 
-                    <div className="flex gap-4">
-                        <Link
+                    {/* Main Score Card */}
+                    <Card className="overflow-hidden">
+                        <div className="p-8 text-center border-b border-warm-gray-100">
+                            <h2 className="text-sm font-semibold text-warm-gray-500 uppercase tracking-wider mb-2">
+                                Your Result
+                            </h2>
+                            <div className="text-6xl font-bold text-warm-gray-900 mb-2">
+                                {result.score}
+                            </div>
+                            <div className="text-warm-gray-500">
+                                Total Score
+                            </div>
+                        </div>
+
+                        <div className={`p-8 ${themeClass} border-t-0`}>
+                            <h3 className="text-xl font-bold mb-3 flex items-center justify-center gap-2">
+                                {status.label}
+                            </h3>
+                            <p className="text-center opacity-90 leading-relaxed">
+                                {status.description}
+                            </p>
+                        </div>
+                    </Card>
+
+                    {/* Navigation Actions */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Button
                             to="/quizzes"
-                            className="flex-1 bg-white hover:bg-gray-50 text-indigo-600 font-semibold py-3 px-6 rounded-lg shadow border-2 border-indigo-600 text-center transition-colors"
+                            variant="outline"
+                            size="lg"
+                            className="w-full justify-center"
                         >
-                            Take Another Quiz
-                        </Link>
-                        <Link
+                            Take Another Test
+                        </Button>
+                        <Button
                             to="/progress"
-                            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow text-center transition-colors"
+                            variant="primary"
+                            size="lg"
+                            className="w-full justify-center"
                         >
-                            View Progress
-                        </Link>
+                            View Journey
+                        </Button>
+                    </div>
+
+                    <div className="text-center text-sm text-warm-gray-400">
+                        Completed on {new Date(result.completedAt).toLocaleDateString()} at{' '}
+                        {new Date(result.completedAt).toLocaleTimeString()}
                     </div>
                 </div>
             </div>
