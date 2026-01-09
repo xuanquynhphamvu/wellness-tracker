@@ -37,6 +37,14 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           {user ? (
             // Authenticated user - show email and logout
             <>
+              {user.role === 'admin' && (
+                <Link
+                  to="/admin/quizzes"
+                  className="text-indigo-600 dark:text-indigo-400 font-semibold px-4 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors"
+                >
+                  Admin Panel
+                </Link>
+              )}
               <span className="text-gray-700 dark:text-gray-300 font-medium">
                 {user.email}
               </span>

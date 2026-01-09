@@ -121,6 +121,11 @@ export default function AdminQuizzes({ loaderData }: Route.ComponentProps) {
                                     <div className="flex items-center gap-3 mb-2">
                                         <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                                             {quiz.title}
+                                            {quiz.shortName && (
+                                                <span className="ml-2 text-sm font-normal text-gray-500 dark:text-gray-400">
+                                                    ({quiz.shortName})
+                                                </span>
+                                            )}
                                         </h2>
                                         <span
                                             className={`px-3 py-1 rounded-full text-xs font-semibold ${quiz.isPublished

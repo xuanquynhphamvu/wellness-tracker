@@ -42,6 +42,9 @@ export async function loader({ params }: Route.LoaderArgs) {
         isPublished: quiz.isPublished,
         createdAt: quiz.createdAt.toISOString(),
         updatedAt: quiz.updatedAt.toISOString(),
+        baseTestName: quiz.baseTestName,
+        shortName: quiz.shortName,
+        instructions: quiz.instructions,
     };
 
     return { quiz: serialized };
@@ -116,6 +119,9 @@ export async function action({ request, params }: Route.ActionArgs) {
             $set: {
                 title: String(title),
                 description: String(description),
+                baseTestName: formData.get('baseTestName') ? String(formData.get('baseTestName')) : undefined,
+                shortName: formData.get('shortName') ? String(formData.get('shortName')) : undefined,
+                instructions: formData.get('instructions') ? String(formData.get('instructions')) : undefined,
                 questions,
                 updatedAt: new Date(),
             },
@@ -220,6 +226,47 @@ export default function EditQuiz({ loaderData, actionData }: Route.ComponentProp
                                     {errors.description}
                                 </p>
                             )}
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                                    Full Name of Base Test <span className="text-gray-500 font-normal">(Optional)</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="baseTestName"
+                                    defaultValue={quiz.baseTestName}
+                                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    placeholder="e.g., Patient Health Questionnaire 9"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                                    Short Name <span className="text-gray-500 font-normal">(Optional)</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="shortName"
+                                    defaultValue={quiz.shortName}
+                                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    placeholder="e.g., PHQ-9"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                                Instructions <span className="text-gray-500 font-normal">(Optional)</span>
+                            </label>
+                            <textarea
+                                name="instructions"
+                                rows={3}
+                                defaultValue={quiz.instructions}
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                placeholder="Explain how users should answer..."
+                            />
                         </div>
                     </div>
                 </div>

@@ -16,6 +16,9 @@ export interface Quiz {
     isPublished: boolean;
     createdAt: Date;
     updatedAt: Date;
+    baseTestName?: string;
+    shortName?: string;
+    instructions?: string;
 }
 
 export interface Question {
@@ -40,6 +43,9 @@ export interface SerializedQuiz {
     isPublished: boolean;
     createdAt: string;
     updatedAt: string;
+    baseTestName?: string;
+    shortName?: string;
+    instructions?: string;
 }
 
 /**

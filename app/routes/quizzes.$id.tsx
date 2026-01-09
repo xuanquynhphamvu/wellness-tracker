@@ -53,6 +53,9 @@ export async function loader({ request, params }: Route.LoaderArgs) {
         isPublished: quiz.isPublished,
         createdAt: quiz.createdAt.toISOString(),
         updatedAt: quiz.updatedAt.toISOString(),
+        baseTestName: quiz.baseTestName,
+        shortName: quiz.shortName,
+        instructions: quiz.instructions,
     };
 
     return { quiz: serialized };
@@ -142,12 +145,32 @@ export default function TakeQuiz({ loaderData }: Route.ComponentProps) {
                         >
                             ← Back to Quizzes
                         </Link>
-                        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
                             {quiz.title}
+                            {quiz.shortName && (
+                                <span className="ml-3 text-2xl font-normal text-gray-500 dark:text-gray-400">
+                                    ({quiz.shortName})
+                                </span>
+                            )}
                         </h1>
-                        <p className="text-gray-600 dark:text-gray-300 text-lg">
+                        {quiz.baseTestName && (
+                            <p className="text-xl text-gray-500 dark:text-gray-400 mb-4">
+                                {quiz.baseTestName}
+                            </p>
+                        )}
+                        <p className="text-gray-600 dark:text-gray-300 text-lg mb-6">
                             {quiz.description}
                         </p>
+                        {quiz.instructions && (
+                            <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r">
+                                <h3 className="text-sm font-bold text-blue-800 dark:text-blue-300 uppercase tracking-wide mb-1">
+                                    Instructions
+                                </h3>
+                                <p className="text-blue-900 dark:text-blue-200">
+                                    {quiz.instructions}
+                                </p>
+                            </div>
+                        )}
                     </div>
 
                     {/* 

@@ -38,6 +38,8 @@ export async function loader({ }: Route.LoaderArgs) {
         isPublished: quiz.isPublished,
         createdAt: quiz.createdAt.toISOString(),
         updatedAt: quiz.updatedAt.toISOString(),
+        baseTestName: quiz.baseTestName,
+        shortName: quiz.shortName,
     }));
 
     return { quizzes: serialized };
@@ -91,7 +93,17 @@ export default function Quizzes({ loaderData }: Route.ComponentProps) {
                                 >
                                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                                         {quiz.title}
+                                        {quiz.shortName && (
+                                            <span className="ml-3 text-lg font-normal text-gray-500 dark:text-gray-400">
+                                                ({quiz.shortName})
+                                            </span>
+                                        )}
                                     </h2>
+                                    {quiz.baseTestName && (
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wide font-semibold">
+                                            {quiz.baseTestName}
+                                        </p>
+                                    )}
                                     <p className="text-gray-600 dark:text-gray-300 mb-4">
                                         {quiz.description}
                                     </p>
