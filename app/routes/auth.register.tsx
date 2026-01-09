@@ -2,6 +2,8 @@ import type { Route } from "./+types/auth.register";
 import { Form, redirect, Link, useNavigation } from "react-router";
 import { createUser } from "~/lib/auth.server";
 import { createUserSession, getUserId } from "~/lib/session.server";
+import { Button } from "~/components/Button";
+import { Card } from "~/components/Card";
 
 /**
  * Register Route
@@ -80,21 +82,23 @@ export default function Register({ actionData }: Route.ComponentProps) {
     const isSubmitting = navigation.state === "submitting";
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
+        <div className="min-h-screen flex items-center justify-center px-4 py-12">
             <div className="max-w-md w-full">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8">
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                <div className="text-center mb-8">
+                    <h1 className="text-3xl font-bold text-warm-gray-900 mb-2">
                         Create Account
                     </h1>
-                    <p className="text-gray-600 dark:text-gray-300 mb-8">
-                        Start tracking your wellness journey today
+                    <p className="text-warm-gray-600">
+                        Start your journey to wellness
                     </p>
+                </div>
 
+                <Card className="p-8">
                     <Form method="post" className="space-y-6">
                         {actionData?.errors?.form && (
-                            <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4">
-                                <p className="text-red-800 dark:text-red-300">
-                                    {actionData.errors.form}
+                            <div className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg">
+                                <p className="text-orange-800 text-sm">
+                                    {actionData?.errors?.form}
                                 </p>
                             </div>
                         )}
@@ -102,7 +106,7 @@ export default function Register({ actionData }: Route.ComponentProps) {
                         <div>
                             <label
                                 htmlFor="email"
-                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                className="block text-sm font-semibold text-warm-gray-700 mb-2"
                             >
                                 Email
                             </label>
@@ -112,11 +116,12 @@ export default function Register({ actionData }: Route.ComponentProps) {
                                 type="email"
                                 autoComplete="email"
                                 required
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+                                className="w-full px-4 py-3 rounded-xl border border-warm-gray-200 bg-warm-gray-50 text-warm-gray-900 focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all outline-none"
+                                placeholder="you@example.com"
                             />
                             {actionData?.errors?.email && (
-                                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                                    {actionData.errors.email}
+                                <p className="mt-1 text-sm text-orange-600">
+                                    {actionData?.errors?.email}
                                 </p>
                             )}
                         </div>
@@ -124,7 +129,7 @@ export default function Register({ actionData }: Route.ComponentProps) {
                         <div>
                             <label
                                 htmlFor="password"
-                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                className="block text-sm font-semibold text-warm-gray-700 mb-2"
                             >
                                 Password
                             </label>
@@ -134,11 +139,12 @@ export default function Register({ actionData }: Route.ComponentProps) {
                                 type="password"
                                 autoComplete="new-password"
                                 required
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+                                className="w-full px-4 py-3 rounded-xl border border-warm-gray-200 bg-warm-gray-50 text-warm-gray-900 focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all outline-none"
+                                placeholder="••••••••"
                             />
                             {actionData?.errors?.password && (
-                                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                                    {actionData.errors.password}
+                                <p className="mt-1 text-sm text-orange-600">
+                                    {actionData?.errors?.password}
                                 </p>
                             )}
                         </div>
@@ -146,7 +152,7 @@ export default function Register({ actionData }: Route.ComponentProps) {
                         <div>
                             <label
                                 htmlFor="confirmPassword"
-                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                className="block text-sm font-semibold text-warm-gray-700 mb-2"
                             >
                                 Confirm Password
                             </label>
@@ -156,44 +162,43 @@ export default function Register({ actionData }: Route.ComponentProps) {
                                 type="password"
                                 autoComplete="new-password"
                                 required
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+                                className="w-full px-4 py-3 rounded-xl border border-warm-gray-200 bg-warm-gray-50 text-warm-gray-900 focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all outline-none"
+                                placeholder="••••••••"
                             />
                             {actionData?.errors?.confirmPassword && (
-                                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                                    {actionData.errors.confirmPassword}
+                                <p className="mt-1 text-sm text-orange-600">
+                                    {actionData?.errors?.confirmPassword}
                                 </p>
                             )}
                         </div>
 
-                        <button
+                        <Button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg shadow transition-colors"
+                            className="w-full justify-center"
+                            size="lg"
                         >
                             {isSubmitting ? "Creating Account..." : "Create Account"}
-                        </button>
+                        </Button>
                     </Form>
+                </Card>
 
-                    <div className="mt-6 text-center">
-                        <p className="text-gray-600 dark:text-gray-400">
-                            Already have an account?{' '}
-                            <Link
-                                to="/auth/login"
-                                className="text-indigo-600 hover:text-indigo-700 font-medium"
-                            >
-                                Log in
-                            </Link>
-                        </p>
-                    </div>
-
-                    <div className="mt-4 text-center">
+                <div className="mt-8 text-center space-y-4">
+                    <p className="text-warm-gray-600">
+                        Already have an account?{' '}
                         <Link
-                            to="/"
-                            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-sm"
+                            to="/auth/login"
+                            className="text-sage-600 hover:text-sage-700 font-semibold transition-colors"
                         >
-                            ← Back to home
+                            Log in
                         </Link>
-                    </div>
+                    </p>
+                    <Link
+                        to="/"
+                        className="inline-block text-warm-gray-500 hover:text-warm-gray-700 text-sm transition-colors"
+                    >
+                        ← Back to home
+                    </Link>
                 </div>
             </div>
         </div>

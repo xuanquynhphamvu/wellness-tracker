@@ -1,4 +1,5 @@
 import type { Route } from "./+types/quizzes.$id";
+import React from "react";
 import { Form, redirect, Link, useNavigation, isRouteErrorResponse, useRouteError } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import type { Quiz, SerializedQuiz } from "~/types/quiz";
@@ -133,78 +134,95 @@ export default function TakeQuiz({ loaderData }: Route.ComponentProps) {
     const { quiz } = loaderData;
     const navigation = useNavigation();
     const isSubmitting = navigation.state === "submitting";
+    const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0);
+
+    const questions = quiz.questions;
+    const currentQuestion = questions[currentQuestionIndex];
+    const isFirst = currentQuestionIndex === 0;
+    const isLast = currentQuestionIndex === questions.length - 1;
+    const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+
+    const handleNext = (e: React.MouseEvent) => {
+        e.preventDefault();
+        // Validation logic could go here
+        if (!isLast) {
+            setCurrentQuestionIndex(prev => prev + 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    const handlePrevious = (e: React.MouseEvent) => {
+        e.preventDefault();
+        if (!isFirst) {
+            setCurrentQuestionIndex(prev => prev - 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-            <div className="container mx-auto px-4 py-12">
-                <div className="max-w-3xl mx-auto">
+        <div className="min-h-screen bg-warm-white transition-colors duration-500">
+            <div className="container mx-auto px-6 py-8 md:py-12">
+                <div className="max-w-2xl mx-auto">
+                    {/* Header / Progress */}
+                    <div className="mb-12">
+                        <div className="flex justify-between items-center mb-6">
+                            <Link
+                                to="/quizzes"
+                                className="text-warm-gray-500 hover:text-warm-gray-800 transition-colors text-sm font-medium"
+                            >
+                                Cancel & Exit
+                            </Link>
+                            <span className="text-warm-gray-400 text-sm font-medium">
+                                {currentQuestionIndex + 1} of {questions.length}
+                            </span>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div className="h-1.5 bg-warm-gray-100 rounded-full overflow-hidden">
+                            <div
+                                className="h-full bg-sage-500 transition-all duration-700 ease-out rounded-full"
+                                style={{ width: `${progress}%` }}
+                            />
+                        </div>
+                    </div>
+
                     <div className="mb-8">
-                        <Link
-                            to="/quizzes"
-                            className="text-indigo-600 hover:text-indigo-700 font-medium mb-4 inline-block"
-                        >
-                            ← Back to Quizzes
-                        </Link>
-                        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                        <h1 className="text-xl font-medium text-warm-gray-500 mb-1">
                             {quiz.title}
-                            {quiz.shortName && (
-                                <span className="ml-3 text-2xl font-normal text-gray-500 dark:text-gray-400">
-                                    ({quiz.shortName})
-                                </span>
-                            )}
                         </h1>
-                        {quiz.baseTestName && (
-                            <p className="text-xl text-gray-500 dark:text-gray-400 mb-4">
-                                {quiz.baseTestName}
-                            </p>
-                        )}
-                        <p className="text-gray-600 dark:text-gray-300 text-lg mb-6">
-                            {quiz.description}
-                        </p>
-                        {quiz.instructions && (
-                            <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r">
-                                <h3 className="text-sm font-bold text-blue-800 dark:text-blue-300 uppercase tracking-wide mb-1">
-                                    Instructions
-                                </h3>
-                                <p className="text-blue-900 dark:text-blue-200">
-                                    {quiz.instructions}
-                                </p>
-                            </div>
-                        )}
                     </div>
 
                     {/* 
-            LEARNING POINT: <Form> component
-            - method="post" triggers the action function
-            - No need for onSubmit handler or fetch
-            - Progressive enhancement: works without JS
-          */}
+                      Keep Form for submission, but visual wizard.
+                      We hide non-active questions with display:none 
+                      so they are still submitted.
+                    */}
                     <Form method="post" className="space-y-8">
-                        {quiz.questions.map((question, index) => (
+                        {questions.map((question, index) => (
                             <div
                                 key={question.id}
-                                className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6"
+                                className={index === currentQuestionIndex ? "block animate-in fade-in slide-in-from-bottom-4 duration-500" : "hidden"}
                             >
-                                <label className="block mb-4">
-                                    <span className="text-lg font-semibold text-gray-900 dark:text-white">
-                                        {index + 1}. {question.text}
+                                <div className="mb-10">
+                                    <span className="block text-4xl md:text-5xl font-bold text-warm-gray-900 mb-8 leading-tight">
+                                        {question.text}
                                     </span>
 
                                     {question.type === 'multiple-choice' && question.options && (
-                                        <div className="mt-4 space-y-2">
+                                        <div className="space-y-4">
                                             {question.options.map((option) => (
                                                 <label
                                                     key={option}
-                                                    className="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                                                    className="flex items-center p-6 rounded-2xl border-2 border-transparent bg-white hover:border-sage-200 hover:bg-sage-50 cursor-pointer transition-all duration-200 group shadow-sm"
                                                 >
                                                     <input
                                                         type="radio"
                                                         name={`question_${question.id}`}
                                                         value={option}
                                                         required
-                                                        className="mr-3"
+                                                        className="w-5 h-5 text-sage-600 border-warm-gray-300 focus:ring-sage-500 transition-colors"
                                                     />
-                                                    <span className="text-gray-700 dark:text-gray-300">
+                                                    <span className="ml-4 text-xl text-warm-gray-700 group-hover:text-warm-gray-900">
                                                         {option}
                                                     </span>
                                                 </label>
@@ -213,7 +231,7 @@ export default function TakeQuiz({ loaderData }: Route.ComponentProps) {
                                     )}
 
                                     {question.type === 'scale' && (
-                                        <div className="mt-4">
+                                        <div className="space-y-8 py-4">
                                             <input
                                                 type="range"
                                                 name={`question_${question.id}`}
@@ -221,11 +239,11 @@ export default function TakeQuiz({ loaderData }: Route.ComponentProps) {
                                                 max={question.scaleMax || 10}
                                                 defaultValue={Math.floor(((question.scaleMin || 1) + (question.scaleMax || 10)) / 2)}
                                                 required
-                                                className="w-full"
+                                                className="w-full h-3 bg-warm-gray-200 rounded-lg appearance-none cursor-pointer accent-sage-600"
                                             />
-                                            <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-2">
-                                                <span>{question.scaleMin || 1}</span>
-                                                <span>{question.scaleMax || 10}</span>
+                                            <div className="flex justify-between text-warm-gray-500 font-medium">
+                                                <span>{question.scaleMin || 1} (Low)</span>
+                                                <span>{question.scaleMax || 10} (High)</span>
                                             </div>
                                         </div>
                                     )}
@@ -234,22 +252,44 @@ export default function TakeQuiz({ loaderData }: Route.ComponentProps) {
                                         <textarea
                                             name={`question_${question.id}`}
                                             required
-                                            rows={4}
-                                            className="mt-4 w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                                            placeholder="Type your answer here..."
+                                            rows={6}
+                                            className="w-full text-xl p-6 rounded-2xl border-2 border-warm-gray-100 bg-white focus:border-sage-400 focus:ring-0 transition-all placeholder:text-warm-gray-300"
+                                            placeholder="Type your answer gently here..."
                                         />
                                     )}
-                                </label>
+                                </div>
                             </div>
                         ))}
 
-                        <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-semibold py-4 px-8 rounded-lg shadow-lg transition-colors"
-                        >
-                            {isSubmitting ? "Submitting..." : "Submit Quiz"}
-                        </button>
+                        <div className="flex justify-between items-center pt-8">
+                            <button
+                                type="button"
+                                onClick={handlePrevious}
+                                disabled={isFirst}
+                                className={`text-warm-gray-500 font-medium px-6 py-3 rounded-full hover:bg-warm-gray-100 transition-colors ${isFirst ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                                    }`}
+                            >
+                                Back
+                            </button>
+
+                            {isLast ? (
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="bg-sage-600 text-white font-semibold text-lg px-10 py-4 rounded-full shadow-lg hover:bg-sage-700 hover:scale-105 active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {isSubmitting ? "Completing..." : "Complete Reflection"}
+                                </button>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={handleNext}
+                                    className="bg-sage-600 text-white font-semibold text-lg px-10 py-4 rounded-full shadow-lg hover:bg-sage-700 hover:scale-105 active:scale-95 transition-all duration-300"
+                                >
+                                    Next Question
+                                </button>
+                            )}
+                        </div>
                     </Form>
                 </div>
             </div>
@@ -264,7 +304,7 @@ export function ErrorBoundary() {
         return (
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
                 <div className="max-w-md w-full text-center">
-                    <h1 className="text-6xl font-bold text-red-600 dark:text-red-400 mb-4">
+                    <h1 className="text-6xl font-bold text-orange-600 dark:text-orange-400 mb-4">
                         {error.status}
                     </h1>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -287,7 +327,7 @@ export function ErrorBoundary() {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
             <div className="max-w-md w-full text-center">
-                <h1 className="text-6xl font-bold text-red-600 dark:text-red-400 mb-4">
+                <h1 className="text-6xl font-bold text-orange-600 dark:text-orange-400 mb-4">
                     Error
                 </h1>
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">

@@ -5,9 +5,10 @@ interface QuestionEditorProps {
     index: number;
     onChange: (index: number, updatedQuestion: Question) => void;
     onRemove: (index: number) => void;
+    onDuplicate: (index: number) => void;
 }
 
-export function QuestionEditor({ question, index, onChange, onRemove }: QuestionEditorProps) {
+export function QuestionEditor({ question, index, onChange, onRemove, onDuplicate }: QuestionEditorProps) {
     const updateQuestion = (updates: Partial<Question>) => {
         onChange(index, { ...question, ...updates });
     };
@@ -39,13 +40,22 @@ export function QuestionEditor({ question, index, onChange, onRemove }: Question
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                     Question {index + 1}
                 </h3>
-                <button
-                    type="button"
-                    onClick={() => onRemove(index)}
-                    className="text-red-600 hover:text-red-700 font-medium"
-                >
-                    Remove
-                </button>
+                <div className="flex gap-2">
+                    <button
+                        type="button"
+                        onClick={() => onDuplicate(index)}
+                        className="text-sage-600 hover:text-sage-700 font-medium"
+                    >
+                        Duplicate
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => onRemove(index)}
+                        className="text-orange-600 hover:text-orange-700 font-medium"
+                    >
+                        Remove
+                    </button>
+                </div>
             </div>
 
             {/* Question Text */}
@@ -118,7 +128,7 @@ export function QuestionEditor({ question, index, onChange, onRemove }: Question
                                     <button
                                         type="button"
                                         onClick={() => removeOption(optionIndex)}
-                                        className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg"
+                                        className="px-3 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg"
                                     >
                                         ✕
                                     </button>
@@ -129,7 +139,7 @@ export function QuestionEditor({ question, index, onChange, onRemove }: Question
                     <button
                         type="button"
                         onClick={addOption}
-                        className="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"
+                        className="mt-2 px-4 py-2 bg-sage-500 hover:bg-sage-600 text-white rounded-lg font-medium"
                     >
                         + Add Option
                     </button>
@@ -166,8 +176,8 @@ export function QuestionEditor({ question, index, onChange, onRemove }: Question
 
             {/* Text Response Info */}
             {question.type === 'text' && (
-                <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4">
-                    <p className="text-sm text-blue-800 dark:text-blue-300">
+                <div className="bg-sage-50 dark:bg-sage-900/20 border-l-4 border-sage-500 p-4">
+                    <p className="text-sm text-sage-800 dark:text-sage-300">
                         Text responses allow users to type free-form answers. No scoring is applied.
                     </p>
                 </div>

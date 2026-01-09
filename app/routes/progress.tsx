@@ -1,6 +1,8 @@
 import type { Route } from "./+types/progress";
 import { Link } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
+import { Button } from "~/components/Button";
+import { Card } from "~/components/Card";
 import type { QuizResult } from "~/types/result";
 import type { Quiz } from "~/types/quiz";
 import { requireUser } from "~/lib/auth.server";
@@ -105,23 +107,23 @@ export function meta({ }: Route.MetaArgs) {
 function TrendIndicator({ trend }: { trend: Trend }) {
     if (trend === 'improving') {
         return (
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                ↗️ Improving
+            <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-sage-100 text-sage-800">
+                ↗️ Finding balance
             </span>
         );
     }
 
     if (trend === 'declining') {
         return (
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
-                ↘️ Declining
+            <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-warm-gray-100 text-warm-gray-800">
+                ↘️ Needs care
             </span>
         );
     }
 
     return (
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-            → Stable
+        <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-warm-gray-50 text-warm-gray-600">
+            → Steady
         </span>
     );
 }
@@ -164,7 +166,7 @@ function ProgressCard({ progress }: { progress: QuizProgress }) {
                 </div>
                 <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
                     <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Worst</p>
-                    <p className="text-2xl font-bold text-red-600 dark:text-red-400">{progress.worst}</p>
+                    <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{progress.worst}</p>
                 </div>
             </div>
 
@@ -175,8 +177,8 @@ function ProgressCard({ progress }: { progress: QuizProgress }) {
                         Change from first attempt:
                     </span>
                     <span className={`text-lg font-semibold ${progress.change > 0 ? 'text-green-600 dark:text-green-400' :
-                            progress.change < 0 ? 'text-red-600 dark:text-red-400' :
-                                'text-gray-600 dark:text-gray-400'
+                        progress.change < 0 ? 'text-orange-600 dark:text-orange-400' :
+                            'text-gray-600 dark:text-gray-400'
                         }`}>
                         {progress.change > 0 ? '+' : ''}{progress.change}
                     </span>
@@ -190,26 +192,32 @@ export default function Progress({ loaderData }: Route.ComponentProps) {
     const { progressByQuiz } = loaderData;
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-            <div className="container mx-auto px-4 py-12">
+        <div className="min-h-screen">
+            <div className="container mx-auto px-6 py-12">
                 <div className="max-w-4xl mx-auto">
-                    <div className="flex justify-between items-center mb-8">
-                        <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-                            Your Progress
-                        </h1>
-                        <Link
+                    <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+                        <div>
+                            <h1 className="text-3xl md:text-4xl font-bold text-warm-gray-900 mb-2">
+                                Your Journey
+                            </h1>
+                            <p className="text-warm-gray-600">
+                                See how you've been doing — gently.
+                            </p>
+                        </div>
+                        <Button
                             to="/"
-                            className="text-indigo-600 hover:text-indigo-700 font-medium"
+                            variant="ghost"
+                            size="sm"
                         >
                             ← Back to Home
-                        </Link>
+                        </Button>
                     </div>
 
                     {progressByQuiz.length === 0 ? (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-12 text-center">
-                            <div className="mb-6">
+                        <Card className="p-12 text-center bg-white/50 backdrop-blur-sm">
+                            <div className="mb-6 inline-flex p-4 rounded-full bg-sage-50 text-sage-300">
                                 <svg
-                                    className="mx-auto h-24 w-24 text-gray-400"
+                                    className="h-12 w-12"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
@@ -217,26 +225,27 @@ export default function Progress({ loaderData }: Route.ComponentProps) {
                                     <path
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
-                                        strokeWidth={2}
+                                        strokeWidth={1.5}
                                         d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                                     />
                                 </svg>
                             </div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                                No Progress Yet
+                            <h2 className="text-2xl font-bold text-warm-gray-900 mb-4">
+                                Your journey begins here
                             </h2>
-                            <p className="text-gray-600 dark:text-gray-300 mb-6">
-                                You haven't taken any quizzes yet. Start your wellness journey by taking your first quiz!
+                            <p className="text-warm-gray-600 mb-8 max-w-md mx-auto">
+                                You haven't taken any quizzes yet. Take a moment to check in with yourself.
                             </p>
-                            <Link
+                            <Button
                                 to="/quizzes"
-                                className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg shadow transition-colors"
+                                variant="primary"
+                                size="lg"
                             >
-                                Browse Quizzes
-                            </Link>
-                        </div>
+                                Browse Assessments
+                            </Button>
+                        </Card>
                     ) : (
-                        <div className="space-y-6">
+                        <div className="space-y-8">
                             {progressByQuiz.map((progress) => (
                                 <ProgressCard key={progress.quizId} progress={progress} />
                             ))}

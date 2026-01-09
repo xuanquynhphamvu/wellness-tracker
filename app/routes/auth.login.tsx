@@ -2,6 +2,8 @@ import type { Route } from "./+types/auth.login";
 import { Form, redirect, Link, useNavigation } from "react-router";
 import { verifyLogin } from "~/lib/auth.server";
 import { createUserSession, getUserId } from "~/lib/session.server";
+import { Button } from "~/components/Button";
+import { Card } from "~/components/Card";
 
 /**
  * Login Route
@@ -76,16 +78,18 @@ export default function Login({ loaderData, actionData }: Route.ComponentProps) 
     const isSubmitting = navigation.state === "submitting";
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
+        <div className="min-h-screen flex items-center justify-center px-4 py-12">
             <div className="max-w-md w-full">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8">
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                <div className="text-center mb-8">
+                    <h1 className="text-3xl font-bold text-warm-gray-900 mb-2">
                         Welcome Back
                     </h1>
-                    <p className="text-gray-600 dark:text-gray-300 mb-8">
-                        Log in to track your wellness journey
+                    <p className="text-warm-gray-600">
+                        Log in to continue your journey
                     </p>
+                </div>
 
+                <Card className="p-8">
                     <Form method="post" className="space-y-6">
                         <input
                             type="hidden"
@@ -94,8 +98,8 @@ export default function Login({ loaderData, actionData }: Route.ComponentProps) 
                         />
 
                         {actionData?.errors?.form && (
-                            <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4">
-                                <p className="text-red-800 dark:text-red-300">
+                            <div className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg">
+                                <p className="text-orange-800 text-sm">
                                     {actionData.errors.form}
                                 </p>
                             </div>
@@ -104,7 +108,7 @@ export default function Login({ loaderData, actionData }: Route.ComponentProps) 
                         <div>
                             <label
                                 htmlFor="email"
-                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                className="block text-sm font-semibold text-warm-gray-700 mb-2"
                             >
                                 Email
                             </label>
@@ -114,10 +118,11 @@ export default function Login({ loaderData, actionData }: Route.ComponentProps) 
                                 type="email"
                                 autoComplete="email"
                                 required
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+                                className="w-full px-4 py-3 rounded-xl border border-warm-gray-200 bg-warm-gray-50 text-warm-gray-900 focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all outline-none"
+                                placeholder="you@example.com"
                             />
                             {actionData?.errors?.email && (
-                                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                                <p className="mt-1 text-sm text-orange-600">
                                     {actionData.errors.email}
                                 </p>
                             )}
@@ -126,7 +131,7 @@ export default function Login({ loaderData, actionData }: Route.ComponentProps) 
                         <div>
                             <label
                                 htmlFor="password"
-                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                className="block text-sm font-semibold text-warm-gray-700 mb-2"
                             >
                                 Password
                             </label>
@@ -136,44 +141,43 @@ export default function Login({ loaderData, actionData }: Route.ComponentProps) 
                                 type="password"
                                 autoComplete="current-password"
                                 required
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+                                className="w-full px-4 py-3 rounded-xl border border-warm-gray-200 bg-warm-gray-50 text-warm-gray-900 focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all outline-none"
+                                placeholder="••••••••"
                             />
                             {actionData?.errors?.password && (
-                                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                                <p className="mt-1 text-sm text-orange-600">
                                     {actionData.errors.password}
                                 </p>
                             )}
                         </div>
 
-                        <button
+                        <Button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg shadow transition-colors"
+                            className="w-full justify-center"
+                            size="lg"
                         >
                             {isSubmitting ? "Logging in..." : "Log In"}
-                        </button>
+                        </Button>
                     </Form>
+                </Card>
 
-                    <div className="mt-6 text-center">
-                        <p className="text-gray-600 dark:text-gray-400">
-                            Don't have an account?{' '}
-                            <Link
-                                to="/auth/register"
-                                className="text-indigo-600 hover:text-indigo-700 font-medium"
-                            >
-                                Sign up
-                            </Link>
-                        </p>
-                    </div>
-
-                    <div className="mt-4 text-center">
+                <div className="mt-8 text-center space-y-4">
+                    <p className="text-warm-gray-600">
+                        Don't have an account?{' '}
                         <Link
-                            to="/"
-                            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-sm"
+                            to="/auth/register"
+                            className="text-sage-600 hover:text-sage-700 font-semibold transition-colors"
                         >
-                            ← Back to home
+                            Sign up
                         </Link>
-                    </div>
+                    </p>
+                    <Link
+                        to="/"
+                        className="inline-block text-warm-gray-500 hover:text-warm-gray-700 text-sm transition-colors"
+                    >
+                        ← Back to home
+                    </Link>
                 </div>
             </div>
         </div>
