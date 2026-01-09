@@ -6,6 +6,7 @@ import type { Quiz, SerializedQuiz } from "~/types/quiz";
 import type { QuizResult } from "~/types/result";
 import { data } from "react-router";
 import { requireUser } from "~/lib/auth.server";
+import { calculateScore } from "~/utils/scoring";
 
 /**
  * Take Quiz Route (Dynamic Route)
@@ -75,10 +76,6 @@ export async function action({ request, params }: Route.ActionArgs) {
         throw new Response("Quiz ID is required", { status: 400 });
     }
 
-    // Extract answers from form data
-    const answers: { questionId: string; answer: string | number }[] = [];
-    let totalScore = 0;
-
     // Get quiz to access score mappings
     const quizzes = await getCollection<Quiz>('quizzes');
     const quiz = await quizzes.findOne({ _id: new ObjectId(quizId) });
@@ -87,28 +84,8 @@ export async function action({ request, params }: Route.ActionArgs) {
         throw new Response("Quiz not found", { status: 404 });
     }
 
-    // Calculate score based on answers
-    quiz.questions.forEach((question) => {
-        const answer = formData.get(`question_${question.id}`);
-
-        if (answer) {
-            const answerValue = question.type === 'scale'
-                ? Number(answer)
-                : String(answer);
-
-            answers.push({
-                questionId: question.id,
-                answer: answerValue,
-            });
-
-            // Calculate score if mapping exists
-            if (question.scoreMapping && typeof answerValue === 'string') {
-                totalScore += question.scoreMapping[answerValue] || 0;
-            } else if (question.type === 'scale' && typeof answerValue === 'number') {
-                totalScore += answerValue;
-            }
-        }
-    });
+    // Calculate score using utility
+    const { totalScore, answers } = calculateScore(formData, quiz.questions, quiz.scoreRanges || []);
 
     // Save result to database (linked to user)
     const results = await getCollection<QuizResult>('results');
