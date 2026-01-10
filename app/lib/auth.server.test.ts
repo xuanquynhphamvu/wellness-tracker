@@ -9,8 +9,6 @@ import {
     requireUser
 } from './auth.server';
 import { ObjectId } from 'mongodb';
-import bcrypt from 'bcrypt';
-import { getUserId } from './session.server';
 
 // Define mocks using vi.hoisted so they can be accessed inside vi.mock factory
 const hoistedMocks = vi.hoisted(() => ({
@@ -170,8 +168,8 @@ describe('auth.server', () => {
             try {
                 await requireUser(request);
                 expect(true).toBe(false); // Should throw
-            } catch (response: any) {
-                expect(response.status).toBe(302);
+            } catch (response: unknown) {
+                expect((response as Response).status).toBe(302);
             }
         });
     });

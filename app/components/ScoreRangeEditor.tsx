@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React from "react";
 import type { ScoreRange } from "~/types/quiz";
 import { Button } from "./Button";
 import { Card } from "./Card";
@@ -28,7 +28,7 @@ export function ScoreRangeEditor({ scoreRanges, onChange }: ScoreRangeEditorProp
     };
 
     // Update a specific range
-    const updateRange = (index: number, field: keyof ScoreRange, value: any) => {
+    const updateRange = (index: number, field: keyof ScoreRange, value: string | number) => {
         const newRanges = [...scoreRanges];
         newRanges[index] = { ...newRanges[index], [field]: value };
         onChange(newRanges);
@@ -100,7 +100,7 @@ export function ScoreRangeEditor({ scoreRanges, onChange }: ScoreRangeEditorProp
 
                                 <div>
                                     <label className="block text-xs font-semibold text-warm-gray-600 mb-1">
-                                        Status Label (e.g., "High Risk")
+                                        Status Label (e.g., &ldquo;High Risk&rdquo;)
                                     </label>
                                     <input
                                         type="text"

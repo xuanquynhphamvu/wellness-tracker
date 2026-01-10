@@ -1,7 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
+import React from 'react';
 import Progress, { loader } from './progress';
+import type { Route } from './+types/progress';
 import type { Trend } from '~/lib/progress.server';
 
 // Mock dependencies using vi.hoisted to ensure availability
@@ -9,10 +11,12 @@ const mocks = vi.hoisted(() => ({
     requireUser: vi.fn(),
     getCollection: vi.fn(),
     ObjectId: class {
-        id: any;
-        constructor(id: any) { this.id = id; }
+        id: string | number;
+        constructor(id: string | number) { this.id = id; }
         toString() { return String(this.id); }
-        equals(other: any) { return String(this.id) === String(other); }
+        equals(other: string | number | { id: string | number }) { 
+            return String(this.id) === String(typeof other === 'object' ? other.id : other); 
+        }
     }
 }));
 
@@ -27,7 +31,7 @@ vi.mock('~/lib/db.server', () => ({
 
 // Mock progress server utils
 vi.mock('~/lib/progress.server', () => ({
-    calculateProgressStats: (scores: number[], dates: Date[]) => ({
+    calculateProgressStats: (scores: number[]) => ({
         average: 15,
         best: 20,
         worst: 10,
@@ -71,7 +75,7 @@ describe('Progress Route', () => {
             mockToArray.mockResolvedValue([]); // No results
 
             const request = new Request('http://localhost/progress');
-            const result = await loader({ request: request as any, params: {} as any, context: {} as any });
+            const result = await loader({ request, params: {}, context: {} } as Route.LoaderArgs);
 
             expect(result.progressByQuiz).toEqual([]);
             expect(mocks.getCollection).toHaveBeenCalledWith('results');
@@ -102,7 +106,7 @@ describe('Progress Route', () => {
             mockFindOne.mockResolvedValue({ _id: new mocks.ObjectId('quiz1'), title: 'Test Quiz' });
 
             const request = new Request('http://localhost/progress');
-            const result = await loader({ request: request as any, params: {} as any, context: {} as any });
+            const result = await loader({ request, params: {}, context: {} } as Route.LoaderArgs);
 
             expect(result.progressByQuiz).toHaveLength(1);
             expect(result.progressByQuiz[0]).toMatchObject({
@@ -142,7 +146,7 @@ describe('Progress Route', () => {
             });
 
             const request = new Request('http://localhost/progress');
-            const result = await loader({ request: request as any, params: {} as any, context: {} as any });
+            const result = await loader({ request, params: {}, context: {} } as Route.LoaderArgs);
 
             expect(result.progressByQuiz).toHaveLength(2);
             expect(result.progressByQuiz[0].quizId).toBe('quiz2'); // Newer one first
@@ -155,7 +159,7 @@ describe('Progress Route', () => {
             const router = createMemoryRouter([
                 {
                     path: '/progress',
-                    element: <Progress loaderData={{ progressByQuiz: [] }} actionData={undefined} params={{} as any} matches={[] as any} />
+                    element: <Progress {...{ loaderData: { progressByQuiz: [] }, params: {}, matches: [] } as unknown as Route.ComponentProps} />
                 }
             ], { initialEntries: ['/progress'] });
 
@@ -184,7 +188,7 @@ describe('Progress Route', () => {
             const router = createMemoryRouter([
                 {
                     path: '/progress',
-                    element: <Progress loaderData={{ progressByQuiz: mockProgress }} actionData={undefined} params={{} as any} matches={[] as any} />
+                    element: <Progress {...{ loaderData: { progressByQuiz: mockProgress }, params: {}, matches: [] } as unknown as Route.ComponentProps} />
                 }
             ], { initialEntries: ['/progress'] });
 

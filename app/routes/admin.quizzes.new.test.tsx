@@ -35,7 +35,7 @@ vi.mock('node:crypto', () => ({
 
 // Mock child components to simplify integration testing
 vi.mock('~/components/QuestionEditor', () => ({
-    QuestionEditor: ({ question, onDuplicate, onRemove }: any) => (
+    QuestionEditor: ({ question, onDuplicate, onRemove }: { question: { id: string; text?: string }; onDuplicate: (index: number) => void; onRemove: (index: number) => void }) => (
         <div data-testid={`question-${question.id}`}>
             <div>{question.text || 'New Question'}</div>
             <button onClick={() => onDuplicate(0)}>Duplicate</button>
@@ -45,7 +45,7 @@ vi.mock('~/components/QuestionEditor', () => ({
 }));
 
 vi.mock('~/components/ScoreRangeEditor', () => ({
-    ScoreRangeEditor: ({ onChange }: any) => (
+    ScoreRangeEditor: ({ onChange }: { onChange: (ranges: unknown[]) => void }) => (
         <button onClick={() => onChange([{ min: 0, max: 10, label: 'Low', description: 'Low Score', color: 'green' }])}>
             Add Score Range
         </button>
@@ -72,8 +72,8 @@ describe('Admin New Quiz Route', () => {
                 <AdminNewQuiz
                     loaderData={undefined}
                     actionData={undefined}
-                    params={{}}
-                    matches={[]}
+                    params={{} as unknown as Route.ComponentProps['params']}
+                    matches={[] as unknown as Route.ComponentProps['matches']}
                 />
             );
             render(<RouterProvider router={router} />);
@@ -90,8 +90,8 @@ describe('Admin New Quiz Route', () => {
                 <AdminNewQuiz
                     loaderData={undefined}
                     actionData={undefined}
-                    params={{}}
-                    matches={[]}
+                    params={{} as unknown as Route.ComponentProps['params']}
+                    matches={[] as unknown as Route.ComponentProps['matches']}
                 />
             );
             render(<RouterProvider router={router} />);
@@ -112,8 +112,8 @@ describe('Admin New Quiz Route', () => {
                 <AdminNewQuiz
                     loaderData={undefined}
                     actionData={undefined}
-                    params={{}}
-                    matches={[]}
+                    params={{} as unknown as Route.ComponentProps['params']}
+                    matches={[] as unknown as Route.ComponentProps['matches']}
                 />
             );
             render(<RouterProvider router={router} />);
@@ -131,8 +131,8 @@ describe('Admin New Quiz Route', () => {
                 <AdminNewQuiz
                     loaderData={undefined}
                     actionData={undefined}
-                    params={{}}
-                    matches={[]}
+                    params={{} as unknown as Route.ComponentProps['params']}
+                    matches={[] as unknown as Route.ComponentProps['matches']}
                 />
             );
             render(<RouterProvider router={router} />);
@@ -148,8 +148,8 @@ describe('Admin New Quiz Route', () => {
                 <AdminNewQuiz
                     loaderData={undefined}
                     actionData={undefined}
-                    params={{}}
-                    matches={[]}
+                    params={{} as unknown as Route.ComponentProps['params']}
+                    matches={[] as unknown as Route.ComponentProps['matches']}
                 />
             );
             render(<RouterProvider router={router} />);
@@ -172,8 +172,8 @@ describe('Admin New Quiz Route', () => {
                 <AdminNewQuiz
                     loaderData={undefined}
                     actionData={{ errors: { title: 'Validation Failed' } }}
-                    params={{}}
-                    matches={[]}
+                    params={{} as unknown as Route.ComponentProps['params']}
+                    matches={[] as unknown as Route.ComponentProps['matches']}
                 />
             );
             render(<RouterProvider router={router} />);
@@ -186,8 +186,8 @@ describe('Admin New Quiz Route', () => {
                 <AdminNewQuiz
                     loaderData={undefined}
                     actionData={undefined}
-                    params={{}}
-                    matches={[]}
+                    params={{} as unknown as Route.ComponentProps['params']}
+                    matches={[] as unknown as Route.ComponentProps['matches']}
                 />
             );
             render(<RouterProvider router={router} />);
@@ -206,8 +206,8 @@ describe('Admin New Quiz Route', () => {
                 <AdminNewQuiz
                     loaderData={undefined}
                     actionData={undefined}
-                    params={{}}
-                    matches={[]}
+                    params={{} as unknown as Route.ComponentProps['params']}
+                    matches={[] as unknown as Route.ComponentProps['matches']}
                 />
             );
             render(<RouterProvider router={router} />);
@@ -251,7 +251,7 @@ describe('Admin New Quiz Route', () => {
             const response = await action({ request: createRequest(formData) } as Route.ActionArgs);
 
             expect(response).toHaveProperty('errors');
-            const errors = (response as any).errors;
+            const errors = (response as { errors: Record<string, string> }).errors;
             expect(errors).toHaveProperty('title');
             expect(errors).toHaveProperty('description');
             expect(errors).toHaveProperty('questions');
@@ -270,7 +270,7 @@ describe('Admin New Quiz Route', () => {
             const response = await action({ request: createRequest(formData) } as Route.ActionArgs);
 
             expect(response).toHaveProperty('errors');
-            const errors = (response as any).errors;
+            const errors = (response as { errors: Record<string, string> }).errors;
             expect(errors).toHaveProperty('question_0');
         });
 
@@ -288,7 +288,7 @@ describe('Admin New Quiz Route', () => {
             const response = await action({ request: createRequest(formData) } as Route.ActionArgs);
 
             expect(response).toHaveProperty('errors');
-            const errors = (response as any).errors;
+            const errors = (response as { errors: Record<string, string> }).errors;
             // Check message content roughly matches
             expect(errors['question_0']).toMatch(/min must be less than max/i);
         });
