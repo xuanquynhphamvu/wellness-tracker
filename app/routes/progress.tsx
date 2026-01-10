@@ -1,5 +1,5 @@
+import React from "react";
 import type { Route } from "./+types/progress";
-import { Link } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import { Button } from "~/components/Button";
 import { Card } from "~/components/Card";
@@ -97,7 +97,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     return { progressByQuiz };
 }
 
-export function meta({ }: Route.MetaArgs) {
+export function meta() {
     return [
         { title: "Your Progress - Wellness Tracker" },
         { name: "description", content: "Track your wellness journey over time" },
@@ -201,7 +201,7 @@ export default function Progress({ loaderData }: Route.ComponentProps) {
                                 Your Journey
                             </h1>
                             <p className="text-warm-gray-600">
-                                See how you've been doing — gently.
+                                See how you&apos;ve been doing — gently.
                             </p>
                         </div>
                         <Button
@@ -234,7 +234,7 @@ export default function Progress({ loaderData }: Route.ComponentProps) {
                                 Your journey begins here
                             </h2>
                             <p className="text-warm-gray-600 mb-8 max-w-md mx-auto">
-                                You haven't taken any quizzes yet. Take a moment to check in with yourself.
+                                You haven&apos;t taken any quizzes yet. Take a moment to check in with yourself.
                             </p>
                             <Button
                                 to="/quizzes"

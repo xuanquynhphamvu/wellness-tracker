@@ -219,10 +219,11 @@ export default function NewQuiz({ actionData }: Route.ComponentProps) {
 
                     <div className="space-y-6">
                         <div>
-                            <label className="block text-sm font-semibold text-warm-gray-700 mb-2">
+                            <label htmlFor="title" className="block text-sm font-semibold text-warm-gray-700 mb-2">
                                 Quiz Title *
                             </label>
                             <input
+                                id="title"
                                 type="text"
                                 name="title"
                                 className="w-full px-4 py-2 rounded-xl border border-warm-gray-200 bg-warm-gray-50 text-warm-gray-900 focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all outline-none"
@@ -237,10 +238,11 @@ export default function NewQuiz({ actionData }: Route.ComponentProps) {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-warm-gray-700 mb-2">
+                            <label htmlFor="description" className="block text-sm font-semibold text-warm-gray-700 mb-2">
                                 Description *
                             </label>
                             <textarea
+                                id="description"
                                 name="description"
                                 rows={4}
                                 className="w-full px-4 py-2 rounded-xl border border-warm-gray-200 bg-warm-gray-50 text-warm-gray-900 focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all outline-none resize-none"

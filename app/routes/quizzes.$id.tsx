@@ -4,7 +4,6 @@ import { Form, redirect, Link, useNavigation, isRouteErrorResponse, useRouteErro
 import { getCollection, ObjectId } from "~/lib/db.server";
 import type { Quiz, SerializedQuiz } from "~/types/quiz";
 import type { QuizResult } from "~/types/result";
-import { data } from "react-router";
 import { requireUser } from "~/lib/auth.server";
 import { calculateScore } from "~/utils/scoring";
 
@@ -114,10 +113,10 @@ export default function TakeQuiz({ loaderData }: Route.ComponentProps) {
     const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0);
 
     const questions = quiz.questions;
-    const currentQuestion = questions[currentQuestionIndex];
     const isFirst = currentQuestionIndex === 0;
     const isLast = currentQuestionIndex === questions.length - 1;
     const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+
 
     const handleNext = (e: React.MouseEvent) => {
         e.preventDefault();

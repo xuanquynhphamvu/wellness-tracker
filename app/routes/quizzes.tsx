@@ -1,3 +1,4 @@
+import React from "react";
 import type { Route } from "./+types/quizzes";
 import { Link } from "react-router";
 import { getCollection } from "~/lib/db.server";
@@ -21,7 +22,7 @@ import { Button } from "~/components/Button";
  * - This eliminates the "fetch in useEffect" waterfall pattern
  */
 
-export async function loader({ }: Route.LoaderArgs) {
+export async function loader() {
     // This code runs on the SERVER (Node.js)
     // It will NEVER run in the browser
 
@@ -48,7 +49,7 @@ export async function loader({ }: Route.LoaderArgs) {
     return { quizzes: serialized };
 }
 
-export function meta({ }: Route.MetaArgs) {
+export function meta() {
     return [
         { title: "Browse Quizzes - Wellness Tracker" },
         { name: "description", content: "Choose from our evidence-based mental health quizzes" },
@@ -68,7 +69,7 @@ export default function Quizzes({ loaderData }: Route.ComponentProps) {
                                 Choose what feels right today.
                             </h1>
                             <p className="text-warm-gray-600">
-                                There's no rush. Select an assessment to start your reflection.
+                                There is no rush. Select an assessment to start your reflection.
                             </p>
                         </div>
                         <Button

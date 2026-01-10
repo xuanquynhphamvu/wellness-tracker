@@ -3,7 +3,7 @@ import { Form, redirect, Link, useActionData, useLoaderData, useNavigation } fro
 import { getCollection, ObjectId } from "~/lib/db.server";
 import type { Quiz, SerializedQuiz, Question } from "~/types/quiz";
 import { requireAdmin } from "~/lib/auth.server";
-import { useState } from "react";
+import React, { useState } from "react";
 import { QuestionEditor } from "~/components/QuestionEditor";
 import { Button } from "~/components/Button";
 import { Card } from "~/components/Card";
@@ -221,10 +221,11 @@ export default function EditQuiz({ loaderData, actionData }: Route.ComponentProp
 
                     <div className="space-y-6">
                         <div>
-                            <label className="block text-sm font-semibold text-warm-gray-700 mb-2">
+                            <label htmlFor="title" className="block text-sm font-semibold text-warm-gray-700 mb-2">
                                 Quiz Title *
                             </label>
                             <input
+                                id="title"
                                 type="text"
                                 name="title"
                                 defaultValue={quiz.title}
@@ -239,10 +240,11 @@ export default function EditQuiz({ loaderData, actionData }: Route.ComponentProp
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-warm-gray-700 mb-2">
+                            <label htmlFor="description" className="block text-sm font-semibold text-warm-gray-700 mb-2">
                                 Description *
                             </label>
                             <textarea
+                                id="description"
                                 name="description"
                                 rows={4}
                                 defaultValue={quiz.description}
