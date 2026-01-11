@@ -312,6 +312,7 @@ describe('Admin New Quiz Route', () => {
 
             expect(mockInsertOne).toHaveBeenCalledWith(expect.objectContaining({
                 title: 'Valid Title',
+                slug: 'valid-title',
                 scoreRanges: expect.arrayContaining([
                     expect.objectContaining({ label: 'Good' })
                 ])

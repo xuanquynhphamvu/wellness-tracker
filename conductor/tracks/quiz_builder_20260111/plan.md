@@ -13,7 +13,7 @@
 - [x] Task: Enhance Admin Quiz List f706761
     - [ ] Subtask: Update `app/routes/admin.quizzes.tsx` to display more details (question count, status) and provide "Edit" and "Delete" actions.
     - [ ] Subtask: Write integration tests for the list view loader.
-- [ ] Task: Basic Quiz Creation Form
+- [~] Task: Basic Quiz Creation Form
     - [ ] Subtask: Update `app/routes/admin.quizzes.new.tsx` to handle basic metadata (title, description, slug, cover image).
     - [ ] Subtask: Implement the server-side action to create the quiz document.
     - [ ] Subtask: Write end-to-end test for creating a quiz shell.
