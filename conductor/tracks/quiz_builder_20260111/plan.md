@@ -26,7 +26,7 @@
 - [x] Task: Implement Question Management Logic e11193c
     - [ ] Subtask: Implement "Add Question", "Remove Question", and "Update Question" logic within the client-side state (before save).
     - [ ] Subtask: Implement basic reordering (move up/down buttons) for accessibility.
-- [~] Task: Integrate with Edit Route
+- [x] Task: Integrate with Edit Route bde094d
     - [ ] Subtask: Update `app/routes/admin.quizzes.$id.edit.tsx` to include the `QuestionList` component.
     - [ ] Subtask: Update the route `action` to process and save the full list of questions.
     - [ ] Subtask: Write integration tests for saving complex quiz structures.
