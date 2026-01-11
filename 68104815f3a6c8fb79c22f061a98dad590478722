@@ -1,0 +1,7 @@
+Task Summary: Create Progress Detail Route & Link Dashboard
+Summary: Created a new route `progress.$quizId.tsx` to show detailed history and a large chart for a specific quiz. Updated the main progress dashboard to link to this detail view. Added tests for both routes.
+Files:
+- app/routes/progress.tsx
+- app/routes/progress..tsx
+- app/routes/progress..test.tsx
+Why: To allow users to drill down into their wellness history and view specific trends.
