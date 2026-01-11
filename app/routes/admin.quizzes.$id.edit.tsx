@@ -1,5 +1,5 @@
 import type { Route } from "./+types/admin.quizzes.$id.edit";
-import { Form, redirect, Link, useActionData, useLoaderData, useNavigation } from "react-router";
+import { Form, redirect, Link, useActionData, useLoaderData, useNavigation, isRouteErrorResponse, useRouteError } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import type { Quiz, SerializedQuiz, Question } from "~/types/quiz";
 import { requireAdmin } from "~/lib/auth.server";
@@ -16,18 +16,6 @@ import { validateQuiz } from "~/utils/quiz-validation";
 
 /**
  * Edit Quiz Route
- * 
- * EXECUTION FLOW:
- * 1. LOADER: Fetch quiz by ID
- * 2. COMPONENT: Pre-fill form with quiz data
- * 3. ACTION: Update quiz in database
- * 4. Redirect back to admin quiz list
- * 
- * FEATURES:
- * - Dynamic question management
- * - Support for multiple question types
- * - Client-side state for questions array
- * - Server-side validation
  */
 
 export async function loader({ params }: Route.LoaderArgs) {
@@ -355,5 +343,45 @@ export default function EditQuiz({ loaderData, actionData }: Route.ComponentProp
                 </div>
             </Form>
         </div>
+    );
+}
+
+export function ErrorBoundary() {
+    const error = useRouteError();
+
+    if (isRouteErrorResponse(error)) {
+        return (
+            <Card className="p-12 text-center border-orange-200 bg-orange-50">
+                <h1 className="text-4xl font-bold text-orange-600 mb-4">
+                    {error.status}
+                </h1>
+                <h2 className="text-xl font-bold text-warm-gray-900 mb-4">
+                    {error.statusText}
+                </h2>
+                <p className="text-warm-gray-600 mb-8">
+                    {error.data}
+                </p>
+                <Button to="/admin/quizzes" variant="primary">
+                    Back to Quizzes
+                </Button>
+            </Card>
+        );
+    }
+
+    return (
+        <Card className="p-12 text-center border-orange-200 bg-orange-50">
+            <h1 className="text-4xl font-bold text-orange-600 mb-4">
+                Error
+            </h1>
+            <h2 className="text-xl font-bold text-warm-gray-900 mb-4">
+                Something went wrong
+            </h2>
+            <p className="text-warm-gray-600 mb-8">
+                We encountered an error editing the quiz. Please try again.
+            </p>
+            <Button to="/admin/quizzes" variant="primary">
+                Back to Quizzes
+            </Button>
+        </Card>
     );
 }

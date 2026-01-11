@@ -1,6 +1,6 @@
 import React from "react";
 import type { Route } from "./+types/progress";
-import { Link } from "react-router";
+import { Link, isRouteErrorResponse, useRouteError } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import { Button } from "~/components/Button";
 import { Card } from "~/components/Card";
@@ -151,7 +151,9 @@ function ProgressCard({ progress }: { progress: QuizProgress }) {
             <div className="flex justify-between items-start mb-4">
                 <div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                        {progress.quizTitle}
+                        <Link to={`/progress/${progress.quizId}`} className="hover:text-sage-600 transition-colors">
+                            {progress.quizTitle}
+                        </Link>
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                         {progress.attempts} {progress.attempts === 1 ? 'attempt' : 'attempts'} • Last taken {formattedDate}
@@ -280,6 +282,60 @@ export default function Progress({ loaderData }: Route.ComponentProps) {
                         </div>
                     )}
                 </div>
+            </div>
+        </div>
+    );
+}
+
+export function ErrorBoundary() {
+    const error = useRouteError();
+
+    if (isRouteErrorResponse(error)) {
+        return (
+            <div className="min-h-screen bg-warm-white flex items-center justify-center px-4">
+                <div className="max-w-md w-full text-center">
+                    <h1 className="text-6xl font-bold text-orange-600 mb-4">
+                        {error.status}
+                    </h1>
+                    <h2 className="text-2xl font-bold text-warm-gray-900 mb-4">
+                        {error.statusText}
+                    </h2>
+                    <p className="text-warm-gray-600 mb-8">
+                        {error.data}
+                    </p>
+                    <Button
+                        to="/"
+                        variant="primary"
+                        size="lg"
+                        className="w-full justify-center"
+                    >
+                        Go to Home
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-warm-white flex items-center justify-center px-4">
+            <div className="max-w-md w-full text-center">
+                <h1 className="text-6xl font-bold text-orange-600 mb-4">
+                    Error
+                </h1>
+                <h2 className="text-2xl font-bold text-warm-gray-900 mb-4">
+                    Something went wrong
+                </h2>
+                <p className="text-warm-gray-600 mb-8">
+                    We couldn&apos;t load your progress. Please try again.
+                </p>
+                <Button
+                    to="/"
+                    variant="primary"
+                    size="lg"
+                    className="w-full justify-center"
+                >
+                    Go to Home
+                </Button>
             </div>
         </div>
     );

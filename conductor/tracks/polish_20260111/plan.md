@@ -1,7 +1,7 @@
 # Track Plan: Production Polish
 
 ## Phase 1: Error Handling & Boundaries
-- [ ] Task: Add Error Boundaries to User Routes
+- [~] Task: Add Error Boundaries to User Routes
     - [ ] Subtask: Add `ErrorBoundary` to `app/routes/quizzes.$id.tsx` (handle 404/500).
     - [ ] Subtask: Add `ErrorBoundary` to `app/routes/results.$id.tsx`.
     - [ ] Subtask: Add `ErrorBoundary` to `app/routes/progress.tsx`.

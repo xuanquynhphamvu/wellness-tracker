@@ -1,5 +1,5 @@
 import type { Route } from "./+types/admin.quizzes.new";
-import { Form, redirect, useActionData, useNavigation } from "react-router";
+import { Form, redirect, useActionData, useNavigation, isRouteErrorResponse, useRouteError, Link } from "react-router";
 import { getCollection } from "~/lib/db.server";
 import type { Quiz, Question } from "~/types/quiz";
 import { requireAdmin } from "~/lib/auth.server";
@@ -15,17 +15,6 @@ import * as crypto from "node:crypto";
 
 /**
  * Create Quiz Route
- * 
- * EXECUTION FLOW:
- * - No loader needed (form is empty)
- * - ACTION: Validate and insert new quiz
- * - Redirect to admin quiz list after creation
- * 
- * FEATURES:
- * - Dynamic question management
- * - Support for multiple question types
- * - Client-side state for questions array
- * - Server-side validation
  */
 
 export async function action({ request }: Route.ActionArgs) {
@@ -330,5 +319,45 @@ export default function NewQuiz({ actionData }: Route.ComponentProps) {
                 </div>
             </Form>
         </div>
+    );
+}
+
+export function ErrorBoundary() {
+    const error = useRouteError();
+
+    if (isRouteErrorResponse(error)) {
+        return (
+            <Card className="p-12 text-center border-orange-200 bg-orange-50">
+                <h1 className="text-4xl font-bold text-orange-600 mb-4">
+                    {error.status}
+                </h1>
+                <h2 className="text-xl font-bold text-warm-gray-900 mb-4">
+                    {error.statusText}
+                </h2>
+                <p className="text-warm-gray-600 mb-8">
+                    {error.data}
+                </p>
+                <Button to="/admin/quizzes" variant="primary">
+                    Back to Quizzes
+                </Button>
+            </Card>
+        );
+    }
+
+    return (
+        <Card className="p-12 text-center border-orange-200 bg-orange-50">
+            <h1 className="text-4xl font-bold text-orange-600 mb-4">
+                Error
+            </h1>
+            <h2 className="text-xl font-bold text-warm-gray-900 mb-4">
+                Something went wrong
+            </h2>
+            <p className="text-warm-gray-600 mb-8">
+                We encountered an error creating the quiz. Please try again.
+            </p>
+            <Button to="/admin/quizzes" variant="primary">
+                Back to Quizzes
+            </Button>
+        </Card>
     );
 }

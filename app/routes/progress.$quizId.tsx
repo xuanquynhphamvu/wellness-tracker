@@ -8,7 +8,7 @@ import { ProgressChart } from "~/components/ProgressChart";
 import { calculateMaxScore } from "~/utils/scoring";
 import type { Quiz } from "~/types/quiz";
 import type { QuizResult } from "~/types/result";
-import { Link } from "react-router";
+import { Link, isRouteErrorResponse, useRouteError } from "react-router";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
     const user = await requireUser(request);
@@ -167,6 +167,60 @@ export default function ProgressDetail({ loaderData }: Route.ComponentProps) {
                         </Card>
                     </div>
                 </div>
+            </div>
+        </div>
+    );
+}
+
+export function ErrorBoundary() {
+    const error = useRouteError();
+
+    if (isRouteErrorResponse(error)) {
+        return (
+            <div className="min-h-screen bg-warm-white flex items-center justify-center px-4">
+                <div className="max-w-md w-full text-center">
+                    <h1 className="text-6xl font-bold text-orange-600 mb-4">
+                        {error.status}
+                    </h1>
+                    <h2 className="text-2xl font-bold text-warm-gray-900 mb-4">
+                        {error.statusText}
+                    </h2>
+                    <p className="text-warm-gray-600 mb-8">
+                        {error.data}
+                    </p>
+                    <Button
+                        to="/progress"
+                        variant="primary"
+                        size="lg"
+                        className="w-full justify-center"
+                    >
+                        Back to Overview
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-warm-white flex items-center justify-center px-4">
+            <div className="max-w-md w-full text-center">
+                <h1 className="text-6xl font-bold text-orange-600 mb-4">
+                    Error
+                </h1>
+                <h2 className="text-2xl font-bold text-warm-gray-900 mb-4">
+                    Something went wrong
+                </h2>
+                <p className="text-warm-gray-600 mb-8">
+                    We couldn&apos;t load the quiz progress. Please try again.
+                </p>
+                <Button
+                    to="/progress"
+                    variant="primary"
+                    size="lg"
+                    className="w-full justify-center"
+                >
+                    Back to Overview
+                </Button>
             </div>
         </div>
     );

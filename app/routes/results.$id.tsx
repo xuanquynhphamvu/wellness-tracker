@@ -1,5 +1,5 @@
 import type { Route } from "./+types/results.$id";
-import { Link } from "react-router";
+import { Link, isRouteErrorResponse, useRouteError } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import type { QuizResult, SerializedQuizResult } from "~/types/result";
 import { type Quiz, serializeQuiz } from "~/types/quiz";
@@ -195,6 +195,60 @@ export default function Results({ loaderData }: Route.ComponentProps) {
                         {new Date(result.completedAt).toLocaleTimeString()}
                     </div>
                 </div>
+            </div>
+        </div>
+    );
+}
+
+export function ErrorBoundary() {
+    const error = useRouteError();
+
+    if (isRouteErrorResponse(error)) {
+        return (
+            <div className="min-h-screen bg-warm-white flex items-center justify-center px-4">
+                <div className="max-w-md w-full text-center">
+                    <h1 className="text-6xl font-bold text-orange-600 mb-4">
+                        {error.status}
+                    </h1>
+                    <h2 className="text-2xl font-bold text-warm-gray-900 mb-4">
+                        {error.statusText}
+                    </h2>
+                    <p className="text-warm-gray-600 mb-8">
+                        {error.data}
+                    </p>
+                    <Button
+                        to="/progress"
+                        variant="primary"
+                        size="lg"
+                        className="w-full justify-center"
+                    >
+                        Back to Your Journey
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-warm-white flex items-center justify-center px-4">
+            <div className="max-w-md w-full text-center">
+                <h1 className="text-6xl font-bold text-orange-600 mb-4">
+                    Error
+                </h1>
+                <h2 className="text-2xl font-bold text-warm-gray-900 mb-4">
+                    Something went wrong
+                </h2>
+                <p className="text-warm-gray-600 mb-8">
+                    We couldn&apos;t load your results. Please try again.
+                </p>
+                <Button
+                    to="/progress"
+                    variant="primary"
+                    size="lg"
+                    className="w-full justify-center"
+                >
+                    Back to Your Journey
+                </Button>
             </div>
         </div>
     );

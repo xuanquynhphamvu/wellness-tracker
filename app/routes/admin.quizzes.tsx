@@ -1,5 +1,5 @@
 import type { Route } from "./+types/admin.quizzes";
-import { Link, Form } from "react-router";
+import { Link, Form, isRouteErrorResponse, useRouteError } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import type { Quiz, SerializedQuiz } from "~/types/quiz";
 import { redirect } from "react-router";
@@ -11,16 +11,6 @@ import { getAllQuizzes } from "~/lib/quiz.server";
 
 /**
  * Admin Quiz Management Route
- * 
- * EXECUTION FLOW:
- * - LOADER: Fetch ALL quizzes (including unpublished)
- * - ACTION: Handle quiz deletion
- * - COMPONENT: Display admin quiz list with edit/delete
- * 
- * LEARNING POINTS:
- * - Actions can handle different intents (delete, publish, etc.)
- * - Use FormData to determine action intent
- * - Revalidation happens automatically after actions
  */
 
 export async function loader({ }: Route.LoaderArgs) {
@@ -91,7 +81,6 @@ export async function action({ request }: Route.ActionArgs) {
             allQuizzes[targetIndex] = temp;
 
             // Update all orders based on new array position
-            // This ensures self-healing if orders were missing or duplicate
             await Promise.all(allQuizzes.map((quiz, index) =>
                 quizzesCollection.updateOne(
                     { _id: quiz._id },
@@ -176,7 +165,6 @@ export default function AdminQuizzes({ loaderData }: Route.ComponentProps) {
                                     </p>
                                 </div>
 
-                                {/* Reorder Controls */}
                                 <div className="flex flex-col gap-1 mr-2">
                                     <Form method="post">
                                         <input type="hidden" name="quizId" value={quiz._id} />
@@ -250,5 +238,45 @@ export default function AdminQuizzes({ loaderData }: Route.ComponentProps) {
                 </div>
             )}
         </div>
+    );
+}
+
+export function ErrorBoundary() {
+    const error = useRouteError();
+
+    if (isRouteErrorResponse(error)) {
+        return (
+            <Card className="p-12 text-center border-orange-200 bg-orange-50">
+                <h1 className="text-4xl font-bold text-orange-600 mb-4">
+                    {error.status}
+                </h1>
+                <h2 className="text-xl font-bold text-warm-gray-900 mb-4">
+                    {error.statusText}
+                </h2>
+                <p className="text-warm-gray-600 mb-8">
+                    {error.data}
+                </p>
+                <Button to="/admin/quizzes" variant="primary">
+                    Try Again
+                </Button>
+            </Card>
+        );
+    }
+
+    return (
+        <Card className="p-12 text-center border-orange-200 bg-orange-50">
+            <h1 className="text-4xl font-bold text-orange-600 mb-4">
+                Error
+            </h1>
+            <h2 className="text-xl font-bold text-warm-gray-900 mb-4">
+                Something went wrong
+            </h2>
+            <p className="text-warm-gray-600 mb-8">
+                We encountered an error managing quizzes. Please try again.
+            </p>
+            <Button to="/admin/quizzes" variant="primary">
+                Try Again
+            </Button>
+        </Card>
     );
 }
