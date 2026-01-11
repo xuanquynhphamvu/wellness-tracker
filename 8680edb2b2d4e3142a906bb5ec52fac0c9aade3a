@@ -1,0 +1,12 @@
+Task Summary: Question Component Architecture
+Summary: Moved `QuestionEditor` to `app/components/admin/` and created a new `QuestionList` component to centralize question array management. Refactored `admin.quizzes.new` and `admin.quizzes.$id.edit` routes to use the new architecture.
+Files:
+- app/components/admin/QuestionEditor.tsx
+- app/components/admin/QuestionEditor.test.tsx
+- app/components/admin/QuestionList.tsx
+- app/components/admin/QuestionList.test.tsx
+- app/routes/admin.quizzes.new.tsx
+- app/routes/admin.quizzes.new.test.tsx
+- app/routes/admin.quizzes.$id.edit.tsx
+- app/routes/admin.quizzes.$id.edit.test.tsx
+Why: Improved component modularity and reusability for the dynamic quiz builder.
