@@ -19,11 +19,11 @@
     - [x] Subtask: Add pending state to `admin.quizzes.new.tsx` and edit route (save button).
 - [x] Task: Conductor - User Manual Verification 'UX & Loading States' (Protocol in workflow.md) ba1cd41
 
-## Phase 3: SEO & Final Review
-- [~] Task: Audit Meta Tags
-    - [ ] Subtask: Review and update `meta` functions in all user-facing routes (`home`, `quizzes`, `results`, `progress`).
-    - [ ] Subtask: Ensure consistent title formatting.
-- [ ] Task: Final Codebase Scan
-    - [ ] Subtask: Run `npm run typecheck` and fix any lingering issues.
-    - [ ] Subtask: Run `npm run lint` (if configured) or basic lint check.
-- [ ] Task: Conductor - User Manual Verification 'SEO & Final Review' (Protocol in workflow.md)
+## Phase 3: SEO & Final Review [checkpoint: a6116cd]
+- [x] Task: Audit Meta Tags a6116cd
+    - [x] Subtask: Review and update `meta` functions in all user-facing routes (`home`, `quizzes`, `results`, `progress`).
+    - [x] Subtask: Ensure consistent title formatting.
+- [x] Task: Final Codebase Scan a6116cd
+    - [x] Subtask: Run `npm run typecheck` and fix any lingering issues.
+    - [x] Subtask: Run `npm run lint` (if configured) or basic lint check.
+- [x] Task: Conductor - User Manual Verification 'SEO & Final Review' (Protocol in workflow.md) a6116cd
