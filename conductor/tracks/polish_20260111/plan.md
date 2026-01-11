@@ -20,7 +20,7 @@
 - [x] Task: Conductor - User Manual Verification 'UX & Loading States' (Protocol in workflow.md) ba1cd41
 
 ## Phase 3: SEO & Final Review
-- [ ] Task: Audit Meta Tags
+- [~] Task: Audit Meta Tags
     - [ ] Subtask: Review and update `meta` functions in all user-facing routes (`home`, `quizzes`, `results`, `progress`).
     - [ ] Subtask: Ensure consistent title formatting.
 - [ ] Task: Final Codebase Scan
