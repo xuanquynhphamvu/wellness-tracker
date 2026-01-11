@@ -9,15 +9,15 @@
     - [x] Subtask: Write unit tests for these service functions.
 - [x] Task: Conductor - User Manual Verification 'Data Model & Backend Foundation' (Protocol in workflow.md) d7bc5ca
 
-## Phase 2: Quiz Management Dashboard (List & Create)
+## Phase 2: Quiz Management Dashboard (List & Create) [checkpoint: 8582b92]
 - [x] Task: Enhance Admin Quiz List f706761
-    - [ ] Subtask: Update `app/routes/admin.quizzes.tsx` to display more details (question count, status) and provide "Edit" and "Delete" actions.
-    - [ ] Subtask: Write integration tests for the list view loader.
+    - [x] Subtask: Update `app/routes/admin.quizzes.tsx` to display more details (question count, status) and provide "Edit" and "Delete" actions.
+    - [x] Subtask: Write integration tests for the list view loader.
 - [x] Task: Basic Quiz Creation Form 2bcb5b8
-    - [ ] Subtask: Update `app/routes/admin.quizzes.new.tsx` to handle basic metadata (title, description, slug, cover image).
-    - [ ] Subtask: Implement the server-side action to create the quiz document.
-    - [ ] Subtask: Write end-to-end test for creating a quiz shell.
-- [ ] Task: Conductor - User Manual Verification 'Quiz Management Dashboard (List & Create)' (Protocol in workflow.md)
+    - [x] Subtask: Update `app/routes/admin.quizzes.new.tsx` to handle basic metadata (title, description, slug, cover image).
+    - [x] Subtask: Implement the server-side action to create the quiz document.
+    - [x] Subtask: Write end-to-end test for creating a quiz shell.
+- [x] Task: Conductor - User Manual Verification 'Quiz Management Dashboard (List & Create)' (Protocol in workflow.md) 8582b92
 
 ## Phase 3: Dynamic Question Editor
 - [ ] Task: Question Component Architecture
