@@ -11,7 +11,7 @@
 - [x] Task: Conductor - User Manual Verification 'Error Handling & Boundaries' (Protocol in workflow.md) c51569d
 
 ## Phase 2: UX & Loading States
-- [ ] Task: Enhance Auth Forms
+- [~] Task: Enhance Auth Forms
     - [ ] Subtask: Verify "Logging in..." state in `auth.login.tsx`.
     - [ ] Subtask: Verify "Creating Account..." state in `auth.register.tsx`.
 - [ ] Task: Enhance Quiz Forms

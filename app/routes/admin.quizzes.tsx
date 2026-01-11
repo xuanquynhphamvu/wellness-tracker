@@ -1,5 +1,5 @@
 import type { Route } from "./+types/admin.quizzes";
-import { Link, Form, isRouteErrorResponse, useRouteError } from "react-router";
+import { Link, Form, isRouteErrorResponse, useRouteError, useNavigation } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import type { Quiz, SerializedQuiz } from "~/types/quiz";
 import { redirect } from "react-router";
@@ -81,6 +81,7 @@ export async function action({ request }: Route.ActionArgs) {
             allQuizzes[targetIndex] = temp;
 
             // Update all orders based on new array position
+            // This ensures self-healing if orders were missing or duplicate
             await Promise.all(allQuizzes.map((quiz, index) =>
                 quizzesCollection.updateOne(
                     { _id: quiz._id },
@@ -103,6 +104,7 @@ export function meta({ }: Route.MetaArgs) {
 
 export default function AdminQuizzes({ loaderData }: Route.ComponentProps) {
     const { quizzes } = loaderData;
+    const navigation = useNavigation();
 
     return (
         <div>
@@ -132,109 +134,123 @@ export default function AdminQuizzes({ loaderData }: Route.ComponentProps) {
                 </Card>
             ) : (
                 <div className="grid gap-6">
-                    {quizzes.map((quiz) => (
-                        <Card
-                            key={quiz._id}
-                            className="p-6"
-                        >
-                            <div className="flex flex-col md:flex-row items-start justify-between gap-6">
-                                <div className="flex-1">
-                                    <div className="flex items-center gap-3 mb-2 flex-wrap">
-                                        <h2 className="text-xl font-bold text-warm-gray-900">
-                                            {quiz.title}
-                                        </h2>
-                                        {quiz.shortName && (
-                                            <span className="text-sm font-medium text-sage-600 bg-sage-50 px-2 py-0.5 rounded-full">
-                                                {quiz.shortName}
+                    {quizzes.map((quiz) => {
+                        const isTogglePublishing = 
+                            navigation.state === "submitting" && 
+                            navigation.formData?.get("intent") === "toggle-publish" &&
+                            navigation.formData?.get("quizId") === quiz._id;
+                        
+                        const isDeleting = 
+                            navigation.state === "submitting" && 
+                            navigation.formData?.get("intent") === "delete" &&
+                            navigation.formData?.get("quizId") === quiz._id;
+
+                        return (
+                            <Card
+                                key={quiz._id}
+                                className="p-6"
+                            >
+                                <div className="flex flex-col md:flex-row items-start justify-between gap-6">
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-3 mb-2 flex-wrap">
+                                            <h2 className="text-xl font-bold text-warm-gray-900">
+                                                {quiz.title}
+                                            </h2>
+                                            {quiz.shortName && (
+                                                <span className="text-sm font-medium text-sage-600 bg-sage-50 px-2 py-0.5 rounded-full">
+                                                    {quiz.shortName}
+                                                </span>
+                                            )}
+                                            <span
+                                                className={`px-3 py-1 rounded-full text-xs font-semibold ${quiz.isPublished
+                                                    ? 'bg-sage-100 text-sage-800'
+                                                    : 'bg-warm-gray-100 text-warm-gray-800'
+                                                    }`}
+                                            >
+                                                {quiz.isPublished ? 'Published' : 'Draft'}
                                             </span>
-                                        )}
-                                        <span
-                                            className={`px-3 py-1 rounded-full text-xs font-semibold ${quiz.isPublished
-                                                ? 'bg-sage-100 text-sage-800'
-                                                : 'bg-warm-gray-100 text-warm-gray-800'
-                                                }`}
-                                        >
-                                            {quiz.isPublished ? 'Published' : 'Draft'}
-                                        </span>
+                                        </div>
+                                        <p className="text-warm-gray-600 mb-3">
+                                            {quiz.description}
+                                        </p>
+                                        <p className="text-sm text-warm-gray-400">
+                                            {quiz.questions.length} {quiz.questions.length === 1 ? 'question' : 'questions'}
+                                        </p>
                                     </div>
-                                    <p className="text-warm-gray-600 mb-3">
-                                        {quiz.description}
-                                    </p>
-                                    <p className="text-sm text-warm-gray-400">
-                                        {quiz.questions.length} {quiz.questions.length === 1 ? 'question' : 'questions'}
-                                    </p>
-                                </div>
 
-                                <div className="flex flex-col gap-1 mr-2">
-                                    <Form method="post">
-                                        <input type="hidden" name="quizId" value={quiz._id} />
-                                        <input type="hidden" name="intent" value="reorder" />
-                                        <input type="hidden" name="direction" value="up" />
-                                        <button
-                                            type="submit"
-                                            className="p-1 text-warm-gray-400 hover:text-sage-600 hover:bg-sage-50 rounded"
-                                            title="Move Up"
-                                        >
-                                            ↑
-                                        </button>
-                                    </Form>
-                                    <Form method="post">
-                                        <input type="hidden" name="quizId" value={quiz._id} />
-                                        <input type="hidden" name="intent" value="reorder" />
-                                        <input type="hidden" name="direction" value="down" />
-                                        <button
-                                            type="submit"
-                                            className="p-1 text-warm-gray-400 hover:text-sage-600 hover:bg-sage-50 rounded"
-                                            title="Move Down"
-                                        >
-                                            ↓
-                                        </button>
-                                    </Form>
-                                </div>
+                                    <div className="flex flex-col gap-1 mr-2">
+                                        <Form method="post">
+                                            <input type="hidden" name="quizId" value={quiz._id} />
+                                            <input type="hidden" name="intent" value="reorder" />
+                                            <input type="hidden" name="direction" value="up" />
+                                            <button
+                                                type="submit"
+                                                className="p-1 text-warm-gray-400 hover:text-sage-600 hover:bg-sage-50 rounded"
+                                                title="Move Up"
+                                            >
+                                                ↑
+                                            </button>
+                                        </Form>
+                                        <Form method="post">
+                                            <input type="hidden" name="quizId" value={quiz._id} />
+                                            <input type="hidden" name="intent" value="reorder" />
+                                            <input type="hidden" name="direction" value="down" />
+                                            <button
+                                                type="submit"
+                                                className="p-1 text-warm-gray-400 hover:text-sage-600 hover:bg-sage-50 rounded"
+                                                title="Move Down"
+                                            >
+                                                ↓
+                                            </button>
+                                        </Form>
+                                    </div>
 
-                                <div className="flex gap-3">
-                                    <Button
-                                        to={`/admin/quizzes/${quiz._id}/edit`}
-                                        variant="outline"
-                                        size="sm"
-                                    >
-                                        Edit
-                                    </Button>
-
-                                    <Form method="post">
-                                        <input type="hidden" name="quizId" value={quiz._id} />
-                                        <input type="hidden" name="intent" value="toggle-publish" />
+                                    <div className="flex gap-3">
                                         <Button
-                                            type="submit"
-                                            variant="ghost"
+                                            to={`/admin/quizzes/${quiz._id}/edit`}
+                                            variant="outline"
                                             size="sm"
-                                            className={quiz.isPublished ? "text-warm-gray-500 hover:text-warm-gray-700" : "text-sage-600 hover:text-sage-700"}
                                         >
-                                            {quiz.isPublished ? 'Unpublish' : 'Publish'}
+                                            Edit
                                         </Button>
-                                    </Form>
 
-                                    <Form method="post">
-                                        <input type="hidden" name="quizId" value={quiz._id} />
-                                        <input type="hidden" name="intent" value="delete" />
-                                        <Button
-                                            type="submit"
-                                            variant="ghost"
-                                            size="sm"
-                                            className="text-orange-400 hover:text-orange-600 hover:bg-orange-50"
-                                            onClick={(e) => {
-                                                if (!confirm('Are you sure you want to delete this quiz?')) {
-                                                    e.preventDefault();
-                                                }
-                                            }}
-                                        >
-                                            Delete
-                                        </Button>
-                                    </Form>
+                                        <Form method="post">
+                                            <input type="hidden" name="quizId" value={quiz._id} />
+                                            <input type="hidden" name="intent" value="toggle-publish" />
+                                            <Button
+                                                type="submit"
+                                                variant="ghost"
+                                                size="sm"
+                                                disabled={isTogglePublishing}
+                                                className={quiz.isPublished ? "text-warm-gray-500 hover:text-warm-gray-700" : "text-sage-600 hover:text-sage-700"}
+                                            >
+                                                {isTogglePublishing ? "Processing..." : (quiz.isPublished ? 'Unpublish' : 'Publish')}
+                                            </Button>
+                                        </Form>
+
+                                        <Form method="post">
+                                            <input type="hidden" name="quizId" value={quiz._id} />
+                                            <input type="hidden" name="intent" value="delete" />
+                                            <Button
+                                                type="submit"
+                                                variant="ghost"
+                                                size="sm"
+                                                disabled={isDeleting}
+                                                className="text-orange-400 hover:text-orange-600 hover:bg-orange-50"
+                                                onClick={(e) => {
+                                                    if (!confirm('Are you sure you want to delete this quiz?')) {
+                                                        e.preventDefault();
+                                                    }
+                                                }}
+                                            >
+                                                {isDeleting ? "Deleting..." : "Delete"}
+                                            </Button>
+                                        </Form>
+                                    </div>
                                 </div>
-                            </div>
-                        </Card>
-                    ))}
+                            </Card>
+                        );
+                    })}
                 </div>
             )}
         </div>
