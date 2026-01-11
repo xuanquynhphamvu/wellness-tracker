@@ -168,6 +168,50 @@ describe('Admin Edit Quiz Route', () => {
             }));
         });
 
+        it('saves complex quiz structure with multiple questions and score ranges', async () => {
+            const updateOneMock = vi.fn();
+            (getCollection as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({ updateOne: updateOneMock });
+
+            const complexQuestions = [
+                { id: '1', text: 'Q1', type: 'scale', scaleMin: 1, scaleMax: 5 },
+                { id: '2', text: 'Q2', type: 'multiple-choice', options: ['A', 'B'], scoreMapping: { 'A': 1, 'B': 0 } }
+            ];
+            const complexScoreRanges = [
+                { min: 0, max: 1, status: 'Low', description: 'Low desc', color: 'orange' },
+                { min: 2, max: 5, status: 'High', description: 'High desc', color: 'green' }
+            ];
+
+            const formData = new FormData();
+            formData.append('title', 'Complex Quiz');
+            formData.append('slug', 'complex-quiz');
+            formData.append('description', 'Complex description');
+            formData.append('questions', JSON.stringify(complexQuestions));
+            formData.append('scoreRanges', JSON.stringify(complexScoreRanges));
+
+            await action({
+                request: new Request('http://localhost', { method: 'POST', body: formData }),
+                params: { id: '123' },
+                context: {},
+            } as Route.ActionArgs);
+
+            expect(updateOneMock).toHaveBeenCalledWith(
+                { _id: new ObjectId('123') },
+                expect.objectContaining({
+                    $set: expect.objectContaining({
+                        title: 'Complex Quiz',
+                        questions: expect.arrayContaining([
+                            expect.objectContaining({ text: 'Q1' }),
+                            expect.objectContaining({ text: 'Q2' })
+                        ]),
+                        scoreRanges: expect.arrayContaining([
+                            expect.objectContaining({ status: 'Low' }),
+                            expect.objectContaining({ status: 'High' })
+                        ])
+                    })
+                })
+            );
+        });
+
         it('returns validation errors for invalid data', async () => {
             const formData = new FormData();
             formData.append('title', ''); // Invalid
