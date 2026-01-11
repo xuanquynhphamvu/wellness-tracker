@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [ ] Track: Enhance Progress Visualization
+## [~] Track: Enhance Progress Visualization
 *Link: [./conductor/tracks/progress_viz_20260111/](./conductor/tracks/progress_viz_20260111/)*
