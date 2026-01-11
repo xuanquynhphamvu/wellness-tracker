@@ -19,18 +19,18 @@
     - [x] Subtask: Write end-to-end test for creating a quiz shell.
 - [x] Task: Conductor - User Manual Verification 'Quiz Management Dashboard (List & Create)' (Protocol in workflow.md) 8582b92
 
-## Phase 3: Dynamic Question Editor
+## Phase 3: Dynamic Question Editor [checkpoint: 9ec79f3]
 - [x] Task: Question Component Architecture 8680edb
-    - [ ] Subtask: Create `app/components/admin/QuestionEditor.tsx` component to handle a single question's state (text, type, options).
-    - [ ] Subtask: Create `app/components/admin/QuestionList.tsx` to manage the array of questions.
+    - [x] Subtask: Create `app/components/admin/QuestionEditor.tsx` component to handle a single question's state (text, type, options).
+    - [x] Subtask: Create `app/components/admin/QuestionList.tsx` to manage the array of questions.
 - [x] Task: Implement Question Management Logic e11193c
-    - [ ] Subtask: Implement "Add Question", "Remove Question", and "Update Question" logic within the client-side state (before save).
-    - [ ] Subtask: Implement basic reordering (move up/down buttons) for accessibility.
+    - [x] Subtask: Implement "Add Question", "Remove Question", and "Update Question" logic within the client-side state (before save).
+    - [x] Subtask: Implement basic reordering (move up/down buttons) for accessibility.
 - [x] Task: Integrate with Edit Route bde094d
-    - [ ] Subtask: Update `app/routes/admin.quizzes.$id.edit.tsx` to include the `QuestionList` component.
-    - [ ] Subtask: Update the route `action` to process and save the full list of questions.
-    - [ ] Subtask: Write integration tests for saving complex quiz structures.
-- [ ] Task: Conductor - User Manual Verification 'Dynamic Question Editor' (Protocol in workflow.md)
+    - [x] Subtask: Update `app/routes/admin.quizzes.$id.edit.tsx` to include the `QuestionList` component.
+    - [x] Subtask: Update the route `action` to process and save the full list of questions.
+    - [x] Subtask: Write integration tests for saving complex quiz structures.
+- [x] Task: Conductor - User Manual Verification 'Dynamic Question Editor' (Protocol in workflow.md) 9ec79f3
 
 ## Phase 4: Score Range Configuration & Final Polish
 - [ ] Task: Score Range Editor
