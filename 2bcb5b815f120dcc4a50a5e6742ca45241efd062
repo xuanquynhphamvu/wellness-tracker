@@ -1,0 +1,6 @@
+Task Summary: Basic Quiz Creation Form
+Summary: Verified slug generation and explicit `isPublished: false` setting during quiz creation. Updated tests to ensure correct data is sent to the database.
+Files:
+- app/routes/admin.quizzes.new.tsx
+- app/routes/admin.quizzes.new.test.tsx
+Why: Ensure data integrity and schema compliance for newly created quizzes.
