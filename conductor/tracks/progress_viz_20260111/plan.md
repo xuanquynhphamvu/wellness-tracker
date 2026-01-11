@@ -18,11 +18,11 @@
 - [x] Task: Conductor - User Manual Verification 'Dashboard Integration' (Protocol in workflow.md) bbd9732
 
 ## Phase 3: Detailed History View
-- [ ] Task: Create Progress Detail Route
+- [x] Task: Create Progress Detail Route
     - [ ] Subtask: Create `app/routes/progress.$quizId.tsx`.
     - [ ] Subtask: Implement loader to fetch full history for a specific quiz (similar to main progress loader but focused).
     - [ ] Subtask: Implement UI with a large chart and a sortable/filterable history table.
-- [ ] Task: Link Dashboard to Details
+- [~] Task: Link Dashboard to Details
     - [ ] Subtask: Update `ProgressCard` in `progress.tsx` to link to the new detail route.
     - [ ] Subtask: Add navigation back to dashboard from detail view.
 - [ ] Task: Conductor - User Manual Verification 'Detailed History View' (Protocol in workflow.md)
