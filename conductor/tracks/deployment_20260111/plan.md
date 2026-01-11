@@ -10,10 +10,10 @@
 - [x] Task: Conductor - User Manual Verification 'Configuration & Verification' (Protocol in workflow.md) 8cd46b9
 
 ## Phase 2: Documentation
-- [ ] Task: Create Deployment Guide
-    - [ ] Subtask: Create `docs/DEPLOYMENT.md`.
-    - [ ] Subtask: Document required environment variables.
-    - [ ] Subtask: Write step-by-step instructions for Vercel deployment.
-- [ ] Task: Update README
+- [x] Task: Create Deployment Guide
+    - [x] Subtask: Create `docs/DEPLOYMENT.md`.
+    - [x] Subtask: Document required environment variables.
+    - [x] Subtask: Write step-by-step instructions for Vercel deployment.
+- [~] Task: Update README
     - [ ] Subtask: Link to `docs/DEPLOYMENT.md` from the main `README.md`.
 - [ ] Task: Conductor - User Manual Verification 'Documentation' (Protocol in workflow.md)
