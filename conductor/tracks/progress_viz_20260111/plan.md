@@ -17,12 +17,12 @@
     - [x] Subtask: Ensure chart handles empty or single-data-point states gracefully.
 - [x] Task: Conductor - User Manual Verification 'Dashboard Integration' (Protocol in workflow.md) bbd9732
 
-## Phase 3: Detailed History View
-- [x] Task: Create Progress Detail Route
-    - [ ] Subtask: Create `app/routes/progress.$quizId.tsx`.
-    - [ ] Subtask: Implement loader to fetch full history for a specific quiz (similar to main progress loader but focused).
-    - [ ] Subtask: Implement UI with a large chart and a sortable/filterable history table.
-- [~] Task: Link Dashboard to Details
-    - [ ] Subtask: Update `ProgressCard` in `progress.tsx` to link to the new detail route.
-    - [ ] Subtask: Add navigation back to dashboard from detail view.
-- [ ] Task: Conductor - User Manual Verification 'Detailed History View' (Protocol in workflow.md)
+## Phase 3: Detailed History View [checkpoint: 6810481]
+- [x] Task: Create Progress Detail Route 6810481
+    - [x] Subtask: Create `app/routes/progress.$quizId.tsx`.
+    - [x] Subtask: Implement loader to fetch full history for a specific quiz (similar to main progress loader but focused).
+    - [x] Subtask: Implement UI with a large chart and a sortable/filterable history table.
+- [x] Task: Link Dashboard to Details 6810481
+    - [x] Subtask: Update `ProgressCard` in `progress.tsx` to link to the new detail route.
+    - [x] Subtask: Add navigation back to dashboard from detail view.
+- [x] Task: Conductor - User Manual Verification 'Detailed History View' (Protocol in workflow.md) 6810481
