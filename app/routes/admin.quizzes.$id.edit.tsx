@@ -4,7 +4,7 @@ import { getCollection, ObjectId } from "~/lib/db.server";
 import type { Quiz, SerializedQuiz, Question } from "~/types/quiz";
 import { requireAdmin } from "~/lib/auth.server";
 import React, { useState } from "react";
-import { QuestionEditor } from "~/components/QuestionEditor";
+import { QuestionList } from "~/components/admin/QuestionList";
 import { Button } from "~/components/Button";
 import { Card } from "~/components/Card";
 import { ScoreRangeEditor } from "~/components/ScoreRangeEditor";
@@ -158,41 +158,6 @@ export default function EditQuiz({ loaderData, actionData }: Route.ComponentProp
 
     const [questions, setQuestions] = useState<Question[]>(quiz.questions);
     const [scoreRanges, setScoreRanges] = useState<ScoreRange[]>(quiz.scoreRanges || []);
-
-    const addQuestion = () => {
-        const newQuestion: Question = {
-            id: `${Date.now()}`,
-            text: '',
-            type: 'multiple-choice',
-            options: ['', ''],
-            scoreMapping: {},
-        };
-        setQuestions([...questions, newQuestion]);
-    };
-
-    const updateQuestion = (index: number, updatedQuestion: Question) => {
-        const newQuestions = [...questions];
-        newQuestions[index] = updatedQuestion;
-        setQuestions(newQuestions);
-    };
-
-    const removeQuestion = (index: number) => {
-        if (questions.length > 1) {
-            setQuestions(questions.filter((_, i) => i !== index));
-        }
-    };
-
-    const duplicateQuestion = (index: number) => {
-        const questionToDuplicate = questions[index];
-        const newQuestion: Question = {
-            ...questionToDuplicate,
-            id: `${Date.now()}`,
-            text: `${questionToDuplicate.text} (Copy)`,
-        };
-        const newQuestions = [...questions];
-        newQuestions.splice(index + 1, 0, newQuestion);
-        setQuestions(newQuestions);
-    };
 
     return (
         <div>
@@ -356,42 +321,11 @@ export default function EditQuiz({ loaderData, actionData }: Route.ComponentProp
                 </Card>
 
                 {/* Questions */}
-                <div>
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xl font-bold text-warm-gray-900">
-                            Questions
-                        </h2>
-                        <Button
-                            type="button"
-                            onClick={addQuestion}
-                            variant="secondary"
-                            size="sm"
-                        >
-                            + Add Question
-                        </Button>
-                    </div>
-
-                    {errors?.questions && (
-                        <div className="bg-orange-50 border-l-4 border-orange-500 p-4 mb-4 rounded-r-lg">
-                            <p className="text-orange-800 text-sm">
-                                {errors.questions}
-                            </p>
-                        </div>
-                    )}
-
-                    <div className="space-y-6">
-                        {questions.map((question, index) => (
-                            <QuestionEditor
-                                key={question.id}
-                                question={question}
-                                index={index}
-                                onChange={updateQuestion}
-                                onRemove={removeQuestion}
-                                onDuplicate={duplicateQuestion}
-                            />
-                        ))}
-                    </div>
-                </div>
+                <QuestionList
+                    questions={questions}
+                    onQuestionsChange={setQuestions}
+                    errors={errors}
+                />
 
                 {/* Scoring Logic */}
                 <ScoreRangeEditor

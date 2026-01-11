@@ -20,7 +20,7 @@
 - [x] Task: Conductor - User Manual Verification 'Quiz Management Dashboard (List & Create)' (Protocol in workflow.md) 8582b92
 
 ## Phase 3: Dynamic Question Editor
-- [ ] Task: Question Component Architecture
+- [~] Task: Question Component Architecture
     - [ ] Subtask: Create `app/components/admin/QuestionEditor.tsx` component to handle a single question's state (text, type, options).
     - [ ] Subtask: Create `app/components/admin/QuestionList.tsx` to manage the array of questions.
 - [ ] Task: Implement Question Management Logic

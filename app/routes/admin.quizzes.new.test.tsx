@@ -34,16 +34,6 @@ vi.mock('node:crypto', () => ({
 }));
 
 // Mock child components to simplify integration testing
-vi.mock('~/components/QuestionEditor', () => ({
-    QuestionEditor: ({ question, onDuplicate, onRemove }: { question: { id: string; text?: string }; onDuplicate: (index: number) => void; onRemove: (index: number) => void }) => (
-        <div data-testid={`question-${question.id}`}>
-            <div>{question.text || 'New Question'}</div>
-            <button onClick={() => onDuplicate(0)}>Duplicate</button>
-            <button onClick={() => onRemove(0)}>Remove</button>
-        </div>
-    )
-}));
-
 vi.mock('~/components/ScoreRangeEditor', () => ({
     ScoreRangeEditor: ({ onChange }: { onChange: (ranges: unknown[]) => void }) => (
         <button onClick={() => onChange([{ min: 0, max: 10, label: 'Low', description: 'Low Score', color: 'green' }])}>
@@ -99,10 +89,8 @@ describe('Admin New Quiz Route', () => {
             const addBtn = screen.getByText('+ Add Question');
             fireEvent.click(addBtn);
 
-            // We mock QuestionEditor, so we count them or look for specific mock output
-            // Initial state has 1 question. After click, should have 2.
             await waitFor(() => {
-                const questions = screen.getAllByTestId(/^question-/);
+                const questions = screen.getAllByText(/Question \d+/);
                 expect(questions).toHaveLength(2);
             });
         });
@@ -137,7 +125,7 @@ describe('Admin New Quiz Route', () => {
             );
             render(<RouterProvider router={router} />);
 
-            const titleInput = screen.getByLabelText(/Title/i);
+            const titleInput = screen.getByLabelText(/Quiz Title/i);
             fireEvent.change(titleInput, { target: { value: 'My New Quiz' } });
 
             expect(titleInput).toHaveValue('My New Quiz');
@@ -196,7 +184,7 @@ describe('Admin New Quiz Route', () => {
             fireEvent.click(duplicateBtns[0]);
 
             await waitFor(() => {
-                const questions = screen.getAllByTestId(/^question-/);
+                const questions = screen.getAllByText(/Question \d+/);
                 expect(questions).toHaveLength(2);
             });
         });
@@ -214,14 +202,14 @@ describe('Admin New Quiz Route', () => {
 
             // Add a question first so we have 2
             fireEvent.click(screen.getByText('+ Add Question'));
-            await waitFor(() => expect(screen.getAllByTestId(/^question-/)).toHaveLength(2));
+            await waitFor(() => expect(screen.getAllByText(/Question \d+/)).toHaveLength(2));
 
             // Remove one
             const removeBtns = screen.getAllByText('Remove');
             fireEvent.click(removeBtns[0]);
 
             await waitFor(() => {
-                const questions = screen.getAllByTestId(/^question-/);
+                const questions = screen.getAllByText(/Question \d+/);
                 expect(questions).toHaveLength(1);
             });
         });
