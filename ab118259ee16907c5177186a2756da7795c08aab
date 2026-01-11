@@ -1,0 +1,9 @@
+Task Summary: Score Range Editor
+Summary: Moved `ScoreRangeEditor` to `app/components/admin/` and updated its internal imports to use absolute paths. Updated import paths in `admin.quizzes.new` and `admin.quizzes.$id.edit` routes. Refactored `admin.quizzes.new.test.tsx` to use the real component instead of a mock.
+Files:
+- app/components/admin/ScoreRangeEditor.tsx
+- app/components/admin/ScoreRangeEditor.test.tsx
+- app/routes/admin.quizzes.new.tsx
+- app/routes/admin.quizzes.new.test.tsx
+- app/routes/admin.quizzes.$id.edit.tsx
+Why: Consistent project structure and verified integration with real components.
