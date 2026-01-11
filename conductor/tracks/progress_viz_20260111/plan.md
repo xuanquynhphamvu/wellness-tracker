@@ -1,7 +1,7 @@
 # Track Plan: Enhance Progress Visualization
 
 ## Phase 1: Infrastructure & Charting Foundation
-- [ ] Task: Install Dependencies
+- [x] Task: Install Dependencies 2d90554
     - [ ] Subtask: Install `recharts` and `@types/recharts` (if needed).
     - [ ] Subtask: Verify installation by checking `package.json`.
 - [ ] Task: Create Base Chart Component
