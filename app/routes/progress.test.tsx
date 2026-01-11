@@ -210,6 +210,7 @@ describe('Progress Route', () => {
             expect(screen.getByText('↗️ Finding balance')).toBeInTheDocument();
             expect(screen.getAllByText('20')).toHaveLength(2); // Latest and Best
             expect(screen.getByTestId('progress-chart')).toBeInTheDocument();
+            expect(screen.getByText('View Details →')).toBeInTheDocument();
         });
     });
 });

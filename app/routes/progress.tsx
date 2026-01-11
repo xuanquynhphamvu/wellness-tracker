@@ -1,5 +1,6 @@
 import React from "react";
 import type { Route } from "./+types/progress";
+import { Link } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import { Button } from "~/components/Button";
 import { Card } from "~/components/Card";
@@ -187,20 +188,30 @@ function ProgressCard({ progress }: { progress: QuizProgress }) {
                 </div>
             </div>
 
-            {/* Change Indicator */}
-            {progress.attempts > 1 && (
-                <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                        Change from first attempt:
-                    </span>
-                    <span className={`text-lg font-semibold ${progress.change > 0 ? 'text-green-600 dark:text-green-400' :
-                        progress.change < 0 ? 'text-orange-600 dark:text-orange-400' :
-                            'text-gray-600 dark:text-gray-400'
-                        }`}>
-                        {progress.change > 0 ? '+' : ''}{progress.change}
-                    </span>
+            {/* Change Indicator and History Link */}
+            <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex items-center gap-4">
+                    {progress.attempts > 1 && (
+                        <div>
+                            <span className="text-sm text-gray-600 dark:text-gray-400 mr-2">
+                                Change:
+                            </span>
+                            <span className={`text-lg font-semibold ${progress.change > 0 ? 'text-green-600 dark:text-green-400' :
+                                progress.change < 0 ? 'text-orange-600 dark:text-orange-400' :
+                                    'text-gray-600 dark:text-gray-400'
+                                }`}>
+                                {progress.change > 0 ? '+' : ''}{progress.change}
+                            </span>
+                        </div>
+                    )}
                 </div>
-            )}
+                <Link
+                    to={`/progress/${progress.quizId}`}
+                    className="text-sm font-medium text-sage-600 hover:text-sage-700 flex items-center gap-1"
+                >
+                    View Details →
+                </Link>
+            </div>
         </div>
     );
 }
