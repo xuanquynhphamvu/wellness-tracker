@@ -116,4 +116,29 @@ describe('calculateScore', () => {
             expect(calculateMaxScore(questions)).toBe(13);
         });
     });
+
+    describe('Sub-scale Scoring', () => {
+        it('calculates sub-scores by category', () => {
+            const questions: Question[] = [
+                { id: '1', text: 'Q1', type: 'scale', scaleMax: 10, category: 'Stress' },
+                { id: '2', text: 'Q2', type: 'scale', scaleMax: 10, category: 'Anxiety' },
+                { id: '3', text: 'Q3', type: 'scale', scaleMax: 10, category: 'Stress' },
+                { id: '4', text: 'Q4', type: 'scale', scaleMax: 10 } // No category
+            ];
+
+            const formData = new FormData();
+            formData.append('question_1', '5');
+            formData.append('question_2', '3');
+            formData.append('question_3', '5');
+            formData.append('question_4', '2');
+
+            const result = calculateScore(formData, questions, []);
+
+            expect(result.totalScore).toBe(15);
+            expect(result.subScores).toEqual({
+                'Stress': 10,
+                'Anxiety': 3
+            });
+        });
+    });
 });

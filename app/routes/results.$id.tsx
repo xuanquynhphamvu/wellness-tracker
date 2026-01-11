@@ -95,11 +95,15 @@ export default function Results({ loaderData }: Route.ComponentProps) {
         }
     } else {
         // Fallback Logic
+        const isHigherBetter = quiz.scoringDirection === 'higher-is-better' || !quiz.scoringDirection;
+
         if (percentage >= 70) {
             status = {
-                label: "Doing Well",
-                description: "Your responses indicate positive mental wellness.",
-                color: "green"
+                label: isHigherBetter ? "Doing Well" : "Needs Care",
+                description: isHigherBetter 
+                    ? "Your responses indicate positive mental wellness." 
+                    : "Your responses may indicate areas for improvement.",
+                color: isHigherBetter ? "green" : "orange"
             };
         } else if (percentage >= 40) {
             status = {
@@ -109,9 +113,11 @@ export default function Results({ loaderData }: Route.ComponentProps) {
             };
         } else {
             status = {
-                label: "Needs Care",
-                description: "Your responses may indicate areas for improvement.",
-                color: "orange"
+                label: isHigherBetter ? "Needs Care" : "Doing Well",
+                description: isHigherBetter 
+                    ? "Your responses may indicate areas for improvement." 
+                    : "Your responses indicate positive mental wellness.",
+                color: isHigherBetter ? "orange" : "green"
             };
         }
     }
@@ -169,6 +175,22 @@ export default function Results({ loaderData }: Route.ComponentProps) {
                             </p>
                         </div>
                     </Card>
+
+                    {/* Sub-scores */}
+                    {result.subScores && Object.keys(result.subScores).length > 0 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {Object.entries(result.subScores).map(([category, score]) => (
+                                <Card key={category} className="p-6 text-center">
+                                    <h3 className="text-sm font-semibold text-warm-gray-500 uppercase tracking-wider mb-2">
+                                        {category}
+                                    </h3>
+                                    <div className="text-3xl font-bold text-warm-gray-900">
+                                        {score}
+                                    </div>
+                                </Card>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Navigation Actions */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

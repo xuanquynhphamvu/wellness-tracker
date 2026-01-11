@@ -3,6 +3,7 @@ import type { Question, ScoreRange } from "~/types/quiz";
 
 export interface CalculateScoreResult {
     totalScore: number;
+    subScores?: Record<string, number>;
     resultMessage: string;
     resultDescription: string;
     answers: { questionId: string; answer: string | number }[];
@@ -14,6 +15,7 @@ export function calculateScore(
     scoreRanges: ScoreRange[]
 ): CalculateScoreResult {
     let totalScore = 0;
+    const subScores: Record<string, number> = {};
     const answers: { questionId: string; answer: string | number }[] = [];
 
     questions.forEach((question) => {
@@ -29,11 +31,19 @@ export function calculateScore(
                 answer: answerValue,
             });
 
+            let points = 0;
             // Calculate score if mapping exists
             if (question.scoreMapping && typeof answerValue === 'string') {
-                totalScore += question.scoreMapping[answerValue] || 0;
+                points = question.scoreMapping[answerValue] || 0;
             } else if (question.type === 'scale' && typeof answerValue === 'number') {
-                totalScore += answerValue;
+                points = answerValue;
+            }
+
+            totalScore += points;
+
+            if (question.category && question.category.trim() !== '') {
+                const category = question.category.trim();
+                subScores[category] = (subScores[category] || 0) + points;
             }
         }
     });
@@ -55,6 +65,7 @@ export function calculateScore(
 
     return {
         totalScore,
+        subScores: Object.keys(subScores).length > 0 ? subScores : undefined,
         resultMessage,
         resultDescription,
         answers

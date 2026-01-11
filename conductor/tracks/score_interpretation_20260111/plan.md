@@ -12,11 +12,11 @@
 - [x] Task: Conductor - User Manual Verification 'Data Model & Admin UI' (Protocol in workflow.md) 8dc93bf
 
 ## Phase 2: Scoring Logic & Results
-- [ ] Task: Update Scoring Utility
-    - [ ] Subtask: Update `calculateScore` in `app/utils/scoring.ts` to aggregate scores by category.
-    - [ ] Subtask: Update `calculateMaxScore` to support categories (optional but good).
-    - [ ] Subtask: Update tests for scoring logic.
-- [ ] Task: Update Results Display
+- [x] Task: Update Scoring Utility
+    - [x] Subtask: Update `calculateScore` in `app/utils/scoring.ts` to aggregate scores by category.
+    - [x] Subtask: Update `calculateMaxScore` to support categories (optional but good).
+    - [x] Subtask: Update tests for scoring logic.
+- [~] Task: Update Results Display
     - [ ] Subtask: Update `app/routes/results.$id.tsx` to display sub-scores if present.
     - [ ] Subtask: Update `app/routes/results.$id.tsx` to respect `scoringDirection` for color coding.
 - [ ] Task: Conductor - User Manual Verification 'Scoring Logic & Results' (Protocol in workflow.md)
