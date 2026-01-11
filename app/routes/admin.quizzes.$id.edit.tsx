@@ -3,7 +3,7 @@ import { Form, redirect, Link, useActionData, useLoaderData, useNavigation } fro
 import { getCollection, ObjectId } from "~/lib/db.server";
 import type { Quiz, SerializedQuiz, Question } from "~/types/quiz";
 import { requireAdmin } from "~/lib/auth.server";
-import { useState } from "react";
+import React, { useState } from "react";
 import { QuestionEditor } from "~/components/QuestionEditor";
 import { Button } from "~/components/Button";
 import { Card } from "~/components/Card";
@@ -12,6 +12,7 @@ import type { ScoreRange } from "~/types/quiz";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as crypto from "node:crypto";
+import { validateQuiz } from "~/utils/quiz-validation";
 
 /**
  * Edit Quiz Route
@@ -97,52 +98,24 @@ export async function action({ request, params }: Route.ActionArgs) {
     }
 
     // Validation
-    const errors: Record<string, string> = {};
-
-    if (!title || String(title).trim().length === 0) {
-        errors.title = 'Title is required';
-    }
-
-    if (!description || String(description).trim().length === 0) {
-        errors.description = 'Description is required';
-    }
-
     let questions: Question[] = [];
     let scoreRanges: ScoreRange[] = [];
+    let parseError: string | null = null;
+
     try {
         questions = JSON.parse(questionsString);
         scoreRanges = JSON.parse(scoreRangesString);
     } catch {
-        errors.questions = 'Invalid data';
+        parseError = 'Invalid data';
     }
 
-    if (questions.length === 0) {
-        errors.questions = 'At least one question is required';
+    const { errors, isValid } = validateQuiz(title, description, questions, scoreRanges);
+
+    if (parseError) {
+        errors.questions = parseError;
     }
 
-    // Validate each question
-    questions.forEach((q, index) => {
-        if (!q.text || q.text.trim().length === 0) {
-            errors[`question_${index}`] = `Question ${index + 1} text is required`;
-        }
-
-        if (q.type === 'multiple-choice') {
-            if (!q.options || q.options.length < 2) {
-                errors[`question_${index}`] = `Question ${index + 1} must have at least 2 options`;
-            }
-            if (q.options?.some(opt => !opt || opt.trim().length === 0)) {
-                errors[`question_${index}`] = `Question ${index + 1} has empty options`;
-            }
-        }
-
-        if (q.type === 'scale') {
-            if ((q.scaleMin || 0) >= (q.scaleMax || 0)) {
-                errors[`question_${index}`] = `Question ${index + 1} scale min must be less than max`;
-            }
-        }
-    });
-
-    if (Object.keys(errors).length > 0) {
+    if (!isValid || parseError) {
         return { errors };
     }
 
@@ -248,10 +221,11 @@ export default function EditQuiz({ loaderData, actionData }: Route.ComponentProp
 
                     <div className="space-y-6">
                         <div>
-                            <label className="block text-sm font-semibold text-warm-gray-700 mb-2">
+                            <label htmlFor="title" className="block text-sm font-semibold text-warm-gray-700 mb-2">
                                 Quiz Title *
                             </label>
                             <input
+                                id="title"
                                 type="text"
                                 name="title"
                                 defaultValue={quiz.title}
@@ -266,10 +240,11 @@ export default function EditQuiz({ loaderData, actionData }: Route.ComponentProp
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-warm-gray-700 mb-2">
+                            <label htmlFor="description" className="block text-sm font-semibold text-warm-gray-700 mb-2">
                                 Description *
                             </label>
                             <textarea
+                                id="description"
                                 name="description"
                                 rows={4}
                                 defaultValue={quiz.description}

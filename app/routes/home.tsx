@@ -1,5 +1,6 @@
+import React from "react";
 import type { Route } from "./+types/home";
-import { Link, Form } from "react-router";
+import { Form } from "react-router";
 import { getUser } from "~/lib/session.server";
 import { Button } from "~/components/Button";
 
@@ -21,7 +22,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   return { user };
 }
 
-export function meta({ }: Route.MetaArgs) {
+export function meta() {
   return [
     { title: "Wellness Tracker - Mental Health Quiz App" },
     { name: "description", content: "Track your mental wellness with evidence-based tests" },
@@ -69,7 +70,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <main className="container mx-auto px-6 py-12 lg:py-20">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-warm-gray-900 mb-8 tracking-tight leading-tight">
-            You're in a safe space. <br className="hidden md:block" />
+            You&apos;re in a safe space. <br className="hidden md:block" />
             <span className="text-sage-600">Take your time.</span>
           </h1>
 
@@ -94,7 +95,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                 Choose gently
               </h3>
               <p className="text-warm-gray-600 leading-relaxed">
-                Select a test that resonates with how you're feeling right now.
+                Select a test that resonates with how you&apos;re feeling right now.
               </p>
             </div>
 

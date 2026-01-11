@@ -1,3 +1,4 @@
+import React from "react";
 import { Outlet, Link } from "react-router";
 import type { Route } from "./+types/admin";
 import { requireAdmin } from "~/lib/auth.server";
