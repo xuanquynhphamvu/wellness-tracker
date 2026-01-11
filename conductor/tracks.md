@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [~] Track: Implement Full Quiz Builder
-*Link: [./conductor/tracks/quiz_builder_20260111/](./conductor/tracks/quiz_builder_20260111/)*
+## [ ] Track: Enhance Progress Visualization
+*Link: [./conductor/tracks/progress_viz_20260111/](./conductor/tracks/progress_viz_20260111/)*
