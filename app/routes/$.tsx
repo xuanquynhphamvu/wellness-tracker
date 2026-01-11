@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router";
 
 /**
@@ -19,7 +20,7 @@ export default function NotFound() {
                         Page Not Found
                     </h2>
                     <p className="text-gray-600 dark:text-gray-300 mt-4">
-                        The page you're looking for doesn't exist or has been moved.
+                        The page you&apos;re looking for doesn&apos;t exist or has been moved.
                     </p>
                 </div>
 
