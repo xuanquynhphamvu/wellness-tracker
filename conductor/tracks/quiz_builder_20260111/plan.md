@@ -37,7 +37,7 @@
     - [ ] Subtask: Create `app/components/admin/ScoreRangeEditor.tsx` to manage min/max/interpretation fields.
     - [ ] Subtask: Integrate into the Edit Route.
     - [ ] Subtask: Add server-side validation to ensure ranges don't overlap and cover the possible score spectrum.
-- [ ] Task: Final Polish & UI Review
+- [~] Task: Final Polish & UI Review
     - [ ] Subtask: Apply Tailwind styling for a clean, professional admin interface.
     - [ ] Subtask: Ensure keyboard navigation works for all new inputs and controls.
     - [ ] Subtask: Manual verification of the full "Create -> Edit -> Take" flow.

@@ -73,7 +73,7 @@ describe('QuestionEditor', () => {
 
     it('adds a new option', () => {
         render(<QuestionEditor {...defaultProps} />);
-        const addBtn = screen.getByText('+ Add Option');
+        const addBtn = screen.getByText(/Add another option/i);
         fireEvent.click(addBtn);
 
         expect(mockOnChange).toHaveBeenCalledWith(0, expect.objectContaining({
@@ -88,7 +88,7 @@ describe('QuestionEditor', () => {
         };
         render(<QuestionEditor {...defaultProps} question={questionWithOptions} />);
         
-        const removeBtns = screen.getAllByText('✕');
+        const removeBtns = screen.getAllByTitle(/Remove Option/i);
         fireEvent.click(removeBtns[0]);
 
         expect(mockOnChange).toHaveBeenCalledWith(0, expect.objectContaining({
@@ -132,7 +132,7 @@ describe('QuestionEditor', () => {
         };
         render(<QuestionEditor {...defaultProps} question={textQuestion} />);
         
-        expect(screen.getByText(/Text responses allow users to type free-form answers/i)).toBeInTheDocument();
+        expect(screen.getByText(/allow users to type free-form answers/)).toBeInTheDocument();
     });
 
     it('updates score mapping', () => {
