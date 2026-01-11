@@ -7,6 +7,8 @@ import { requireAdmin } from "~/lib/auth.server";
 import { Button } from "~/components/Button";
 import { Card } from "~/components/Card";
 
+import { getAllQuizzes } from "~/lib/quiz.server";
+
 /**
  * Admin Quiz Management Route
  * 
@@ -22,11 +24,7 @@ import { Card } from "~/components/Card";
  */
 
 export async function loader({ }: Route.LoaderArgs) {
-    const quizzes = await getCollection<Quiz>('quizzes');
-    const allQuizzes = await quizzes
-        .find({})
-        .sort({ order: 1, createdAt: -1 })
-        .toArray();
+    const allQuizzes = await getAllQuizzes();
 
     const serialized: SerializedQuiz[] = allQuizzes.map(quiz => ({
         _id: quiz._id!.toString(),

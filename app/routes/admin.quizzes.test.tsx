@@ -27,8 +27,8 @@ describe('Admin Quizzes Route', () => {
     describe('Loader', () => {
         it('returns serialized quizzes sorted by order and createdAt', async () => {
             const mockQuizzes = [
-                { _id: '1', title: 'Quiz 1', slug: 'quiz-1', order: 1, createdAt: mockDate, updatedAt: mockDate, questions: [] },
-                { _id: '2', title: 'Quiz 2', slug: 'quiz-2', order: 0, createdAt: mockDate, updatedAt: mockDate, questions: [] },
+                { _id: '1', title: 'Quiz 1', slug: 'quiz-1', isPublished: true, order: 1, createdAt: mockDate, updatedAt: mockDate, questions: [] },
+                { _id: '2', title: 'Quiz 2', slug: 'quiz-2', isPublished: false, order: 0, createdAt: mockDate, updatedAt: mockDate, questions: [] },
             ];
 
             const mockFindFn = {
@@ -49,6 +49,7 @@ describe('Admin Quizzes Route', () => {
             expect(mockFindFn.sort).toHaveBeenCalledWith({ order: 1, createdAt: -1 });
             expect(result.quizzes).toHaveLength(2);
             expect(result.quizzes[0].title).toBe('Quiz 1');
+            expect(result.quizzes[0].isPublished).toBe(true);
             expect(result.quizzes[0].createdAt).toBe(mockDate.toISOString());
         });
     });

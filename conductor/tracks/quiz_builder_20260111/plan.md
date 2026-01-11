@@ -10,7 +10,7 @@
 - [x] Task: Conductor - User Manual Verification 'Data Model & Backend Foundation' (Protocol in workflow.md) d7bc5ca
 
 ## Phase 2: Quiz Management Dashboard (List & Create)
-- [ ] Task: Enhance Admin Quiz List
+- [~] Task: Enhance Admin Quiz List
     - [ ] Subtask: Update `app/routes/admin.quizzes.tsx` to display more details (question count, status) and provide "Edit" and "Delete" actions.
     - [ ] Subtask: Write integration tests for the list view loader.
 - [ ] Task: Basic Quiz Creation Form
