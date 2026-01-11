@@ -1,14 +1,14 @@
 # Track Plan: Enhance Progress Visualization
 
-## Phase 1: Infrastructure & Charting Foundation
+## Phase 1: Infrastructure & Charting Foundation [checkpoint: 3c399f3]
 - [x] Task: Install Dependencies 2d90554
-    - [ ] Subtask: Install `recharts` and `@types/recharts` (if needed).
-    - [ ] Subtask: Verify installation by checking `package.json`.
+    - [x] Subtask: Install `recharts` and `@types/recharts` (if needed).
+    - [x] Subtask: Verify installation by checking `package.json`.
 - [x] Task: Create Base Chart Component 2d6d84d
-    - [ ] Subtask: Create `app/components/ProgressChart.tsx`.
-    - [ ] Subtask: Implement a responsive line chart using `recharts` that accepts `data` (date, score) and `color` props.
-    - [ ] Subtask: Write a unit test to verify the component renders without crashing.
-- [ ] Task: Conductor - User Manual Verification 'Infrastructure & Charting Foundation' (Protocol in workflow.md)
+    - [x] Subtask: Create `app/components/ProgressChart.tsx`.
+    - [x] Subtask: Implement a responsive line chart using `recharts` that accepts `data` (date, score) and `color` props.
+    - [x] Subtask: Write a unit test to verify the component renders without crashing.
+- [x] Task: Conductor - User Manual Verification 'Infrastructure & Charting Foundation' (Protocol in workflow.md) 3c399f3
 
 ## Phase 2: Dashboard Integration
 - [ ] Task: Update Progress Dashboard
