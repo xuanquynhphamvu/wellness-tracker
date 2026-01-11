@@ -33,7 +33,7 @@
 - [x] Task: Conductor - User Manual Verification 'Dynamic Question Editor' (Protocol in workflow.md) 9ec79f3
 
 ## Phase 4: Score Range Configuration & Final Polish
-- [~] Task: Score Range Editor
+- [x] Task: Score Range Editor ab11825
     - [ ] Subtask: Create `app/components/admin/ScoreRangeEditor.tsx` to manage min/max/interpretation fields.
     - [ ] Subtask: Integrate into the Edit Route.
     - [ ] Subtask: Add server-side validation to ensure ranges don't overlap and cover the possible score spectrum.
