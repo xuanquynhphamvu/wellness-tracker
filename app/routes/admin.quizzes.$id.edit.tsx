@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { QuestionList } from "~/components/admin/QuestionList";
 import { Button } from "~/components/Button";
 import { Card } from "~/components/Card";
-import { ScoreRangeEditor } from "~/components/ScoreRangeEditor";
+import { ScoreRangeEditor } from "~/components/admin/ScoreRangeEditor";
 import type { ScoreRange } from "~/types/quiz";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";

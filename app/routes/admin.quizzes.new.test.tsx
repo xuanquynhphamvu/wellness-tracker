@@ -106,12 +106,12 @@ describe('Admin New Quiz Route', () => {
             );
             render(<RouterProvider router={router} />);
 
-            // Click the mocked Add Score Range button
-            fireEvent.click(screen.getByText('Add Score Range'));
+            // Click the real Add Score Range button
+            fireEvent.click(screen.getByText('+ Add Score Range'));
 
             // Check hidden input
             const hiddenInput = document.querySelector('input[name="scoreRanges"]') as HTMLInputElement;
-            expect(hiddenInput.value).toContain('Low Score');
+            expect(hiddenInput.value).toContain('min');
         });
 
         it('updates quiz title', () => {

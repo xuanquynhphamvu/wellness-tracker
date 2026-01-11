@@ -1,7 +1,7 @@
 import React from "react";
 import type { ScoreRange } from "~/types/quiz";
-import { Button } from "./Button";
-import { Card } from "./Card";
+import { Button } from "~/components/Button";
+import { Card } from "~/components/Card";
 
 interface ScoreRangeEditorProps {
     scoreRanges: ScoreRange[];
