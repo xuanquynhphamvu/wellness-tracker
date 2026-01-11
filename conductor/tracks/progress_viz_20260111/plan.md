@@ -4,7 +4,7 @@
 - [x] Task: Install Dependencies 2d90554
     - [ ] Subtask: Install `recharts` and `@types/recharts` (if needed).
     - [ ] Subtask: Verify installation by checking `package.json`.
-- [~] Task: Create Base Chart Component
+- [x] Task: Create Base Chart Component 2d6d84d
     - [ ] Subtask: Create `app/components/ProgressChart.tsx`.
     - [ ] Subtask: Implement a responsive line chart using `recharts` that accepts `data` (date, score) and `color` props.
     - [ ] Subtask: Write a unit test to verify the component renders without crashing.
