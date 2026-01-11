@@ -11,7 +11,7 @@
 - [x] Task: Conductor - User Manual Verification 'Infrastructure & Charting Foundation' (Protocol in workflow.md) 3c399f3
 
 ## Phase 2: Dashboard Integration
-- [~] Task: Update Progress Dashboard
+- [x] Task: Update Progress Dashboard 38cb548
     - [ ] Subtask: Modify `app/routes/progress.tsx` to include the `ProgressChart` within the `ProgressCard`.
     - [ ] Subtask: Adjust layout to accommodate the chart (e.g., move stats to side or below).
     - [ ] Subtask: Ensure chart handles empty or single-data-point states gracefully.
