@@ -145,6 +145,20 @@ export function QuestionEditor({
                     </select>
                 </div>
 
+                {/* Question Category */}
+                <div>
+                    <label className="block text-sm font-semibold text-warm-gray-700 dark:text-gray-300 mb-2">
+                        Category (Optional)
+                    </label>
+                    <input
+                        type="text"
+                        value={question.category || ''}
+                        onChange={(e) => updateQuestion({ category: e.target.value })}
+                        className="w-full px-4 py-3 rounded-xl border border-warm-gray-200 dark:border-warm-gray-700 bg-warm-gray-50 dark:bg-warm-gray-900/50 text-warm-gray-900 dark:text-white focus:ring-2 focus:ring-sage-500/20 focus:border-sage-500 transition-all outline-none"
+                        placeholder="e.g., Stress, Anxiety, Depression"
+                    />
+                </div>
+
                 {/* Multiple Choice Options */}
                 {question.type === 'multiple-choice' && (
                     <div className="pt-4 animate-in fade-in slide-in-from-top-2 duration-300">

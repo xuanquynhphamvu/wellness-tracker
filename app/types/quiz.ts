@@ -31,6 +31,7 @@ export interface Quiz {
     scoreRanges?: ScoreRange[];
     coverImage?: string;
     order?: number;
+    scoringDirection?: 'higher-is-better' | 'lower-is-better';
 }
 
 export interface Question {
@@ -41,6 +42,7 @@ export interface Question {
     scaleMin?: number; // For scale questions (e.g., 1)
     scaleMax?: number; // For scale questions (e.g., 10)
     scoreMapping?: Record<string, number>; // Map answers to scores
+    category?: string; // E.g., "Anxiety", "Stress"
 }
 
 /**
@@ -62,6 +64,7 @@ export interface SerializedQuiz {
     scoreRanges?: ScoreRange[];
     coverImage?: string;
     order?: number;
+    scoringDirection?: 'higher-is-better' | 'lower-is-better';
 }
 
 /**
@@ -76,5 +79,6 @@ export function serializeQuiz(quiz: Quiz): SerializedQuiz {
         scoreRanges: quiz.scoreRanges || [],
         coverImage: quiz.coverImage,
         order: quiz.order,
+        scoringDirection: quiz.scoringDirection || 'higher-is-better',
     };
 }

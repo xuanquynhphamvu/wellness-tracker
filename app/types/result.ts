@@ -13,6 +13,7 @@ export interface QuizResult {
     sessionId?: string; // Optional: for tracking sessions
     answers: Answer[];
     score: number;
+    subScores?: Record<string, number>;
     completedAt: Date;
 }
 
@@ -31,6 +32,7 @@ export interface SerializedQuizResult {
     sessionId?: string;
     answers: Answer[];
     score: number;
+    subScores?: Record<string, number>;
     completedAt: string;
 }
 
@@ -45,6 +47,7 @@ export function serializeQuizResult(result: QuizResult): SerializedQuizResult {
         sessionId: result.sessionId,
         answers: result.answers,
         score: result.score,
+        subScores: result.subScores,
         completedAt: result.completedAt.toISOString(),
     };
 }

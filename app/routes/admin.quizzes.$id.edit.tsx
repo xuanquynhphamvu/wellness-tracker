@@ -63,6 +63,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     const description = String(formData.get("description"));
     const questionsString = String(formData.get("questions"));
     const scoreRangesString = formData.get("scoreRanges") ? String(formData.get("scoreRanges")) : "[]";
+    const scoringDirection = String(formData.get("scoringDirection") || "higher-is-better");
 
     // File Upload Logic
     let coverImage = formData.get('coverImage') ? String(formData.get('coverImage')) : undefined;
@@ -121,6 +122,7 @@ export async function action({ request, params }: Route.ActionArgs) {
                 baseTestName: formData.get('baseTestName') ? String(formData.get('baseTestName')) : undefined,
                 shortName: formData.get('shortName') ? String(formData.get('shortName')) : undefined,
                 instructions: formData.get('instructions') ? String(formData.get('instructions')) : undefined,
+                scoringDirection: scoringDirection as 'higher-is-better' | 'lower-is-better',
                 coverImage,
                 questions,
                 scoreRanges,
@@ -272,6 +274,38 @@ export default function EditQuiz({ loaderData, actionData }: Route.ComponentProp
                                 className="w-full px-4 py-2 rounded-xl border border-warm-gray-200 bg-warm-gray-50 text-warm-gray-900 focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all outline-none resize-none"
                                 placeholder="Explain how users should answer..."
                             />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-semibold text-warm-gray-700 mb-2">
+                                Scoring Direction
+                            </label>
+                            <div className="flex gap-6">
+                                <label className="flex items-center gap-2 cursor-pointer group">
+                                    <input
+                                        type="radio"
+                                        name="scoringDirection"
+                                        value="higher-is-better"
+                                        defaultChecked={quiz.scoringDirection === 'higher-is-better' || !quiz.scoringDirection}
+                                        className="w-4 h-4 text-sage-600 focus:ring-sage-500 border-gray-300 transition-all"
+                                    />
+                                    <span className="text-warm-gray-700 group-hover:text-warm-gray-900 transition-colors">
+                                        Higher is Better <span className="text-warm-gray-400 text-sm">(e.g., Wellness)</span>
+                                    </span>
+                                </label>
+                                <label className="flex items-center gap-2 cursor-pointer group">
+                                    <input
+                                        type="radio"
+                                        name="scoringDirection"
+                                        value="lower-is-better"
+                                        defaultChecked={quiz.scoringDirection === 'lower-is-better'}
+                                        className="w-4 h-4 text-sage-600 focus:ring-sage-500 border-gray-300 transition-all"
+                                    />
+                                    <span className="text-warm-gray-700 group-hover:text-warm-gray-900 transition-colors">
+                                        Lower is Better <span className="text-warm-gray-400 text-sm">(e.g., Depression)</span>
+                                    </span>
+                                </label>
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

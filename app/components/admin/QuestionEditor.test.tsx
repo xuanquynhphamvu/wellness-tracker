@@ -55,6 +55,16 @@ describe('QuestionEditor', () => {
         expect(mockOnRemove).toHaveBeenCalledWith(0);
     });
 
+    it('updates question category', () => {
+        render(<QuestionEditor {...defaultProps} />);
+        const categoryInput = screen.getByPlaceholderText(/Stress, Anxiety, Depression/i);
+        fireEvent.change(categoryInput, { target: { value: 'Stress' } });
+
+        expect(mockOnChange).toHaveBeenCalledWith(0, expect.objectContaining({
+            category: 'Stress'
+        }));
+    });
+
     it('renders options for multiple-choice', () => {
         render(<QuestionEditor {...defaultProps} />);
         expect(screen.getByDisplayValue('Yes')).toBeInTheDocument();

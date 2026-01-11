@@ -34,7 +34,8 @@ describe("Quiz Types", () => {
                 updatedAt: date.toISOString(),
                 scoreRanges: [],
                 coverImage: undefined,
-                order: 1
+                order: 1,
+                scoringDirection: 'higher-is-better'
             });
         });
 
