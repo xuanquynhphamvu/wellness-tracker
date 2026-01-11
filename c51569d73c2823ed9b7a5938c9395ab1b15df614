@@ -1,0 +1,10 @@
+Task Summary: Add Error Boundaries
+Summary: Implemented `ErrorBoundary` components in `results.$id`, `progress`, `progress.$quizId`, `admin.quizzes`, `admin.quizzes.new`, and `admin.quizzes.$id.edit` routes. These boundaries provide user-friendly error messages and recovery links (e.g., 'Try Again' or 'Back to Home') when routes fail due to invalid IDs or server errors.
+Files:
+- app/routes/results.$id.tsx
+- app/routes/progress.tsx
+- app/routes/progress.$quizId.tsx
+- app/routes/admin.quizzes.tsx
+- app/routes/admin.quizzes.new.tsx
+- app/routes/admin.quizzes.$id.edit.tsx
+Why: To prevent the entire application from crashing when a single route encounters an error, significantly improving the robustness and user experience of the production app.
