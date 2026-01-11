@@ -10,14 +10,14 @@
     - [x] Subtask: Add `ErrorBoundary` to `app/routes/admin.quizzes.new.tsx` and edit route.
 - [x] Task: Conductor - User Manual Verification 'Error Handling & Boundaries' (Protocol in workflow.md) c51569d
 
-## Phase 2: UX & Loading States
-- [~] Task: Enhance Auth Forms
-    - [ ] Subtask: Verify "Logging in..." state in `auth.login.tsx`.
-    - [ ] Subtask: Verify "Creating Account..." state in `auth.register.tsx`.
-- [ ] Task: Enhance Quiz Forms
-    - [ ] Subtask: Add pending state to `quizzes.$id.tsx` (submission button).
-    - [ ] Subtask: Add pending state to `admin.quizzes.new.tsx` and edit route (save button).
-- [ ] Task: Conductor - User Manual Verification 'UX & Loading States' (Protocol in workflow.md)
+## Phase 2: UX & Loading States [checkpoint: ba1cd41]
+- [x] Task: Enhance Auth Forms ba1cd41
+    - [x] Subtask: Verify "Logging in..." state in `auth.login.tsx`.
+    - [x] Subtask: Verify "Creating Account..." state in `auth.register.tsx`.
+- [x] Task: Enhance Quiz Forms ba1cd41
+    - [x] Subtask: Add pending state to `quizzes.$id.tsx` (submission button).
+    - [x] Subtask: Add pending state to `admin.quizzes.new.tsx` and edit route (save button).
+- [x] Task: Conductor - User Manual Verification 'UX & Loading States' (Protocol in workflow.md) ba1cd41
 
 ## Phase 3: SEO & Final Review
 - [ ] Task: Audit Meta Tags
