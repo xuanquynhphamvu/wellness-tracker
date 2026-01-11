@@ -1,14 +1,14 @@
 # Track Plan: Production Polish
 
-## Phase 1: Error Handling & Boundaries
-- [~] Task: Add Error Boundaries to User Routes
-    - [ ] Subtask: Add `ErrorBoundary` to `app/routes/quizzes.$id.tsx` (handle 404/500).
-    - [ ] Subtask: Add `ErrorBoundary` to `app/routes/results.$id.tsx`.
-    - [ ] Subtask: Add `ErrorBoundary` to `app/routes/progress.tsx`.
-- [ ] Task: Add Error Boundaries to Admin Routes
-    - [ ] Subtask: Add `ErrorBoundary` to `app/routes/admin.quizzes.tsx`.
-    - [ ] Subtask: Add `ErrorBoundary` to `app/routes/admin.quizzes.new.tsx` and edit route.
-- [ ] Task: Conductor - User Manual Verification 'Error Handling & Boundaries' (Protocol in workflow.md)
+## Phase 1: Error Handling & Boundaries [checkpoint: c51569d]
+- [x] Task: Add Error Boundaries to User Routes c51569d
+    - [x] Subtask: Add `ErrorBoundary` to `app/routes/quizzes.$id.tsx` (handle 404/500).
+    - [x] Subtask: Add `ErrorBoundary` to `app/routes/results.$id.tsx`.
+    - [x] Subtask: Add `ErrorBoundary` to `app/routes/progress.tsx`.
+- [x] Task: Add Error Boundaries to Admin Routes c51569d
+    - [x] Subtask: Add `ErrorBoundary` to `app/routes/admin.quizzes.tsx`.
+    - [x] Subtask: Add `ErrorBoundary` to `app/routes/admin.quizzes.new.tsx` and edit route.
+- [x] Task: Conductor - User Manual Verification 'Error Handling & Boundaries' (Protocol in workflow.md) c51569d
 
 ## Phase 2: UX & Loading States
 - [ ] Task: Enhance Auth Forms
