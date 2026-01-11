@@ -1,13 +1,13 @@
 # Track Plan: Implement Full Quiz Builder
 
-## Phase 1: Data Model & Backend Foundation
-- [~] Task: Update Quiz Schema
-    - [ ] Subtask: Define TypeScript interfaces for `Question` (with types), `ScoreRange`, and updated `Quiz` model.
-    - [ ] Subtask: Update MongoDB validation schema (if applicable) or Zod validators to reflect the new structure.
-- [ ] Task: Create/Update Backend Services
-    - [ ] Subtask: Create `app/lib/quiz.server.ts` functions for CRUD operations on Quizzes, specifically handling the nested `questions` and `scoreRanges` arrays.
-    - [ ] Subtask: Write unit tests for these service functions.
-- [ ] Task: Conductor - User Manual Verification 'Data Model & Backend Foundation' (Protocol in workflow.md)
+## Phase 1: Data Model & Backend Foundation [checkpoint: d7bc5ca]
+- [x] Task: Update Quiz Schema d7bc5ca
+    - [x] Subtask: Define TypeScript interfaces for `Question` (with types), `ScoreRange`, and updated `Quiz` model.
+    - [x] Subtask: Update MongoDB validation schema (if applicable) or Zod validators to reflect the new structure.
+- [x] Task: Create/Update Backend Services d7bc5ca
+    - [x] Subtask: Create `app/lib/quiz.server.ts` functions for CRUD operations on Quizzes, specifically handling the nested `questions` and `scoreRanges` arrays.
+    - [x] Subtask: Write unit tests for these service functions.
+- [x] Task: Conductor - User Manual Verification 'Data Model & Backend Foundation' (Protocol in workflow.md) d7bc5ca
 
 ## Phase 2: Quiz Management Dashboard (List & Create)
 - [ ] Task: Enhance Admin Quiz List
