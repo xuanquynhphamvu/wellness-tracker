@@ -78,4 +78,30 @@ describe('validateQuiz', () => {
         expect(result.isValid).toBe(false);
         expect(result.errors['question_0']).toContain('min must be less than max');
     });
+
+    describe('Score Range Validation', () => {
+        it('validates range min/max', () => {
+            const invalidRange: ScoreRange = { min: 10, max: 5, status: 'Invalid', description: '', color: 'gray' };
+            const result = validateQuiz('Title', 'slug', 'Desc', [validQuestion], [invalidRange]);
+            expect(result.isValid).toBe(false);
+            expect(result.errors['range_0']).toContain('min must be less than or equal to max');
+        });
+
+        it('requires status for ranges', () => {
+            const invalidRange: ScoreRange = { min: 0, max: 5, status: '', description: '', color: 'gray' };
+            const result = validateQuiz('Title', 'slug', 'Desc', [validQuestion], [invalidRange]);
+            expect(result.isValid).toBe(false);
+            expect(result.errors['range_0']).toContain('status is required');
+        });
+
+        it('detects overlapping ranges', () => {
+            const ranges: ScoreRange[] = [
+                { min: 0, max: 10, status: 'R1', description: '', color: 'gray' },
+                { min: 5, max: 15, status: 'R2', description: '', color: 'gray' }
+            ];
+            const result = validateQuiz('Title', 'slug', 'Desc', [validQuestion], ranges);
+            expect(result.isValid).toBe(false);
+            expect(result.errors['range_0_overlap']).toContain('overlaps with Range 2');
+        });
+    });
 });

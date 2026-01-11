@@ -52,5 +52,27 @@ export function validateQuiz(
         });
     }
 
+    // Validate score ranges
+    if (scoreRanges && scoreRanges.length > 0) {
+        scoreRanges.forEach((range, index) => {
+            if (range.min > range.max) {
+                errors[`range_${index}`] = `Range ${index + 1} min must be less than or equal to max`;
+            }
+            if (!range.status || range.status.trim().length === 0) {
+                errors[`range_${index}`] = `Range ${index + 1} status is required`;
+            }
+
+            // Check for overlaps with other ranges
+            for (let i = index + 1; i < scoreRanges.length; i++) {
+                const other = scoreRanges[i];
+                if (
+                    (range.min <= other.max && range.max >= other.min)
+                ) {
+                    errors[`range_${index}_overlap`] = `Range ${index + 1} overlaps with Range ${i + 1}`;
+                }
+            }
+        });
+    }
+
     return { errors, isValid: Object.keys(errors).length === 0 };
 }

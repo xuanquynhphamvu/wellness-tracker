@@ -1,5 +1,4 @@
-import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { QuestionList } from './QuestionList';
 import type { Question } from '~/types/quiz';
@@ -41,7 +40,7 @@ describe('QuestionList', () => {
     });
 
     it('calls onQuestionsChange when removing a question', () => {
-        const twoQuestions = [
+        const twoQuestions: Question[] = [
             ...mockQuestions,
             { id: '2', text: 'Question 2', type: 'text' }
         ];
