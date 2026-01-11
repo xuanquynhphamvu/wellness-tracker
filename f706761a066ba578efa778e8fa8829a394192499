@@ -1,0 +1,6 @@
+Task Summary: Enhance Admin Quiz List
+Summary: Updated the admin quiz list loader to use the new `getAllQuizzes` backend service and enhanced tests to verify `slug` and `isPublished` status display.
+Files:
+- app/routes/admin.quizzes.tsx
+- app/routes/admin.quizzes.test.tsx
+Why: Consistency with new backend foundation and improved status visibility for admins.
