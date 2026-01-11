@@ -1,0 +1,9 @@
+Task Summary: Update Progress Dashboard
+Summary: Integrated `ProgressChart` into the progress dashboard cards. Updated loader to calculate `maxScore` for each quiz using `calculateMaxScore`. Charts now scale dynamically based on the quiz's possible maximum score.
+Files:
+- app/routes/progress.tsx
+- app/routes/progress.test.tsx
+- app/utils/scoring.ts
+- app/utils/scoring.test.ts
+- app/components/ProgressChart.tsx
+Why: To provide visual trend analysis with correct scaling for each quiz.
