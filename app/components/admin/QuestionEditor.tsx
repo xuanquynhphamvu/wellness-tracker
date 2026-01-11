@@ -6,9 +6,23 @@ interface QuestionEditorProps {
     onChange: (index: number, updatedQuestion: Question) => void;
     onRemove: (index: number) => void;
     onDuplicate: (index: number) => void;
+    onMoveUp?: (index: number) => void;
+    onMoveDown?: (index: number) => void;
+    isFirst?: boolean;
+    isLast?: boolean;
 }
 
-export function QuestionEditor({ question, index, onChange, onRemove, onDuplicate }: QuestionEditorProps) {
+export function QuestionEditor({ 
+    question, 
+    index, 
+    onChange, 
+    onRemove, 
+    onDuplicate,
+    onMoveUp,
+    onMoveDown,
+    isFirst,
+    isLast
+}: QuestionEditorProps) {
     const updateQuestion = (updates: Partial<Question>) => {
         onChange(index, { ...question, ...updates });
     };
@@ -37,9 +51,31 @@ export function QuestionEditor({ question, index, onChange, onRemove, onDuplicat
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-4">
             <div className="flex justify-between items-start mb-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    Question {index + 1}
-                </h3>
+                <div className="flex items-center gap-4">
+                    <div className="flex flex-col gap-1">
+                        <button
+                            type="button"
+                            onClick={() => onMoveUp?.(index)}
+                            disabled={isFirst}
+                            className="p-1 text-warm-gray-400 hover:text-sage-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                            title="Move Up"
+                        >
+                            ↑
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => onMoveDown?.(index)}
+                            disabled={isLast}
+                            className="p-1 text-warm-gray-400 hover:text-sage-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                            title="Move Down"
+                        >
+                            ↓
+                        </button>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        Question {index + 1}
+                    </h3>
+                </div>
                 <div className="flex gap-2">
                     <button
                         type="button"

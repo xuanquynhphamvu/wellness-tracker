@@ -45,6 +45,22 @@ export function QuestionList({ questions, onQuestionsChange, errors }: QuestionL
         onQuestionsChange(newQuestions);
     };
 
+    const moveQuestionUp = (index: number) => {
+        if (index > 0) {
+            const newQuestions = [...questions];
+            [newQuestions[index - 1], newQuestions[index]] = [newQuestions[index], newQuestions[index - 1]];
+            onQuestionsChange(newQuestions);
+        }
+    };
+
+    const moveQuestionDown = (index: number) => {
+        if (index < questions.length - 1) {
+            const newQuestions = [...questions];
+            [newQuestions[index + 1], newQuestions[index]] = [newQuestions[index], newQuestions[index + 1]];
+            onQuestionsChange(newQuestions);
+        }
+    };
+
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
@@ -78,6 +94,10 @@ export function QuestionList({ questions, onQuestionsChange, errors }: QuestionL
                         onChange={updateQuestion}
                         onRemove={removeQuestion}
                         onDuplicate={duplicateQuestion}
+                        onMoveUp={moveQuestionUp}
+                        onMoveDown={moveQuestionDown}
+                        isFirst={index === 0}
+                        isLast={index === questions.length - 1}
                     />
                 ))}
             </div>

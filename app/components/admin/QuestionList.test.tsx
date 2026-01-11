@@ -77,4 +77,52 @@ describe('QuestionList', () => {
         render(<QuestionList {...defaultProps} errors={{ questions: 'Error message' }} />);
         expect(screen.getByText('Error message')).toBeInTheDocument();
     });
+
+    describe('Reordering', () => {
+        const threeQuestions = [
+            { id: '1', text: 'Q1', type: 'text' },
+            { id: '2', text: 'Q2', type: 'text' },
+            { id: '3', text: 'Q3', type: 'text' },
+        ] as Question[];
+
+        it('calls onQuestionsChange when moving a question up', () => {
+            render(<QuestionList {...defaultProps} questions={threeQuestions} />);
+            
+            // Move Q2 up
+            const moveUpBtns = screen.getAllByTitle('Move Up');
+            fireEvent.click(moveUpBtns[1]); // Index 1 is Q2
+
+            expect(mockOnQuestionsChange).toHaveBeenCalledWith([
+                threeQuestions[1], // Q2
+                threeQuestions[0], // Q1
+                threeQuestions[2], // Q3
+            ]);
+        });
+
+        it('calls onQuestionsChange when moving a question down', () => {
+            render(<QuestionList {...defaultProps} questions={threeQuestions} />);
+            
+            // Move Q1 down
+            const moveDownBtns = screen.getAllByTitle('Move Down');
+            fireEvent.click(moveDownBtns[0]); // Index 0 is Q1
+
+            expect(mockOnQuestionsChange).toHaveBeenCalledWith([
+                threeQuestions[1], // Q2
+                threeQuestions[0], // Q1
+                threeQuestions[2], // Q3
+            ]);
+        });
+
+        it('disables move up for the first question', () => {
+            render(<QuestionList {...defaultProps} questions={threeQuestions} />);
+            const moveUpBtns = screen.getAllByTitle('Move Up');
+            expect(moveUpBtns[0]).toBeDisabled();
+        });
+
+        it('disables move down for the last question', () => {
+            render(<QuestionList {...defaultProps} questions={threeQuestions} />);
+            const moveDownBtns = screen.getAllByTitle('Move Down');
+            expect(moveDownBtns[2]).toBeDisabled();
+        });
+    });
 });

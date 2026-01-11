@@ -23,7 +23,7 @@
 - [x] Task: Question Component Architecture 8680edb
     - [ ] Subtask: Create `app/components/admin/QuestionEditor.tsx` component to handle a single question's state (text, type, options).
     - [ ] Subtask: Create `app/components/admin/QuestionList.tsx` to manage the array of questions.
-- [ ] Task: Implement Question Management Logic
+- [~] Task: Implement Question Management Logic
     - [ ] Subtask: Implement "Add Question", "Remove Question", and "Update Question" logic within the client-side state (before save).
     - [ ] Subtask: Implement basic reordering (move up/down buttons) for accessibility.
 - [ ] Task: Integrate with Edit Route
