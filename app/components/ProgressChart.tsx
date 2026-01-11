@@ -13,9 +13,10 @@ interface ProgressChartProps {
     data: { date: string; score: number }[];
     color: string;
     height?: number;
+    domain?: [number, number];
 }
 
-export function ProgressChart({ data, color, height = 200 }: ProgressChartProps) {
+export function ProgressChart({ data, color, height = 200, domain = [0, 10] }: ProgressChartProps) {
     if (!data || data.length === 0) {
         return (
             <div
@@ -51,7 +52,7 @@ export function ProgressChart({ data, color, height = 200 }: ProgressChartProps)
                         tick={{ fontSize: 10, fill: '#9CA3AF' }}
                         tickLine={false}
                         axisLine={false}
-                        domain={[0, 10]} // Assuming 0-10 scale usually, could be dynamic
+                        domain={domain}
                         allowDecimals={false}
                     />
                     <Tooltip

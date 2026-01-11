@@ -41,6 +41,15 @@ vi.mock('~/lib/progress.server', () => ({
     }),
 }));
 
+vi.mock('~/utils/scoring', () => ({
+    calculateMaxScore: () => 27,
+}));
+
+// Mock ProgressChart to simplify testing
+vi.mock('~/components/ProgressChart', () => ({
+    ProgressChart: () => <div data-testid="progress-chart">Mock Chart</div>
+}));
+
 const mockFind = vi.fn();
 const mockSort = vi.fn();
 const mockToArray = vi.fn();
@@ -174,6 +183,7 @@ describe('Progress Route', () => {
             const mockProgress = [{
                 quizId: '123',
                 quizTitle: 'Anxiety Test',
+                maxScore: 27,
                 attempts: 5,
                 scores: [10, 15, 12, 18, 20],
                 dates: [new Date().toISOString()],
@@ -199,6 +209,7 @@ describe('Progress Route', () => {
             expect(screen.getByText(/5 attempts/)).toBeInTheDocument();
             expect(screen.getByText('↗️ Finding balance')).toBeInTheDocument();
             expect(screen.getAllByText('20')).toHaveLength(2); // Latest and Best
+            expect(screen.getByTestId('progress-chart')).toBeInTheDocument();
         });
     });
 });

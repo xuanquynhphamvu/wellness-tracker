@@ -60,3 +60,18 @@ export function calculateScore(
         answers
     };
 }
+
+export function calculateMaxScore(questions: Question[]): number {
+    let maxScore = 0;
+    questions.forEach(q => {
+        if (q.type === 'scale') {
+            maxScore += q.scaleMax || 10;
+        } else if (q.type === 'multiple-choice' && q.scoreMapping) {
+            const scores = Object.values(q.scoreMapping);
+            if (scores.length > 0) {
+                maxScore += Math.max(...scores);
+            }
+        }
+    });
+    return maxScore;
+}

@@ -1,6 +1,6 @@
 
 import { describe, it, expect } from 'vitest';
-import { calculateScore } from './scoring';
+import { calculateScore, calculateMaxScore } from './scoring';
 import type { Question, ScoreRange } from '~/types/quiz';
 
 describe('calculateScore', () => {
@@ -77,5 +77,43 @@ describe('calculateScore', () => {
 
         const result = calculateScore(formData, [questions[1]], []);
         expect(result.resultMessage).toBe('Assessment Complete');
+    });
+
+    describe('calculateMaxScore', () => {
+        it('calculates max score for scale questions', () => {
+            const questions: Question[] = [
+                { id: '1', text: 'Q1', type: 'scale', scaleMin: 1, scaleMax: 5 },
+                { id: '2', text: 'Q2', type: 'scale', scaleMin: 0, scaleMax: 10 }
+            ];
+            expect(calculateMaxScore(questions)).toBe(15);
+        });
+
+        it('calculates max score for multiple-choice questions', () => {
+            const questions: Question[] = [
+                { 
+                    id: '1', 
+                    text: 'Q1', 
+                    type: 'multiple-choice', 
+                    options: ['A', 'B'], 
+                    scoreMapping: { 'A': 1, 'B': 5 } 
+                }
+            ];
+            expect(calculateMaxScore(questions)).toBe(5);
+        });
+
+        it('handles mixed question types', () => {
+            const questions: Question[] = [
+                { id: '1', text: 'Q1', type: 'scale', scaleMax: 10 },
+                { 
+                    id: '2', 
+                    text: 'Q2', 
+                    type: 'multiple-choice', 
+                    options: ['A', 'B'], 
+                    scoreMapping: { 'A': 2, 'B': 3 } 
+                },
+                { id: '3', text: 'Q3', type: 'text' } // Should correspond to 0
+            ];
+            expect(calculateMaxScore(questions)).toBe(13);
+        });
     });
 });

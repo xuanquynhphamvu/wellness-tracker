@@ -3,10 +3,12 @@ import type { Route } from "./+types/progress";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import { Button } from "~/components/Button";
 import { Card } from "~/components/Card";
+import { ProgressChart } from "~/components/ProgressChart";
 import type { QuizResult } from "~/types/result";
 import type { Quiz } from "~/types/quiz";
 import { requireUser } from "~/lib/auth.server";
 import { calculateProgressStats, type Trend } from "~/lib/progress.server";
+import { calculateMaxScore } from "~/utils/scoring";
 
 /**
  * Progress Tracking Route
@@ -26,6 +28,7 @@ import { calculateProgressStats, type Trend } from "~/lib/progress.server";
 interface QuizProgress {
     quizId: string;
     quizTitle: string;
+    maxScore: number;
     attempts: number;
     scores: number[];
     dates: string[];
@@ -60,6 +63,7 @@ export async function loader({ request }: Route.LoaderArgs) {
             progressMap.set(quizId, {
                 quizId,
                 quizTitle: quiz?.title || 'Unknown Quiz',
+                maxScore: quiz ? calculateMaxScore(quiz.questions) : 10,
                 attempts: 0,
                 scores: [],
                 dates: [],
@@ -136,6 +140,11 @@ function ProgressCard({ progress }: { progress: QuizProgress }) {
         year: 'numeric',
     });
 
+    const chartData = progress.dates.map((date, i) => ({
+        date,
+        score: progress.scores[i],
+    }));
+
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
             <div className="flex justify-between items-start mb-4">
@@ -148,6 +157,14 @@ function ProgressCard({ progress }: { progress: QuizProgress }) {
                     </p>
                 </div>
                 <TrendIndicator trend={progress.trend} />
+            </div>
+
+            <div className="mb-6 h-48">
+                <ProgressChart
+                    data={chartData}
+                    color="#10B981" // Could make this dynamic based on trend or quiz color
+                    domain={[0, progress.maxScore]}
+                />
             </div>
 
             {/* Score Statistics */}
