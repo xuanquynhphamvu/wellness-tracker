@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [ ] Track: Deployment Configuration
+## [~] Track: Deployment Configuration
 *Link: [./conductor/tracks/deployment_20260111/](./conductor/tracks/deployment_20260111/)*
