@@ -7,6 +7,7 @@ export default [
     route("quizzes/:id", "routes/quizzes.$id.tsx"),
     route("results/:id", "routes/results.$id.tsx"),
     route("progress", "routes/progress.tsx"),
+    route("progress/:quizId", "routes/progress.$quizId.tsx"),
 
     // Auth routes
     route("auth/login", "routes/auth.login.tsx"),
