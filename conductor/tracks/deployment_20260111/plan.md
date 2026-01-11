@@ -9,11 +9,11 @@
     - [x] Subtask: Ensure `react-router.config.ts` is optimized for Vercel if needed.
 - [x] Task: Conductor - User Manual Verification 'Configuration & Verification' (Protocol in workflow.md) 8cd46b9
 
-## Phase 2: Documentation
-- [x] Task: Create Deployment Guide
+## Phase 2: Documentation [checkpoint: 2889aee]
+- [x] Task: Create Deployment Guide 2889aee
     - [x] Subtask: Create `docs/DEPLOYMENT.md`.
     - [x] Subtask: Document required environment variables.
     - [x] Subtask: Write step-by-step instructions for Vercel deployment.
-- [~] Task: Update README
-    - [ ] Subtask: Link to `docs/DEPLOYMENT.md` from the main `README.md`.
-- [ ] Task: Conductor - User Manual Verification 'Documentation' (Protocol in workflow.md)
+- [x] Task: Update README 2889aee
+    - [x] Subtask: Link to `docs/DEPLOYMENT.md` from the main `README.md`.
+- [x] Task: Conductor - User Manual Verification 'Documentation' (Protocol in workflow.md) 2889aee
