@@ -1,0 +1,10 @@
+Task Summary: Enhance UX with Loading States
+Summary: Verified and implemented pending states for all major forms in the application. Added `useNavigation` logic to `admin.quizzes.tsx` to show 'Processing...' and 'Deleting...' states for list actions. Verified existing pending states in login, register, quiz submission, and quiz creation/editing routes.
+Files:
+- app/routes/admin.quizzes.tsx
+- app/routes/admin.quizzes.new.tsx (Verified)
+- app/routes/admin.quizzes.$id.edit.tsx (Verified)
+- app/routes/quizzes.$id.tsx (Verified)
+- app/routes/auth.login.tsx (Verified)
+- app/routes/auth.register.tsx (Verified)
+Why: To provide immediate visual feedback to the user during asynchronous server operations, preventing multiple submissions and improving the perceived performance of the app.
