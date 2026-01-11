@@ -10,12 +10,12 @@
     - [x] Subtask: Write a unit test to verify the component renders without crashing.
 - [x] Task: Conductor - User Manual Verification 'Infrastructure & Charting Foundation' (Protocol in workflow.md) 3c399f3
 
-## Phase 2: Dashboard Integration
+## Phase 2: Dashboard Integration [checkpoint: bbd9732]
 - [x] Task: Update Progress Dashboard 38cb548
-    - [ ] Subtask: Modify `app/routes/progress.tsx` to include the `ProgressChart` within the `ProgressCard`.
-    - [ ] Subtask: Adjust layout to accommodate the chart (e.g., move stats to side or below).
-    - [ ] Subtask: Ensure chart handles empty or single-data-point states gracefully.
-- [ ] Task: Conductor - User Manual Verification 'Dashboard Integration' (Protocol in workflow.md)
+    - [x] Subtask: Modify `app/routes/progress.tsx` to include the `ProgressChart` within the `ProgressCard`.
+    - [x] Subtask: Adjust layout to accommodate the chart (e.g., move stats to side or below).
+    - [x] Subtask: Ensure chart handles empty or single-data-point states gracefully.
+- [x] Task: Conductor - User Manual Verification 'Dashboard Integration' (Protocol in workflow.md) bbd9732
 
 ## Phase 3: Detailed History View
 - [ ] Task: Create Progress Detail Route
