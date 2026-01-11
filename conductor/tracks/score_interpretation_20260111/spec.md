@@ -1,30 +1,37 @@
 # Track Specification: Enhanced Score Interpretation
 
 ## 1. Goal
-Allow administrators to define the "direction" of scoring for each quiz (e.g., "Higher is Better" vs "Lower is Better"). This setting will adjust the default result interpretation logic (labels and colors) when explicit score ranges are not defined.
+Enhance the quiz engine to support more complex scoring scenarios, specifically:
+1.  **Scoring Direction:** Allow admins to define if "High Score" is good or bad.
+2.  **Multi-Scale Scoring:** Support quizzes like DASS-21 where specific subsets of questions contribute to different sub-scales (e.g., Stress, Anxiety, Depression).
 
 ## 2. Core Features
-- **Scoring Direction Field:** Add `scoringDirection` to the `Quiz` schema.
-- **Admin Interface:** Add a radio button or dropdown in the "Create/Edit Quiz" form to select the direction.
-- **Dynamic Fallback Logic:** Update the results page to interpret scores based on this direction.
-    - *Higher is Better (Default):* High score = Green, Low score = Orange.
-    - *Lower is Better:* Low score = Green, High score = Orange.
+- **Scoring Direction:**
+    -   Add `scoringDirection` ('higher-is-better' | 'lower-is-better') to `Quiz` schema.
+    -   Update Admin UI to select this.
+    -   Update Result UI to color-code total score based on this.
+- **Multi-Scale Scoring:**
+    -   Add `category` field to `Question` schema (e.g., "stress", "anxiety").
+    -   Update `calculateScore` utility to compute scores per category.
+    -   Update Result UI to display a breakdown of scores by category if categories exist.
 
 ## 3. User Flows
-1.  **Admin Flow:**
-    -   Admin creates a "Depression Test" (where high score = bad).
-    -   Admin selects "Lower Score is Better" in the settings.
-    -   Admin saves the quiz.
-2.  **User Flow:**
-    -   User takes the "Depression Test".
-    -   User gets a high score (e.g., 20/27).
-    -   Result page shows "Needs Care" (Orange) instead of "Doing Well" (Green).
+1.  **Admin Flow (Multi-Scale):**
+    -   Admin creates "DASS-21".
+    -   Adds Question 1, assigns category "Stress".
+    -   Adds Question 2, assigns category "Anxiety".
+    -   Saves quiz.
+2.  **User Flow (Multi-Scale):**
+    -   User takes DASS-21.
+    -   Result page shows "Total Score" (if relevant) AND "Stress Score", "Anxiety Score".
 
 ## 4. Technical Considerations
-- **Schema Update:** Modify `app/types/quiz.ts`.
-- **Database:** Existing documents will default to 'higher-is-better'.
-- **UI:** Update `admin.quizzes.new.tsx` and `admin.quizzes.$id.edit.tsx`.
-- **Logic:** Update `app/routes/results.$id.tsx`.
+- **Schema:**
+    -   `Quiz.scoringDirection`
+    -   `Question.category`
+- **Scoring Logic:**
+    -   `calculateScore` needs to return `subScores: Record<string, number>`.
+    -   `QuizResult` needs to store `subScores` (optional).
 
 ## 5. Non-Functional Requirements
-- **Backward Compatibility:** Ensure existing quizzes default sensibly.
+- **Backward Compatibility:** Existing quizzes without categories should work as they do now (single total score).
