@@ -1,15 +1,15 @@
 # Track Plan: Enhanced Score Interpretation
 
-## Phase 1: Data Model & Admin UI
-- [~] Task: Update Schema
-    - [ ] Subtask: Add `scoringDirection` to `Quiz` in `app/types/quiz.ts`.
-    - [ ] Subtask: Add `category` to `Question` in `app/types/quiz.ts`.
-    - [ ] Subtask: Update `QuizResult` in `app/types/result.ts` to support `subScores`.
-- [~] Task: Update Admin Forms
-    - [ ] Subtask: Add "Scoring Direction" control to Quiz Create/Edit forms.
-    - [ ] Subtask: Add "Category" input to `QuestionEditor`.
-    - [ ] Subtask: Ensure new fields are saved.
-- [ ] Task: Conductor - User Manual Verification 'Data Model & Admin UI' (Protocol in workflow.md)
+## Phase 1: Data Model & Admin UI [checkpoint: 8dc93bf]
+- [x] Task: Update Schema 8dc93bf
+    - [x] Subtask: Add `scoringDirection` to `Quiz` in `app/types/quiz.ts`.
+    - [x] Subtask: Add `category` to `Question` in `app/types/quiz.ts`.
+    - [x] Subtask: Update `QuizResult` in `app/types/result.ts` to support `subScores`.
+- [x] Task: Update Admin Forms 8dc93bf
+    - [x] Subtask: Add "Scoring Direction" control to Quiz Create/Edit forms.
+    - [x] Subtask: Add "Category" input to `QuestionEditor`.
+    - [x] Subtask: Ensure new fields are saved.
+- [x] Task: Conductor - User Manual Verification 'Data Model & Admin UI' (Protocol in workflow.md) 8dc93bf
 
 ## Phase 2: Scoring Logic & Results
 - [ ] Task: Update Scoring Utility
