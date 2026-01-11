@@ -1,0 +1,7 @@
+Task Summary: Implement Question Management Logic
+Summary: Added `onMoveUp` and `onMoveDown` functionality to `QuestionList` and updated `QuestionEditor` with corresponding UI buttons. Added tests to verify correct reordering of questions and proper enabling/disabling of buttons.
+Files:
+- app/components/admin/QuestionEditor.tsx
+- app/components/admin/QuestionList.tsx
+- app/components/admin/QuestionList.test.tsx
+Why: Improves accessibility and user experience by allowing admins to easily reorder questions in a quiz.
