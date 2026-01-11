@@ -154,6 +154,9 @@ describe('Progress Detail Route', () => {
             expect(screen.getByText((content, element) => {
                 return element?.tagName.toLowerCase() === 'span' && content.includes('15') && content.includes('27');
             })).toBeInTheDocument();
+            
+            // Check for View Details button
+            expect(screen.getAllByText('View Details →')).toHaveLength(2);
         });
     });
 });

@@ -143,13 +143,15 @@ export default function ProgressDetail({ loaderData }: Route.ComponentProps) {
                                                         {attempt.score} / {maxScore}
                                                     </span>
                                                 </td>
-                                                <td className="py-4">
-                                                    <Link
+                                                <td className="py-4 text-right">
+                                                    <Button
                                                         to={`/results/${attempt._id}`}
-                                                        className="text-sage-600 hover:text-sage-700 font-medium text-sm"
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="text-sage-600 hover:text-sage-700 hover:bg-sage-50"
                                                     >
-                                                        View Details
-                                                    </Link>
+                                                        View Details →
+                                                    </Button>
                                                 </td>
                                             </tr>
                                         ))}
