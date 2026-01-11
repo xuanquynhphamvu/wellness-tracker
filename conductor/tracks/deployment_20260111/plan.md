@@ -1,13 +1,13 @@
 # Track Plan: Deployment Configuration
 
-## Phase 1: Configuration & Verification
+## Phase 1: Configuration & Verification [checkpoint: 8cd46b9]
 - [x] Task: Verify Build Process
     - [x] Subtask: Run `npm run build` and check for errors or warnings.
     - [x] Subtask: Inspect the output directory (`build/`) to ensure server and client files are generated.
-- [~] Task: Create Vercel Configuration
-    - [ ] Subtask: Create `vercel.json` (optional but recommended for caching headers etc., or generic fallback).
-    - [ ] Subtask: Ensure `react-router.config.ts` is optimized for Vercel if needed.
-- [ ] Task: Conductor - User Manual Verification 'Configuration & Verification' (Protocol in workflow.md)
+- [x] Task: Create Vercel Configuration 8cd46b9
+    - [x] Subtask: Create `vercel.json` (optional but recommended for caching headers etc., or generic fallback).
+    - [x] Subtask: Ensure `react-router.config.ts` is optimized for Vercel if needed.
+- [x] Task: Conductor - User Manual Verification 'Configuration & Verification' (Protocol in workflow.md) 8cd46b9
 
 ## Phase 2: Documentation
 - [ ] Task: Create Deployment Guide
