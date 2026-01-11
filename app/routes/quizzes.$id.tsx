@@ -49,6 +49,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     const serialized: SerializedQuiz = {
         _id: quiz._id!.toString(),
         title: quiz.title,
+        slug: quiz.slug || '',
         description: quiz.description,
         questions: quiz.questions,
         isPublished: quiz.isPublished,

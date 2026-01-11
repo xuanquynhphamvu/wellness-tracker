@@ -65,6 +65,7 @@ describe('Quizzes Route', () => {
                 {
                     _id: new mocks.ObjectId('quiz1'),
                     title: 'Anxiety Assessment',
+                    slug: 'gad-7',
                     description: 'Measure your anxiety levels',
                     questions: [
                         { id: '1', text: 'Question 1', options: [{ text: 'Yes', score: 1 }, { text: 'No', score: 0 }] }
@@ -101,6 +102,7 @@ describe('Quizzes Route', () => {
             expect(result.quizzes[0]).toEqual({
                 _id: 'quiz1',
                 title: 'Anxiety Assessment',
+                slug: 'gad-7',
                 description: 'Measure your anxiety levels',
                 questions: mockQuizzes[0].questions,
                 isPublished: true,
@@ -126,6 +128,7 @@ describe('Quizzes Route', () => {
                 {
                     _id: new mocks.ObjectId('507f1f77bcf86cd799439011'),
                     title: 'Test Quiz',
+                    slug: 'test-quiz',
                     description: 'Test description',
                     questions: [],
                     isPublished: true,
@@ -179,6 +182,7 @@ describe('Quizzes Route', () => {
                 {
                     _id: 'quiz1',
                     title: 'Anxiety Assessment',
+                    slug: 'gad-7',
                     description: 'Measure your anxiety levels with this evidence-based tool',
                     questions: [
                         { id: '1', text: 'Q1', options: [{ text: 'Yes', score: 1 }] },
@@ -215,6 +219,7 @@ describe('Quizzes Route', () => {
                 {
                     _id: 'quiz1',
                     title: 'Anxiety Assessment',
+                    slug: 'gad-7',
                     description: 'Measure your anxiety levels',
                     questions: [{ id: '1', text: 'Q1', options: [] }],
                     isPublished: true,
@@ -262,6 +267,7 @@ describe('Quizzes Route', () => {
                 {
                     _id: 'quiz1',
                     title: 'Simple Quiz',
+                    slug: 'simple-quiz',
                     description: 'A simple quiz without extras',
                     questions: [{ id: '1', text: 'Q1', options: [] }],
                     isPublished: true,
@@ -295,6 +301,7 @@ describe('Quizzes Route', () => {
                 {
                     _id: 'quiz1',
                     title: 'Quiz with Image',
+                    slug: 'quiz-with-image',
                     description: 'Has a cover image',
                     questions: [{ id: '1', text: 'Q1', options: [] }],
                     isPublished: true,

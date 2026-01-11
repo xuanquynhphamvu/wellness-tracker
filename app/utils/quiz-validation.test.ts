@@ -15,46 +15,52 @@ describe('validateQuiz', () => {
     const validScoreRanges: ScoreRange[] = [];
 
     it('should return valid for correct inputs', () => {
-        const result = validateQuiz('Valid Title', 'Valid Description', [validQuestion], validScoreRanges);
+        const result = validateQuiz('Valid Title', 'valid-slug', 'Valid Description', [validQuestion], validScoreRanges);
         expect(result.isValid).toBe(true);
         expect(result.errors).toEqual({});
     });
 
     it('should require title', () => {
-        const result = validateQuiz('', 'Valid Description', [validQuestion], validScoreRanges);
+        const result = validateQuiz('', 'valid-slug', 'Valid Description', [validQuestion], validScoreRanges);
         expect(result.isValid).toBe(false);
         expect(result.errors.title).toBeDefined();
     });
 
+    it('should require slug', () => {
+        const result = validateQuiz('Valid Title', '', 'Valid Description', [validQuestion], validScoreRanges);
+        expect(result.isValid).toBe(false);
+        expect(result.errors.slug).toBeDefined();
+    });
+
     it('should require description', () => {
-        const result = validateQuiz('Valid Title', '', [validQuestion], validScoreRanges);
+        const result = validateQuiz('Valid Title', 'valid-slug', '', [validQuestion], validScoreRanges);
         expect(result.isValid).toBe(false);
         expect(result.errors.description).toBeDefined();
     });
 
     it('should require at least one question', () => {
-        const result = validateQuiz('Valid Title', 'Valid Description', [], validScoreRanges);
+        const result = validateQuiz('Valid Title', 'valid-slug', 'Valid Description', [], validScoreRanges);
         expect(result.isValid).toBe(false);
         expect(result.errors.questions).toBeDefined();
     });
 
     it('should validate question text', () => {
         const invalidQuestion = { ...validQuestion, text: '' };
-        const result = validateQuiz('Valid Title', 'Valid Description', [invalidQuestion], validScoreRanges);
+        const result = validateQuiz('Valid Title', 'valid-slug', 'Valid Description', [invalidQuestion], validScoreRanges);
         expect(result.isValid).toBe(false);
         expect(result.errors['question_0']).toContain('text is required');
     });
 
     it('should validate multiple-choice options count', () => {
         const invalidQuestion = { ...validQuestion, options: ['Only One'] };
-        const result = validateQuiz('Valid Title', 'Valid Description', [invalidQuestion], validScoreRanges);
+        const result = validateQuiz('Valid Title', 'valid-slug', 'Valid Description', [invalidQuestion], validScoreRanges);
         expect(result.isValid).toBe(false);
         expect(result.errors['question_0']).toContain('at least 2 options');
     });
 
     it('should validate multiple-choice empty options', () => {
         const invalidQuestion = { ...validQuestion, options: ['Option 1', ''] };
-        const result = validateQuiz('Valid Title', 'Valid Description', [invalidQuestion], validScoreRanges);
+        const result = validateQuiz('Valid Title', 'valid-slug', 'Valid Description', [invalidQuestion], validScoreRanges);
         expect(result.isValid).toBe(false);
         expect(result.errors['question_0']).toContain('empty options');
     });
@@ -68,7 +74,7 @@ describe('validateQuiz', () => {
             scaleMax: 5,
             scoreMapping: {}
         };
-        const result = validateQuiz('Valid Title', 'Valid Description', [invalidQuestion], validScoreRanges);
+        const result = validateQuiz('Valid Title', 'valid-slug', 'Valid Description', [invalidQuestion], validScoreRanges);
         expect(result.isValid).toBe(false);
         expect(result.errors['question_0']).toContain('min must be less than max');
     });

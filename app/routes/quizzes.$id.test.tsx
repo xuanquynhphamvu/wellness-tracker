@@ -45,6 +45,7 @@ describe("Quiz Route (quizzes.$id)", () => {
     const mockQuiz: Quiz = {
         _id: mockQuizId,
         title: "Wellness Check-In",
+        slug: "wellness-check-in",
         description: "Daily wellness assessment",
         questions: mockQuestions,
         isPublished: true,
@@ -254,6 +255,7 @@ describe("Quiz Route (quizzes.$id)", () => {
             const serializedQuiz: SerializedQuiz = {
                 _id: mockQuizId.toString(),
                 title: "Wellness Check-In",
+                slug: "wellness-check-in",
                 description: "Daily wellness assessment",
                 questions: mockQuestions,
                 isPublished: true,
@@ -294,6 +296,7 @@ describe("Quiz Route (quizzes.$id)", () => {
         const serializedQuiz: SerializedQuiz = {
             _id: mockQuizId.toString(),
             title: "Wellness Check-In",
+            slug: "wellness-check-in",
             description: "Daily wellness assessment",
             questions: mockQuestions,
             isPublished: true,

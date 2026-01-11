@@ -52,6 +52,7 @@ describe("Results Route (results.$id)", () => {
     const mockQuiz: Quiz = {
         _id: mockQuizId,
         title: "Test Quiz",
+        slug: "test-quiz",
         description: "Test",
         questions: [
            { id: "q1", text: "Q1", type: "scale", scaleMin: 1, scaleMax: 5 }
@@ -198,6 +199,7 @@ describe("Results Route (results.$id)", () => {
         const serializedQuiz: SerializedQuiz = {
             _id: mockQuizId.toString(),
             title: "Test Quiz",
+            slug: "test-quiz",
             description: "Test Description",
             questions: [
                 { id: "q1", text: "Q1", type: "scale", scaleMin: 1, scaleMax: 5 }

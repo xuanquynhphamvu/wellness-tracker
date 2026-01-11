@@ -49,6 +49,7 @@ describe('Admin Edit Quiz Route', () => {
     const mockQuiz: SerializedQuiz = {
         _id: '123',
         title: 'Existing Quiz',
+        slug: 'test-quiz',
         description: 'Test Description',
         questions: [{
             id: 'q1',

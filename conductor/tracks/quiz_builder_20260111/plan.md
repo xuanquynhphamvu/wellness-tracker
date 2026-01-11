@@ -1,7 +1,7 @@
 # Track Plan: Implement Full Quiz Builder
 
 ## Phase 1: Data Model & Backend Foundation
-- [ ] Task: Update Quiz Schema
+- [~] Task: Update Quiz Schema
     - [ ] Subtask: Define TypeScript interfaces for `Question` (with types), `ScoreRange`, and updated `Quiz` model.
     - [ ] Subtask: Update MongoDB validation schema (if applicable) or Zod validators to reflect the new structure.
 - [ ] Task: Create/Update Backend Services

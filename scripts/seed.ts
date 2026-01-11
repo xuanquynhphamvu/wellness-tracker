@@ -40,6 +40,7 @@ async function seed() {
     // Quiz 1: Depression Screening (PHQ-9 inspired)
     const quiz1: Omit<Quiz, '_id'> = {
         title: 'Depression Screening (PHQ-9)',
+        slug: 'phq-9',
         description: 'A brief questionnaire to assess symptoms of depression over the past two weeks.',
         questions: [
             {
@@ -110,8 +111,9 @@ async function seed() {
 
     // Quiz 2: Anxiety Assessment (GAD-7 inspired)
     const quiz2: Omit<Quiz, '_id'> = {
-        title: 'Anxiety Assessment (GAD-7)',
-        description: 'A screening tool to assess generalized anxiety disorder symptoms.',
+        title: "Generalized Anxiety Disorder (GAD-7)",
+        slug: "gad-7",
+        description: "Screening for Generalized Anxiety Disorder.",
         questions: [
             {
                 id: '1',
@@ -169,8 +171,9 @@ async function seed() {
 
     // Quiz 3: Stress Level Check
     const quiz3: Omit<Quiz, '_id'> = {
-        title: 'Stress Level Assessment',
-        description: 'Evaluate your current stress levels and identify potential stressors.',
+        title: "Brief Wellness Check",
+        slug: "brief-wellness-check",
+        description: "A quick check-in on your overall well-being.",
         questions: [
             {
                 id: '1',

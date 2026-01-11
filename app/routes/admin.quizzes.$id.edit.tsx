@@ -45,6 +45,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     const serialized: SerializedQuiz = {
         _id: quiz._id!.toString(),
         title: quiz.title,
+        slug: quiz.slug || '',
         description: quiz.description,
         questions: quiz.questions,
         isPublished: quiz.isPublished,
@@ -70,6 +71,7 @@ export async function action({ request, params }: Route.ActionArgs) {
 
     const formData = await request.formData();
     const title = String(formData.get("title"));
+    const slug = String(formData.get("slug"));
     const description = String(formData.get("description"));
     const questionsString = String(formData.get("questions"));
     const scoreRangesString = formData.get("scoreRanges") ? String(formData.get("scoreRanges")) : "[]";
@@ -109,7 +111,7 @@ export async function action({ request, params }: Route.ActionArgs) {
         parseError = 'Invalid data';
     }
 
-    const { errors, isValid } = validateQuiz(title, description, questions, scoreRanges);
+    const { errors, isValid } = validateQuiz(title, slug, description, questions, scoreRanges);
 
     if (parseError) {
         errors.questions = parseError;
@@ -126,6 +128,7 @@ export async function action({ request, params }: Route.ActionArgs) {
         {
             $set: {
                 title: String(title),
+                slug: String(slug),
                 description: String(description),
                 baseTestName: formData.get('baseTestName') ? String(formData.get('baseTestName')) : undefined,
                 shortName: formData.get('shortName') ? String(formData.get('shortName')) : undefined,
@@ -235,6 +238,25 @@ export default function EditQuiz({ loaderData, actionData }: Route.ComponentProp
                             {errors?.title && (
                                 <p className="mt-1 text-sm text-orange-600">
                                     {errors.title}
+                                </p>
+                            )}
+                        </div>
+
+                        <div>
+                            <label htmlFor="slug" className="block text-sm font-semibold text-warm-gray-700 mb-2">
+                                Slug *
+                            </label>
+                            <input
+                                id="slug"
+                                type="text"
+                                name="slug"
+                                defaultValue={quiz.slug}
+                                className="w-full px-4 py-2 rounded-xl border border-warm-gray-200 bg-warm-gray-50 text-warm-gray-900 focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all outline-none"
+                                required
+                            />
+                            {errors?.slug && (
+                                <p className="mt-1 text-sm text-orange-600">
+                                    {errors.slug}
                                 </p>
                             )}
                         </div>

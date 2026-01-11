@@ -36,6 +36,7 @@ export async function loader() {
     const serialized: SerializedQuiz[] = allQuizzes.map(quiz => ({
         _id: quiz._id!.toString(),
         title: quiz.title,
+        slug: quiz.slug || '',
         description: quiz.description,
         questions: quiz.questions,
         isPublished: quiz.isPublished,

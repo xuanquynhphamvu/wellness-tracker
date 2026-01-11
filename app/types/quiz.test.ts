@@ -12,6 +12,7 @@ describe("Quiz Types", () => {
                 _id: quizId,
                 title: "Test Quiz",
                 description: "A test quiz",
+                slug: "test-quiz",
                 questions: [],
                 isPublished: true,
                 createdAt: date,
@@ -26,6 +27,7 @@ describe("Quiz Types", () => {
                 _id: quizId.toString(),
                 title: "Test Quiz",
                 description: "A test quiz",
+                slug: "test-quiz",
                 questions: [],
                 isPublished: true,
                 createdAt: date.toISOString(),
@@ -42,6 +44,7 @@ describe("Quiz Types", () => {
             const quiz: Quiz = {
                 title: "Minimal Quiz",
                 description: "Description",
+                slug: "minimal-quiz",
                 questions: [],
                 isPublished: false,
                 createdAt: date,
@@ -51,6 +54,7 @@ describe("Quiz Types", () => {
             const serialized = serializeQuiz(quiz);
 
             expect(serialized._id).toBe("");
+            expect(serialized.slug).toBe("minimal-quiz");
             expect(serialized.scoreRanges).toEqual([]);
             expect(serialized.coverImage).toBeUndefined();
         });

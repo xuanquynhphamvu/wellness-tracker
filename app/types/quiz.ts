@@ -20,6 +20,7 @@ export interface Quiz {
     _id?: ObjectId;
     title: string;
     description: string;
+    slug: string;
     questions: Question[];
     isPublished: boolean;
     createdAt: Date;
@@ -50,6 +51,7 @@ export interface SerializedQuiz {
     _id: string;
     title: string;
     description: string;
+    slug: string;
     questions: Question[];
     isPublished: boolean;
     createdAt: string;

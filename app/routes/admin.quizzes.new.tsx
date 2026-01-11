@@ -114,8 +114,16 @@ export async function action({ request }: Route.ActionArgs) {
 
     // Create quiz
     const quizzes = await getCollection<Quiz>('quizzes');
+    
+    // Generate slug
+    const slug = String(title)
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
     await quizzes.insertOne({
         title: String(title),
+        slug,
         description: String(description),
         baseTestName: formData.get('baseTestName') ? String(formData.get('baseTestName')) : undefined,
         shortName: formData.get('shortName') ? String(formData.get('shortName')) : undefined,

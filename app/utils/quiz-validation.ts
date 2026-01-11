@@ -5,6 +5,7 @@ export type QuizValidationErrors = Record<string, string>;
 
 export function validateQuiz(
     title: string | null,
+    slug: string | null,
     description: string | null,
     questions: Question[],
     scoreRanges: ScoreRange[]
@@ -13,6 +14,12 @@ export function validateQuiz(
 
     if (!title || String(title).trim().length === 0) {
         errors.title = 'Title is required';
+    }
+
+    if (!slug || String(slug).trim().length === 0) {
+        errors.slug = 'Slug is required';
+    } else if (!/^[a-z0-9-]+$/.test(String(slug))) {
+        errors.slug = 'Slug must only contain lowercase letters, numbers, and hyphens';
     }
 
     if (!description || String(description).trim().length === 0) {

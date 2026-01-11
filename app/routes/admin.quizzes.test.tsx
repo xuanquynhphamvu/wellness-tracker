@@ -27,8 +27,8 @@ describe('Admin Quizzes Route', () => {
     describe('Loader', () => {
         it('returns serialized quizzes sorted by order and createdAt', async () => {
             const mockQuizzes = [
-                { _id: '1', title: 'Quiz 1', order: 1, createdAt: mockDate, updatedAt: mockDate, questions: [] },
-                { _id: '2', title: 'Quiz 2', order: 0, createdAt: mockDate, updatedAt: mockDate, questions: [] },
+                { _id: '1', title: 'Quiz 1', slug: 'quiz-1', order: 1, createdAt: mockDate, updatedAt: mockDate, questions: [] },
+                { _id: '2', title: 'Quiz 2', slug: 'quiz-2', order: 0, createdAt: mockDate, updatedAt: mockDate, questions: [] },
             ];
 
             const mockFindFn = {
@@ -176,6 +176,7 @@ describe('Admin Quizzes Route', () => {
             const mockQuizzes = [{
                 _id: '1',
                 title: 'Depression Test',
+                slug: 'depression-test',
                 description: 'Assess levels',
                 questions: [],
                 isPublished: true,
@@ -184,6 +185,7 @@ describe('Admin Quizzes Route', () => {
             }, {
                 _id: '2',
                 title: 'Draft Quiz',
+                slug: 'draft-quiz',
                 description: 'WIP',
                 questions: [],
                 isPublished: false,
