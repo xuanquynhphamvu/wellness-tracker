@@ -44,6 +44,7 @@ export async function loader({ params }: Route.LoaderArgs) {
         instructions: quiz.instructions,
         scoreRanges: quiz.scoreRanges,
         coverImage: quiz.coverImage,
+        scoringDirection: quiz.scoringDirection || 'higher-is-better',
     };
 
     return { quiz: serialized };

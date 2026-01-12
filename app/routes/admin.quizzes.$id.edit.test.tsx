@@ -98,6 +98,7 @@ describe('Admin Edit Quiz Route', () => {
                     shortName: undefined,
                     instructions: undefined,
                     coverImage: undefined,
+                    scoringDirection: 'higher-is-better',
                 }
             });
         });

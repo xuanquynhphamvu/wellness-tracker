@@ -290,20 +290,15 @@ describe("Results Route (results.$id)", () => {
                 scoreRanges: [] // Force fallback logic
             };
             
-            // High score (bad)
-            const badResult = { ...serializedResult, score: 90 }; // 90%
+            // High score (bad) - with 1 question, max score is 10, so score 9 = 90%
+            const badResult = { ...serializedResult, score: 9 };
             renderComponent(badResult, lowerIsBetterQuiz);
             expect(screen.getByText('Needs Care')).toBeInTheDocument();
 
-            // Low score (good)
-            const goodResult = { ...serializedResult, score: 10 }; // 10%
-            // Note: need to clear previous render if using same container, but renderComponent creates new router/render
-            // But we should check logic carefully.
-            // 10% < 40% -> "Doing Well" (green) in lower-is-better logic?
-            // Code:
-            // if (percentage >= 70) -> Needs Care
-            // else if (percentage >= 40) -> Moderate
-            // else -> Doing Well
+            // Low score (good) - with 1 question, max score is 10, so score 1 = 10%
+            const goodResult = { ...serializedResult, score: 1 };
+            renderComponent(goodResult, lowerIsBetterQuiz);
+            expect(screen.getByText('Doing Well')).toBeInTheDocument();
         });
     });
 });
