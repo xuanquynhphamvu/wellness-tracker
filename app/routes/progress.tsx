@@ -30,6 +30,7 @@ interface QuizProgress {
     quizId: string;
     quizTitle: string;
     maxScore: number;
+    scoringDirection: 'higher-is-better' | 'lower-is-better';
     attempts: number;
     scores: number[];
     dates: string[];
@@ -65,6 +66,7 @@ export async function loader({ request }: Route.LoaderArgs) {
                 quizId,
                 quizTitle: quiz?.title || 'Unknown Quiz',
                 maxScore: quiz ? calculateMaxScore(quiz.questions) : 10,
+                scoringDirection: quiz?.scoringDirection || 'higher-is-better',
                 attempts: 0,
                 scores: [],
                 dates: [],
@@ -85,7 +87,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     // Calculate statistics for each quiz
     const progressByQuiz: QuizProgress[] = [];
     for (const progress of progressMap.values()) {
-        const stats = calculateProgressStats(progress.scores, progress.dates.map(d => new Date(d)));
+        const stats = calculateProgressStats(progress.scores, progress.dates.map(d => new Date(d)), progress.scoringDirection);
         progressByQuiz.push({
             ...progress,
             ...stats,

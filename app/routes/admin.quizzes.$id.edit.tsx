@@ -1,13 +1,15 @@
 import type { Route } from "./+types/admin.quizzes.$id.edit";
 import { Form, redirect, useNavigation, isRouteErrorResponse, useRouteError } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
-import type { Quiz, SerializedQuiz, Question } from "~/types/quiz";
+import type { Quiz, SerializedQuiz, Question, OverviewSection } from "~/types/quiz";
 import { requireAdmin } from "~/lib/auth.server";
 import React, { useState } from "react";
 import { QuestionList } from "~/components/admin/QuestionList";
 import { Button } from "~/components/Button";
 import { Card } from "~/components/Card";
 import { ScoreRangeEditor } from "~/components/admin/ScoreRangeEditor";
+import { OverviewSectionEditor } from "~/components/admin/OverviewSectionEditor";
+
 import type { ScoreRange } from "~/types/quiz";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
@@ -46,6 +48,7 @@ export async function loader({ params }: Route.LoaderArgs) {
         coverImage: quiz.coverImage,
         scoringDirection: quiz.scoringDirection || 'higher-is-better',
         scoreMultiplier: quiz.scoreMultiplier,
+        overview: quiz.overview,
     };
 
     return { quiz: serialized };
@@ -60,11 +63,42 @@ export async function action({ request, params }: Route.ActionArgs) {
     }
 
     const formData = await request.formData();
+    const intent = formData.get("intent");
+
+    // Handle overview-only save
+    if (intent === "save-overview") {
+        const overviewString = formData.get("overview") ? String(formData.get("overview")) : null;
+        let overview = null;
+        
+        try {
+            if (overviewString) {
+                overview = JSON.parse(overviewString);
+            }
+        } catch {
+            return { errors: { overview: 'Invalid overview data' } };
+        }
+
+        const quizzes = await getCollection<Quiz>('quizzes');
+        await quizzes.updateOne(
+            { _id: new ObjectId(params.id) },
+            {
+                $set: {
+                    overview,
+                    updatedAt: new Date(),
+                },
+            }
+        );
+
+        return redirect(`/admin/quizzes/${params.id}/edit`);
+    }
+
+    // Handle full quiz save
     const title = String(formData.get("title"));
     const slug = String(formData.get("slug"));
     const description = String(formData.get("description"));
     const questionsString = String(formData.get("questions"));
     const scoreRangesString = formData.get("scoreRanges") ? String(formData.get("scoreRanges")) : "[]";
+
     const scoringDirection = String(formData.get("scoringDirection") || "higher-is-better");
     const scoreMultiplierStr = formData.get("scoreMultiplier") ? String(formData.get("scoreMultiplier")) : "";
     const scoreMultiplier = scoreMultiplierStr && scoreMultiplierStr.trim() !== "" ? Number(scoreMultiplierStr) : undefined;
@@ -153,6 +187,22 @@ export default function EditQuiz({ loaderData, actionData }: Route.ComponentProp
 
     const [questions, setQuestions] = useState<Question[]>(quiz.questions);
     const [scoreRanges, setScoreRanges] = useState<ScoreRange[]>(quiz.scoreRanges || []);
+    const [overviewSections, setOverviewSections] = useState<OverviewSection[]>(quiz.overview?.sections || []);
+
+    // Auto-scroll to overview section if hash is present
+    React.useEffect(() => {
+        if (window.location.hash === '#overview') {
+            const overviewElement = document.getElementById('overview-section');
+            if (overviewElement) {
+                setTimeout(() => {
+                    overviewElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+    }, []);
+
+
+
 
     return (
         <div>
@@ -407,9 +457,60 @@ export default function EditQuiz({ loaderData, actionData }: Route.ComponentProp
                     </Button>
                 </div>
             </Form>
-        </div>
-    );
-}
+
+                {/* OVERVIEW EDITOR - SEPARATE SECTION */}
+                <div id="overview-section" className="mt-16 pt-8 border-t-4 border-sage-200">
+                    <div className="mb-6 bg-sage-50 p-6 rounded-2xl border-2 border-sage-200">
+                        <h2 className="text-2xl font-bold text-sage-900 mb-2 flex items-center gap-2">
+                            📄 Test Overview / Info Page
+                        </h2>
+                        <p className="text-sage-700 text-sm">
+                            This section is <strong>completely separate</strong> from the quiz details above. 
+                            Use the &ldquo;Save Overview Only&rdquo; button below to save changes without affecting other quiz fields.
+                        </p>
+                    </div>
+
+                    <Form method="post" className="space-y-6">
+                        <input type="hidden" name="intent" value="save-overview" />
+                        <input type="hidden" name="overview" value={JSON.stringify({ sections: overviewSections })} />
+
+                        <OverviewSectionEditor
+                            sections={overviewSections}
+                            onChange={setOverviewSections}
+                        />
+
+                        {errors?.overview && (
+                            <Card className="p-4 bg-orange-50 border-orange-200">
+                                <p className="text-sm text-orange-600">
+                                    {errors.overview}
+                                </p>
+                            </Card>
+                        )}
+
+                        <div className="flex gap-4 pt-6 border-t border-warm-gray-200">
+                            <Button
+                                type="submit"
+                                disabled={isSubmitting}
+                                variant="primary"
+                                size="lg"
+                                className="flex-1 justify-center bg-sage-600 hover:bg-sage-700"
+                            >
+                                {isSubmitting ? "Saving..." : "💾 Save Overview Only"}
+                            </Button>
+                            <Button
+                                to="/admin/quizzes"
+                                variant="ghost"
+                                size="lg"
+                                className="flex-1 justify-center text-warm-gray-600 hover:bg-warm-gray-100"
+                            >
+                                Cancel
+                            </Button>
+                        </div>
+                    </Form>
+                </div>
+            </div>
+        );
+    }
 
 export function ErrorBoundary() {
     const error = useRouteError();

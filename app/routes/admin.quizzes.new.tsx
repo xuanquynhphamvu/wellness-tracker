@@ -2,13 +2,14 @@ import React from "react";
 import type { Route } from "./+types/admin.quizzes.new";
 import { Form, redirect, useNavigation, isRouteErrorResponse, useRouteError} from "react-router";
 import { getCollection } from "~/lib/db.server";
-import type { Quiz, Question } from "~/types/quiz";
+import type { Quiz, Question, OverviewSection } from "~/types/quiz";
 import { requireAdmin } from "~/lib/auth.server";
 import { useState } from "react";
 import { QuestionList } from "~/components/admin/QuestionList";
 import { Button } from "~/components/Button";
 import { Card } from "~/components/Card";
 import { ScoreRangeEditor } from "~/components/admin/ScoreRangeEditor";
+import { OverviewSectionEditor } from "~/components/admin/OverviewSectionEditor";
 import type { ScoreRange } from "~/types/quiz";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
@@ -28,6 +29,7 @@ export async function action({ request }: Route.ActionArgs) {
     const description = String(formData.get("description"));
     const questionsString = String(formData.get("questions"));
     const scoreRangesString = formData.get("scoreRanges") ? String(formData.get("scoreRanges")) : "[]";
+    const overviewString = formData.get("overview") ? String(formData.get("overview")) : null;
     const scoringDirection = String(formData.get("scoringDirection") || "higher-is-better");
     const scoreMultiplierStr = formData.get("scoreMultiplier") ? String(formData.get("scoreMultiplier")) : "";
     const scoreMultiplier = scoreMultiplierStr && scoreMultiplierStr.trim() !== "" ? Number(scoreMultiplierStr) : undefined;
@@ -68,9 +70,13 @@ export async function action({ request }: Route.ActionArgs) {
 
     let questions: Question[] = [];
     let scoreRanges: ScoreRange[] = [];
+    let overview = null;
     try {
         questions = JSON.parse(questionsString);
         scoreRanges = JSON.parse(scoreRangesString);
+        if (overviewString) {
+            overview = JSON.parse(overviewString);
+        }
     } catch {
         errors.questions = 'Invalid data';
     }
@@ -126,6 +132,7 @@ export async function action({ request }: Route.ActionArgs) {
         coverImage,
         questions,
         scoreRanges,
+        overview,
         isPublished: false,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -156,6 +163,7 @@ export default function NewQuiz({ actionData }: Route.ComponentProps) {
     ]);
 
     const [scoreRanges, setScoreRanges] = useState<ScoreRange[]>([]);
+    const [overviewSections, setOverviewSections] = useState<OverviewSection[]>([]);
 
     return (
         <div>
@@ -178,6 +186,7 @@ export default function NewQuiz({ actionData }: Route.ComponentProps) {
                 {/* Hidden inputs */}
                 <input type="hidden" name="questions" value={JSON.stringify(questions)} />
                 <input type="hidden" name="scoreRanges" value={JSON.stringify(scoreRanges)} />
+                <input type="hidden" name="overview" value={JSON.stringify({ sections: overviewSections })} />
 
                 {/* Quiz Details */}
                 <Card className="p-8">
@@ -326,6 +335,12 @@ export default function NewQuiz({ actionData }: Route.ComponentProps) {
                     questions={questions}
                     onQuestionsChange={setQuestions}
                     errors={errors}
+                />
+
+                {/* Test Overview / Info Page */}
+                <OverviewSectionEditor
+                    sections={overviewSections}
+                    onChange={setOverviewSections}
                 />
 
                 {/* Scoring Logic */}

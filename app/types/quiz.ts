@@ -16,6 +16,28 @@ export interface ScoreRange {
     color: 'green' | 'yellow' | 'orange' | 'gray'; // For UI styling
 }
 
+/**
+ * Overview Section for Quiz Information Page
+ */
+export interface OverviewSection {
+    id: string;
+    type: 'purpose' | 'target-audience' | 'question-basis' | 'format' | 
+          'scoring' | 'interpretation' | 'limitations' | 'seek-help' | 
+          'privacy' | 'scientific-background' | 'custom';
+    title: string;
+    content: string;
+    visible: boolean;
+    order: number;
+    characterLimit?: number;
+}
+
+/**
+ * Quiz Overview Configuration
+ */
+export interface QuizOverview {
+    sections: OverviewSection[];
+}
+
 export interface Quiz {
     _id?: ObjectId;
     title: string;
@@ -33,6 +55,7 @@ export interface Quiz {
     order?: number;
     scoringDirection?: 'higher-is-better' | 'lower-is-better';
     scoreMultiplier?: number; // Optional multiplier to apply after summing scores (e.g., 2 for DASS-21)
+    overview?: QuizOverview; // Optional overview/info page configuration
 }
 
 export interface Question {
@@ -68,6 +91,7 @@ export interface SerializedQuiz {
     order?: number;
     scoringDirection?: 'higher-is-better' | 'lower-is-better';
     scoreMultiplier?: number;
+    overview?: QuizOverview; // Optional overview/info page configuration
 }
 
 /**
@@ -84,5 +108,6 @@ export function serializeQuiz(quiz: Quiz): SerializedQuiz {
         order: quiz.order,
         scoringDirection: quiz.scoringDirection || 'higher-is-better',
         scoreMultiplier: quiz.scoreMultiplier,
+        overview: quiz.overview,
     };
 }

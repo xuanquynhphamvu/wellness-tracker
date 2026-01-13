@@ -94,56 +94,63 @@ export default function Quizzes({ loaderData }: Route.ComponentProps) {
                     ) : (
                         <div className="grid md:grid-cols-1 gap-8">
                             {quizzes.map((quiz) => (
-                                <Link
-                                    key={quiz._id}
-                                    to={`/quizzes/${quiz._id}`}
-                                    className="block h-full group"
-                                >
+                                <div key={quiz._id} className="h-full group">
                                     <Card variant="hover" className="h-full overflow-hidden bg-white border-0 shadow-sm hover:shadow-md transition-all duration-300">
                                         <div className="flex flex-col md:flex-row h-full items-center">
                                             {quiz.coverImage && (
-                                                <div className="w-full h-56 md:w-56 md:h-56 shrink-0 relative">
+                                                <Link
+                                                    to={`/quizzes/${quiz._id}/overview`}
+                                                    className="w-full h-56 md:w-56 md:h-56 shrink-0 relative block"
+                                                >
                                                     <img
                                                         src={quiz.coverImage}
                                                         alt={quiz.title}
                                                         className="w-full h-full object-cover absolute inset-0 group-hover:scale-105 transition-transform duration-500"
                                                     />
-                                                </div>
+                                                </Link>
                                             )}
-                                            <div className="p-8 flex flex-col flex-grow">
-                                                <div className="flex justify-between items-start mb-4 gap-4">
-                                                    <h2 className="text-2xl font-bold text-warm-gray-900 group-hover:text-sage-800 transition-colors">
-                                                        {quiz.title}
-                                                    </h2>
-                                                    {quiz.shortName && (
-                                                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-sage-100 text-sage-700">
-                                                            {quiz.shortName}
-                                                        </span>
+                                            <div className="p-8 flex flex-col flex-grow w-full">
+                                                <Link
+                                                    to={`/quizzes/${quiz._id}/overview`}
+                                                    className="block mb-8"
+                                                >
+                                                    <div className="flex justify-between items-start mb-4 gap-4">
+                                                        <h2 className="text-2xl font-bold text-warm-gray-900 group-hover:text-sage-800 transition-colors">
+                                                            {quiz.title}
+                                                        </h2>
+                                                        {quiz.shortName && (
+                                                            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-sage-100 text-sage-700">
+                                                                {quiz.shortName}
+                                                            </span>
+                                                        )}
+                                                    </div>
+
+                                                    {quiz.baseTestName && (
+                                                        <p className="text-xs font-semibold tracking-wider text-warm-gray-400 uppercase mb-4">
+                                                            Based on: {quiz.baseTestName}
+                                                        </p>
                                                     )}
-                                                </div>
 
-                                                {quiz.baseTestName && (
-                                                    <p className="text-xs font-semibold tracking-wider text-warm-gray-400 uppercase mb-4">
-                                                        Based on: {quiz.baseTestName}
+                                                    <p className="text-warm-gray-600 leading-relaxed">
+                                                        {quiz.description}
                                                     </p>
-                                                )}
-
-                                                <p className="text-warm-gray-600 mb-8 flex-grow leading-relaxed">
-                                                    {quiz.description}
-                                                </p>
+                                                </Link>
 
                                                 <div className="flex items-center justify-between pt-6 mt-auto border-t border-warm-gray-100">
                                                     <span className="text-sm font-medium text-warm-gray-500 bg-warm-gray-50 px-3 py-1 rounded-full">
                                                         {quiz.questions.length} Questions
                                                     </span>
-                                                    <span className="text-sage-600 font-semibold flex items-center group-hover:translate-x-1 transition-transform">
+                                                    <Link
+                                                        to={`/quizzes/${quiz._id}`}
+                                                        className="inline-flex items-center gap-1 text-sage-600 hover:text-sage-700 font-medium transition-colors duration-200"
+                                                    >
                                                         Begin →
-                                                    </span>
+                                                    </Link>
                                                 </div>
                                             </div>
                                         </div>
                                     </Card>
-                                </Link>
+                                </div>
                             ))}
                         </div>
                     )}

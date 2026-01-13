@@ -4,6 +4,7 @@ export default [
     // User-facing routes
     index("routes/home.tsx"),
     route("quizzes", "routes/quizzes.tsx"),
+    route("quizzes/:id/overview", "routes/quizzes.$id.overview.tsx"),
     route("quizzes/:id", "routes/quizzes.$id.tsx"),
     route("results/:id", "routes/results.$id.tsx"),
     route("progress", "routes/progress.tsx"),
