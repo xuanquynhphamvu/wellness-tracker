@@ -1,11 +1,13 @@
 import type { Route } from "./+types/results.$id";
-import { Link, isRouteErrorResponse, useRouteError } from "react-router";
+import { isRouteErrorResponse, useRouteError } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import type { QuizResult, SerializedQuizResult } from "~/types/result";
 import { type Quiz, serializeQuiz } from "~/types/quiz";
 import { requireUser } from "~/lib/auth.server";
 import { Card } from "~/components/Card";
 import { Button } from "~/components/Button";
+import React from "react";
+
 
 /**
  * Quiz Results Route
@@ -90,7 +92,7 @@ export default function Results({ loaderData }: Route.ComponentProps) {
             status = {
                 label: matchedRange.status,
                 description: matchedRange.description,
-                color: matchedRange.color as any // Cast to match our limited palette
+                color: matchedRange.color as 'green' | 'yellow' | 'orange' | 'gray' | 'indigo'
             };
         }
     } else {
