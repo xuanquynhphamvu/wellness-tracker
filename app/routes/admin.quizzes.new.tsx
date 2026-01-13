@@ -1,5 +1,6 @@
+import React from "react";
 import type { Route } from "./+types/admin.quizzes.new";
-import { Form, redirect, useActionData, useNavigation, isRouteErrorResponse, useRouteError, Link } from "react-router";
+import { Form, redirect, useNavigation, isRouteErrorResponse, useRouteError} from "react-router";
 import { getCollection } from "~/lib/db.server";
 import type { Quiz, Question } from "~/types/quiz";
 import { requireAdmin } from "~/lib/auth.server";
@@ -28,6 +29,8 @@ export async function action({ request }: Route.ActionArgs) {
     const questionsString = String(formData.get("questions"));
     const scoreRangesString = formData.get("scoreRanges") ? String(formData.get("scoreRanges")) : "[]";
     const scoringDirection = String(formData.get("scoringDirection") || "higher-is-better");
+    const scoreMultiplierStr = formData.get("scoreMultiplier") ? String(formData.get("scoreMultiplier")) : "";
+    const scoreMultiplier = scoreMultiplierStr && scoreMultiplierStr.trim() !== "" ? Number(scoreMultiplierStr) : undefined;
 
     // File Upload Logic
     let coverImage = formData.get('coverImage') ? String(formData.get('coverImage')) : undefined;
@@ -119,6 +122,7 @@ export async function action({ request }: Route.ActionArgs) {
         shortName: formData.get('shortName') ? String(formData.get('shortName')) : undefined,
         instructions: formData.get('instructions') ? String(formData.get('instructions')) : undefined,
         scoringDirection: scoringDirection as 'higher-is-better' | 'lower-is-better',
+        scoreMultiplier,
         coverImage,
         questions,
         scoreRanges,
@@ -130,7 +134,7 @@ export async function action({ request }: Route.ActionArgs) {
     return redirect('/admin/quizzes');
 }
 
-export function meta({ }: Route.MetaArgs) {
+export function meta() {
     return [
         { title: "Create Quiz - Admin - Wellness Tracker" },
     ];
@@ -325,10 +329,35 @@ export default function NewQuiz({ actionData }: Route.ComponentProps) {
                 />
 
                 {/* Scoring Logic */}
-                <ScoreRangeEditor
-                    scoreRanges={scoreRanges}
-                    onChange={setScoreRanges}
-                />
+                <Card className="p-8">
+                    <h2 className="text-xl font-bold text-warm-gray-900 mb-6">
+                        Scoring Logic
+                    </h2>
+
+                    <div className="space-y-6">
+                        <div>
+                            <label className="block text-sm font-semibold text-warm-gray-700 mb-2">
+                                Score Multiplier <span className="text-warm-gray-400 font-normal">(Optional)</span>
+                            </label>
+                            <input
+                                type="number"
+                                name="scoreMultiplier"
+                                step="0.1"
+                                min="0.1"
+                                className="w-full px-4 py-2 rounded-xl border border-warm-gray-200 bg-warm-gray-50 text-warm-gray-900 focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all outline-none"
+                                placeholder="e.g., 2 (for DASS-21)"
+                            />
+                            <p className="mt-1 text-xs text-warm-gray-500">
+                                Multiply the total score after summing all answers (e.g., DASS-21 uses 2)
+                            </p>
+                        </div>
+
+                        <ScoreRangeEditor
+                            scoreRanges={scoreRanges}
+                            onChange={setScoreRanges}
+                        />
+                    </div>
+                </Card>
 
                 {/* Submit Buttons */}
                 <div className="flex gap-4 pt-4 border-t border-warm-gray-200">

@@ -1,5 +1,6 @@
+import React from "react";
 import type { Route } from "./+types/admin.quizzes";
-import { Link, Form, isRouteErrorResponse, useRouteError, useNavigation } from "react-router";
+import { Form, isRouteErrorResponse, useRouteError, useNavigation } from "react-router";
 import { getCollection, ObjectId } from "~/lib/db.server";
 import type { Quiz, SerializedQuiz } from "~/types/quiz";
 import { redirect } from "react-router";
@@ -13,7 +14,7 @@ import { getAllQuizzes } from "~/lib/quiz.server";
  * Admin Quiz Management Route
  */
 
-export async function loader({ }: Route.LoaderArgs) {
+export async function loader() {
     const allQuizzes = await getAllQuizzes();
 
     const serialized: SerializedQuiz[] = allQuizzes.map(quiz => ({
@@ -93,10 +94,43 @@ export async function action({ request }: Route.ActionArgs) {
         return redirect('/admin/quizzes');
     }
 
+    if (intent === 'duplicate' && quizId) {
+        const quizzesCollection = await getCollection<Quiz>('quizzes');
+        const originalQuiz = await quizzesCollection.findOne({ _id: new ObjectId(String(quizId)) });
+
+        if (originalQuiz) {
+            // Create a copy with modified title and slug
+            const now = new Date();
+            const copyTitle = `${originalQuiz.title} (Copy)`;
+            const baseSlug = originalQuiz.slug ? `${originalQuiz.slug}-copy` : 'quiz-copy';
+            
+            // Ensure unique slug by appending timestamp if needed
+            let newSlug = baseSlug;
+            const existingWithSlug = await quizzesCollection.findOne({ slug: newSlug });
+            if (existingWithSlug) {
+                newSlug = `${baseSlug}-${Date.now()}`;
+            }
+
+            const duplicatedQuiz: Quiz = {
+                ...originalQuiz,
+                _id: undefined, // Let MongoDB generate a new ID
+                title: copyTitle,
+                slug: newSlug,
+                isPublished: false, // Duplicates start as drafts
+                createdAt: now,
+                updatedAt: now,
+            };
+
+            await quizzesCollection.insertOne(duplicatedQuiz);
+        }
+
+        return redirect('/admin/quizzes');
+    }
+
     return null;
 }
 
-export function meta({ }: Route.MetaArgs) {
+export function meta() {
     return [
         { title: "Manage Quizzes - Admin - Wellness Tracker" },
     ];
@@ -213,6 +247,18 @@ export default function AdminQuizzes({ loaderData }: Route.ComponentProps) {
                                         >
                                             Edit
                                         </Button>
+
+                                        <Form method="post">
+                                            <input type="hidden" name="quizId" value={quiz._id} />
+                                            <input type="hidden" name="intent" value="duplicate" />
+                                            <Button
+                                                type="submit"
+                                                variant="outline"
+                                                size="sm"
+                                            >
+                                                Duplicate
+                                            </Button>
+                                        </Form>
 
                                         <Form method="post">
                                             <input type="hidden" name="quizId" value={quiz._id} />

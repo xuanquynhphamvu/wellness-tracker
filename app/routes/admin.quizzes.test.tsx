@@ -1,3 +1,4 @@
+import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
@@ -40,9 +41,9 @@ describe('Admin Quizzes Route', () => {
                 find: vi.fn().mockReturnValue(mockFindFn),
             };
 
-            (dbServer.getCollection as any).mockResolvedValue(mockCollection);
+            vi.mocked(dbServer.getCollection).mockResolvedValue(mockCollection as Partial<Awaited<ReturnType<typeof dbServer.getCollection>>> as Awaited<ReturnType<typeof dbServer.getCollection>>);
 
-            const result = await loader({ request: new Request('http://localhost'), params: {}, context: {} } as any);
+            const result = await (loader as () => ReturnType<typeof loader>)();
 
             expect(dbServer.getCollection).toHaveBeenCalledWith('quizzes');
             expect(mockCollection.find).toHaveBeenCalledWith({});
@@ -61,7 +62,7 @@ describe('Admin Quizzes Route', () => {
                 method: 'POST',
                 body: formData,
             });
-            await action({ request, params: {}, context: {} } as any);
+            await action({ request, params: {}, context: {} } as Parameters<typeof action>[0]);
             expect(authServer.requireAdmin).toHaveBeenCalledWith(request);
         });
 
@@ -73,14 +74,14 @@ describe('Admin Quizzes Route', () => {
             const mockCollection = {
                 deleteOne: vi.fn().mockResolvedValue({ deletedCount: 1 }),
             };
-            (dbServer.getCollection as any).mockResolvedValue(mockCollection);
+            vi.mocked(dbServer.getCollection).mockResolvedValue(mockCollection as Partial<Awaited<ReturnType<typeof dbServer.getCollection>>> as Awaited<ReturnType<typeof dbServer.getCollection>>);
 
             const request = new Request('http://localhost', {
                 method: 'POST',
                 body: formData,
             });
 
-            const response = await action({ request, params: {}, context: {} } as any);
+            const response = await action({ request, params: {}, context: {} } as Parameters<typeof action>[0]);
 
             expect(mockCollection.deleteOne).toHaveBeenCalledWith(expect.anything());
             expect(response).toEqual(expect.objectContaining({ status: 302 }));
@@ -96,14 +97,14 @@ describe('Admin Quizzes Route', () => {
                 findOne: vi.fn().mockResolvedValue(mockQuiz),
                 updateOne: vi.fn().mockResolvedValue({ modifiedCount: 1 }),
             };
-            (dbServer.getCollection as any).mockResolvedValue(mockCollection);
+            vi.mocked(dbServer.getCollection).mockResolvedValue(mockCollection as Partial<Awaited<ReturnType<typeof dbServer.getCollection>>> as Awaited<ReturnType<typeof dbServer.getCollection>>);
 
             const request = new Request('http://localhost', {
                 method: 'POST',
                 body: formData,
             });
 
-            const response = await action({ request, params: {}, context: {} } as any);
+            const response = await action({ request, params: {}, context: {} } as Parameters<typeof action>[0]);
 
             expect(mockCollection.findOne).toHaveBeenCalledWith(expect.anything());
             expect(mockCollection.updateOne).toHaveBeenCalledWith(
@@ -139,20 +140,104 @@ describe('Admin Quizzes Route', () => {
                 find: vi.fn().mockReturnValue(mockFindFn),
                 updateOne: vi.fn().mockResolvedValue({ modifiedCount: 1 }),
             };
-            (dbServer.getCollection as any).mockResolvedValue(mockCollection);
+            vi.mocked(dbServer.getCollection).mockResolvedValue(mockCollection as Partial<Awaited<ReturnType<typeof dbServer.getCollection>>> as Awaited<ReturnType<typeof dbServer.getCollection>>);
 
             const request = new Request('http://localhost', {
                 method: 'POST',
                 body: formData,
             });
 
-            await action({ request, params: {}, context: {} } as any);
+            await action({ request, params: {}, context: {} } as Parameters<typeof action>[0]);
 
             expect(mockCollection.updateOne).toHaveBeenCalledTimes(3);
 
             expect(mockCollection.updateOne).toHaveBeenCalledWith(
                 { _id: '2' },
                 { $set: { order: 0 } }
+            );
+        });
+
+        it('handles duplicate intent', async () => {
+            const formData = new FormData();
+            formData.append('intent', 'duplicate');
+            formData.append('quizId', '123');
+
+            const mockQuiz = {
+                _id: '123',
+                title: 'Original Quiz',
+                slug: 'original-quiz',
+                description: 'Test description',
+                questions: [{ id: '1', text: 'Q1', type: 'scale' }],
+                isPublished: true,
+                createdAt: new Date('2024-01-01'),
+                updatedAt: new Date('2024-01-01'),
+            };
+
+            const mockCollection = {
+                findOne: vi.fn()
+                    .mockResolvedValueOnce(mockQuiz) // First call for original quiz
+                    .mockResolvedValueOnce(null), // Second call to check slug uniqueness
+                insertOne: vi.fn().mockResolvedValue({ insertedId: '456' }),
+            };
+            vi.mocked(dbServer.getCollection).mockResolvedValue(mockCollection as Partial<Awaited<ReturnType<typeof dbServer.getCollection>>> as Awaited<ReturnType<typeof dbServer.getCollection>>);
+
+            const request = new Request('http://localhost', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const response = await action({ request, params: {}, context: {} } as Parameters<typeof action>[0]);
+
+            expect(mockCollection.findOne).toHaveBeenCalledTimes(2);
+            expect(mockCollection.insertOne).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    title: 'Original Quiz (Copy)',
+                    slug: 'original-quiz-copy',
+                    isPublished: false,
+                    createdAt: expect.any(Date),
+                    updatedAt: expect.any(Date),
+                })
+            );
+            expect(response).toEqual(expect.objectContaining({ status: 302 }));
+        });
+
+        it('handles duplicate intent with slug conflict', async () => {
+            const formData = new FormData();
+            formData.append('intent', 'duplicate');
+            formData.append('quizId', '123');
+
+            const mockQuiz = {
+                _id: '123',
+                title: 'Original Quiz',
+                slug: 'original-quiz',
+                description: 'Test description',
+                questions: [],
+                isPublished: true,
+                createdAt: new Date('2024-01-01'),
+                updatedAt: new Date('2024-01-01'),
+            };
+
+            const mockCollection = {
+                findOne: vi.fn()
+                    .mockResolvedValueOnce(mockQuiz) // First call for original quiz
+                    .mockResolvedValueOnce({ slug: 'original-quiz-copy' }), // Second call finds existing slug
+                insertOne: vi.fn().mockResolvedValue({ insertedId: '456' }),
+            };
+            vi.mocked(dbServer.getCollection).mockResolvedValue(mockCollection as Partial<Awaited<ReturnType<typeof dbServer.getCollection>>> as Awaited<ReturnType<typeof dbServer.getCollection>>);
+
+            const request = new Request('http://localhost', {
+                method: 'POST',
+                body: formData,
+            });
+
+            await action({ request, params: {}, context: {} } as Parameters<typeof action>[0]);
+
+            expect(mockCollection.insertOne).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    title: 'Original Quiz (Copy)',
+                    slug: expect.stringMatching(/^original-quiz-copy-\d+$/),
+                    isPublished: false,
+                })
             );
         });
     });
@@ -162,7 +247,7 @@ describe('Admin Quizzes Route', () => {
             const router = createMemoryRouter([
                 {
                     path: '/admin/quizzes',
-                    element: <AdminQuizzes loaderData={{ quizzes: [] }} actionData={undefined} params={{} as any} matches={[] as any} />
+                    element: <AdminQuizzes loaderData={{ quizzes: [] }} actionData={undefined} params={{}} matches={[] as unknown as Parameters<typeof AdminQuizzes>[0]['matches']} />
                 }
             ], { initialEntries: ['/admin/quizzes'] });
 
@@ -197,7 +282,7 @@ describe('Admin Quizzes Route', () => {
             const router = createMemoryRouter([
                 {
                     path: '/admin/quizzes',
-                    element: <AdminQuizzes loaderData={{ quizzes: mockQuizzes }} actionData={undefined} params={{} as any} matches={[] as any} />
+                    element: <AdminQuizzes loaderData={{ quizzes: mockQuizzes }} actionData={undefined} params={{}} matches={[] as unknown as Parameters<typeof AdminQuizzes>[0]['matches']} />
                 }
             ], { initialEntries: ['/admin/quizzes'] });
 
@@ -209,6 +294,10 @@ describe('Admin Quizzes Route', () => {
             // Check for buttons
             expect(screen.getByText('Unpublish')).toBeInTheDocument(); // For published quiz
             expect(screen.getByText('Publish')).toBeInTheDocument(); // For draft quiz
+            
+            // Check for Duplicate buttons (should be 2, one for each quiz)
+            const duplicateButtons = screen.getAllByText('Duplicate');
+            expect(duplicateButtons).toHaveLength(2);
 
             // Check if delete confirmation is present (mocking window.confirm)
             const confirmSpy = vi.spyOn(window, 'confirm').mockImplementation(() => true);

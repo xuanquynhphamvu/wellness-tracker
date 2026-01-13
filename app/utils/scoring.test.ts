@@ -141,4 +141,77 @@ describe('calculateScore', () => {
             });
         });
     });
+
+    describe('Score Multiplier', () => {
+        it('applies multiplier to total score', () => {
+            const formData = new FormData();
+            formData.append('question_1', '2');
+            formData.append('question_2', '3');
+
+            const questions: Question[] = [
+                { id: '1', text: 'Q1', type: 'scale', scaleMin: 0, scaleMax: 4 },
+                { id: '2', text: 'Q2', type: 'scale', scaleMin: 0, scaleMax: 4 },
+            ];
+
+            const result = calculateScore(formData, questions, [], 2);
+
+            expect(result.totalScore).toBe(10); // (2 + 3) * 2 = 10
+        });
+
+        it('applies multiplier to subscores', () => {
+            const formData = new FormData();
+            formData.append('question_1', '2');
+            formData.append('question_2', '3');
+
+            const questions: Question[] = [
+                { id: '1', text: 'Q1', type: 'scale', scaleMin: 0, scaleMax: 4, category: 'Anxiety' },
+                { id: '2', text: 'Q2', type: 'scale', scaleMin: 0, scaleMax: 4, category: 'Stress' },
+            ];
+
+            const result = calculateScore(formData, questions, [], 2);
+
+            expect(result.totalScore).toBe(10); // (2 + 3) * 2 = 10
+            expect(result.subScores).toEqual({
+                'Anxiety': 4, // 2 * 2 = 4
+                'Stress': 6,  // 3 * 2 = 6
+            });
+        });
+
+        it('does not apply multiplier when not provided', () => {
+            const formData = new FormData();
+            formData.append('question_1', '2');
+            formData.append('question_2', '3');
+
+            const questions: Question[] = [
+                { id: '1', text: 'Q1', type: 'scale', scaleMin: 0, scaleMax: 4 },
+                { id: '2', text: 'Q2', type: 'scale', scaleMin: 0, scaleMax: 4 },
+            ];
+
+            const result = calculateScore(formData, questions, []);
+
+            expect(result.totalScore).toBe(5); // 2 + 3 = 5 (no multiplier)
+        });
+
+        it('calculates max score with multiplier', () => {
+            const questions: Question[] = [
+                { id: '1', text: 'Q1', type: 'scale', scaleMin: 0, scaleMax: 4 },
+                { id: '2', text: 'Q2', type: 'scale', scaleMin: 0, scaleMax: 3 },
+            ];
+
+            const maxScore = calculateMaxScore(questions, 2);
+
+            expect(maxScore).toBe(14); // (4 + 3) * 2 = 14
+        });
+
+        it('calculates max score without multiplier', () => {
+            const questions: Question[] = [
+                { id: '1', text: 'Q1', type: 'scale', scaleMin: 0, scaleMax: 4 },
+                { id: '2', text: 'Q2', type: 'scale', scaleMin: 0, scaleMax: 3 },
+            ];
+
+            const maxScore = calculateMaxScore(questions);
+
+            expect(maxScore).toBe(7); // 4 + 3 = 7 (no multiplier)
+        });
+    });
 });

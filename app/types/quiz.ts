@@ -32,6 +32,7 @@ export interface Quiz {
     coverImage?: string;
     order?: number;
     scoringDirection?: 'higher-is-better' | 'lower-is-better';
+    scoreMultiplier?: number; // Optional multiplier to apply after summing scores (e.g., 2 for DASS-21)
 }
 
 export interface Question {
@@ -41,7 +42,8 @@ export interface Question {
     options?: string[]; // For multiple-choice questions
     scaleMin?: number; // For scale questions (e.g., 1)
     scaleMax?: number; // For scale questions (e.g., 10)
-    scoreMapping?: Record<string, number>; // Map answers to scores
+    scoreMapping?: Record<string, number>; // Map answers to scores (format 1)
+    points?: number[]; // Array of points mapped to options by index (format 2)
     category?: string; // E.g., "Anxiety", "Stress"
 }
 
@@ -65,6 +67,7 @@ export interface SerializedQuiz {
     coverImage?: string;
     order?: number;
     scoringDirection?: 'higher-is-better' | 'lower-is-better';
+    scoreMultiplier?: number;
 }
 
 /**
@@ -80,5 +83,6 @@ export function serializeQuiz(quiz: Quiz): SerializedQuiz {
         coverImage: quiz.coverImage,
         order: quiz.order,
         scoringDirection: quiz.scoringDirection || 'higher-is-better',
+        scoreMultiplier: quiz.scoreMultiplier,
     };
 }

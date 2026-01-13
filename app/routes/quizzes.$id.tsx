@@ -85,7 +85,12 @@ export async function action({ request, params }: Route.ActionArgs) {
     }
 
     // Calculate score using utility
-    const { totalScore, answers } = calculateScore(formData, quiz.questions, quiz.scoreRanges || []);
+    const { totalScore, answers } = calculateScore(
+        formData,
+        quiz.questions,
+        quiz.scoreRanges || [],
+        quiz.scoreMultiplier
+    );
 
     // Save result to database (linked to user)
     const results = await getCollection<QuizResult>('results');
