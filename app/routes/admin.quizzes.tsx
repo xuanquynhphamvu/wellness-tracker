@@ -248,6 +248,15 @@ export default function AdminQuizzes({ loaderData }: Route.ComponentProps) {
                                             Edit
                                         </Button>
 
+                                        <Button
+                                            to={`/admin/quizzes/${quiz._id}/edit#overview`}
+                                            variant="outline"
+                                            size="sm"
+                                            className="text-sage-600 border-sage-200 hover:bg-sage-50"
+                                        >
+                                            📄 Overview
+                                        </Button>
+
                                         <Form method="post">
                                             <input type="hidden" name="quizId" value={quiz._id} />
                                             <input type="hidden" name="intent" value="duplicate" />
